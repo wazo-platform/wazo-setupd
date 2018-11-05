@@ -1,0 +1,2 @@
+etc/wazo-setupd/conf.d
+etc/nginx/locations/https-enabled

@@ -1,0 +1,7 @@
+Format: http://dep.debian.net/deps/dep5
+Upstream-Name: wazo-setupd
+Source: https://github.com/wazo-pbx/wazo-setupd.git
+
+Files: *
+Copyright: 2018 The Wazo Authors
+License: GPL-3.0

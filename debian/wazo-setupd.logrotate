@@ -1,0 +1,7 @@
+/var/log/wazo-setupd.log {
+    daily
+    rotate 15
+    compress
+    copytruncate
+    missingok
+}
