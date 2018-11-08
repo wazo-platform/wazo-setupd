@@ -5,6 +5,9 @@ from hamcrest import (
     all_of,
     assert_that,
     calling,
+    has_entries,
+    has_entry,
+    has_item,
     has_property,
 )
 from xivo_test_helpers.hamcrest.raises import raises
@@ -16,7 +19,7 @@ from .helpers.wait_strategy import NoWaitStrategy
 from wazo_setupd_client.exceptions import SetupdError
 
 
-class TestConfig(BaseIntegrationTest):
+class TestSetup(BaseIntegrationTest):
 
     asset = 'base'
     wait_strategy = NoWaitStrategy()
@@ -51,14 +54,33 @@ class TestConfig(BaseIntegrationTest):
 
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
+        confd = self.make_confd()
+        confd.set_wizard_discover({
+            "timezone": 'America/Montreal',
+            "hostname": 'wazo-engine',
+            "domain": 'example.com',
+            'interfaces': [
+                {'interface': 'my-interface',
+                 'ip_address': '10.1.1.1',
+                 'netmask': '255.0.0.0'}
+            ],
+            'gateways': [
+                {'gateway': '10.254.254.254'}
+            ],
+            "nameservers": ['10.2.2.2']
+        })
+        confd.set_wizard({
+            'configured': False,
+        })
         body = {
             'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
             'engine_number_start': '1000',
             'engine_number_end': '1999',
             'engine_password': 'secret',
-            'nestbox_host': 'nestbox.example.com',
-            'nestbox_port': 443,
+            'nestbox_host': 'nestbox-auth',
+            'nestbox_port': 9497,
+            'nestbox_verify_certificate': False,
             'nestbox_service_id': 'nestbox-user',
             'nestbox_service_key': 'secret',
             'nestbox_instance_name': 'my-wazo',
@@ -67,3 +89,12 @@ class TestConfig(BaseIntegrationTest):
         }
 
         setupd.setup.create(body)
+
+        assert_that(confd.requests().json(), has_entry('requests', has_item(has_entries({
+            'method': 'POST',
+            'path': '/1.1/wizard',
+            'json': has_entry('network', has_entries({
+                'hostname': 'wazo-engine',
+                'domain': 'example.com',
+            }))
+        }))))

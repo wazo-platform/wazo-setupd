@@ -10,6 +10,7 @@ from xivo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
 from xivo_test_helpers.auth import AuthClient
 from xivo_test_helpers.bus import BusClient
 
+from .confd import ConfdMockClient
 from .wait_strategy import WaitStrategy
 
 VALID_TOKEN = 'valid-token'
@@ -38,9 +39,9 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
     @classmethod
     def make_setupd(cls, token):
         return SetupdClient('localhost',
-                             cls.service_port(9302, 'setupd'),
-                             token=token,
-                             verify_certificate=False)
+                            cls.service_port(9302, 'setupd'),
+                            token=token,
+                            verify_certificate=False)
 
     def make_auth(self):
         return AuthClient('localhost', self.service_port(9497, 'auth'))
@@ -50,6 +51,9 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
             host='localhost',
             port=self.service_port(5672, 'rabbitmq')
         )
+
+    def make_confd(self):
+        return ConfdMockClient('localhost', self.service_port(9486, 'setupd'))
 
     @contextmanager
     def auth_stopped(self):

@@ -12,6 +12,7 @@ pull-images:
 	docker pull swaggerapi/swagger-validator
 	docker pull wazopbx/wait
 	docker pull wazopbx/xivo-auth-mock
+	docker pull wazopbx/xivo-confd-mock
 
 setupd:
 	docker pull python:3.5.3
