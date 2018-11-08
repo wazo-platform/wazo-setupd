@@ -2,8 +2,8 @@ version: '3.7'
 services:
   sync:
     depends_on:
-      - auth
+      - nestbox-auth
       - rabbitmq
       - setupd
     environment:
-      TARGETS: "rabbitmq:5672 setupd:9302 auth:9497"
+      TARGETS: "rabbitmq:5672 setupd:9302 nestbox-auth:9497"
