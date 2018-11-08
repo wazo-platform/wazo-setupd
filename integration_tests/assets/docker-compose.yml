@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   sync:
     image: wazopbx/wait
@@ -16,6 +16,9 @@ services:
     image: rabbitmq
     ports:
       - "5672"
+    volumes:
+      - type: tmpfs
+        target: /var/lib/rabbitmq
 
   setupd:
     image: "wazo-setupd-test"
