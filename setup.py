@@ -22,6 +22,7 @@ setup(
         'wazo_setupd.plugins': [
             'api = wazo_setupd.plugins.api.plugin:Plugin',
             'config = wazo_setupd.plugins.config.plugin:Plugin',
+            'setup = wazo_setupd.plugins.setup.plugin:Plugin',
             'status = wazo_setupd.plugins.status.plugin:Plugin',
         ],
     },
