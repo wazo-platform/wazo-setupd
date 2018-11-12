@@ -5,7 +5,8 @@ import logging
 
 from requests import HTTPError
 from xivo_auth_client import Client as AuthClient
-from xivo_confd_client import Client as Confd
+from xivo_confd_client import Client as ConfdClient
+from wazo_deployd_client import Client as DeploydClient
 
 from .exceptions import SetupError
 
@@ -26,6 +27,15 @@ class SetupService:
                                setup_infos['engine_number_start'],
                                setup_infos['engine_number_end'],
                                setup_infos['engine_password'])
+        instance_uuid = self.register_instance(nestbox_token,
+                                               setup_infos['nestbox_host'],
+                                               setup_infos['nestbox_port'],
+                                               setup_infos['nestbox_verify_certificate'],
+                                               setup_infos['nestbox_instance_name'],
+                                               setup_infos['nestbox_engine_host'],
+                                               setup_infos['nestbox_engine_port'],
+                                               setup_infos['engine_internal_address'],
+                                               setup_infos['engine_password'])
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
         auth = AuthClient(
@@ -51,7 +61,10 @@ class SetupService:
         return token_data['token']
 
     def post_confd_wizard(self, entity_name, language, number_start, number_end, password):
-        c = Confd('localhost', port=9486, https=True, verify_certificate='/usr/share/xivo-certs/server.crt')
+        c = ConfdClient('localhost',
+                        port=9486,
+                        https=True,
+                        verify_certificate='/usr/share/xivo-certs/server.crt')
 
         if c.wizard.get()['configured']:
             logger.info("Wizard already configured...")
@@ -92,3 +105,31 @@ class SetupService:
         }
 
         c.wizard.create(wizard)
+
+    def register_instance(self,
+                          token,
+                          nestbox_host,
+                          nestbox_port,
+                          nestbox_verify_certificate,
+                          nestbox_instance_name,
+                          nestbox_engine_host,
+                          nestbox_engine_port,
+                          engine_internal_address,
+                          engine_password):
+        deployd = DeploydClient(nestbox_host,
+                                port=nestbox_port,
+                                token=token,
+                                prefix="/api/deployd",
+                                verify_certificate=nestbox_verify_certificate)
+        instance_data = {
+            "remote_host": nestbox_engine_host,
+            "https_port": nestbox_engine_port,
+            "name": nestbox_instance_name,
+            "interface_ip": engine_internal_address,
+            "username": "root",
+            "password": engine_password,
+            "config": {},
+            "service_id": 1,
+        }
+        instance = deployd.instances.register(instance_data)
+        return instance.get('uuid')

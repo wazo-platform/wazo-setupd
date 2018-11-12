@@ -11,6 +11,7 @@ from xivo_test_helpers.auth import AuthClient
 from xivo_test_helpers.bus import BusClient
 
 from .confd import ConfdMockClient
+from .deployd import DeploydMockClient
 from .wait_strategy import WaitStrategy
 
 VALID_TOKEN = 'valid-token'
@@ -44,7 +45,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
                             verify_certificate=False)
 
     def make_auth(self):
-        return AuthClient('localhost', self.service_port(9497, 'auth'))
+        return AuthClient('localhost', self.service_port(9497, 'nestbox-auth'))
 
     def make_bus(self):
         return BusClient.from_connection_fields(
@@ -54,6 +55,9 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     def make_confd(self):
         return ConfdMockClient('localhost', self.service_port(9486, 'setupd'))
+
+    def make_deployd(self):
+        return DeploydMockClient('localhost', self.service_port(9800, 'nestbox-deployd'))
 
     @contextmanager
     def auth_stopped(self):

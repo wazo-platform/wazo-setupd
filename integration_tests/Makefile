@@ -1,6 +1,6 @@
 .PHONY: test-setup test egg-info pull-images setupd
 
-test-setup: egg-info pull-images setupd
+test-setup: egg-info pull-images setupd deployd
 
 test:
 	pytest -x
@@ -21,3 +21,6 @@ setupd:
 
 setupd-test: egg-info
 	docker build --no-cache -t wazo-setupd-test -f Dockerfile ..
+
+deployd:
+	docker build --no-cache -t wazopbx/wazo-deployd-mock -f docker/wazo-deployd-mock/Dockerfile docker/wazo-deployd-mock

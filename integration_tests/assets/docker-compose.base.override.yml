@@ -3,8 +3,10 @@ services:
   sync:
     depends_on:
       - confd
+      - nestbox
       - nestbox-auth
+      - nestbox-deployd
       - rabbitmq
       - setupd
     environment:
-      TARGETS: "rabbitmq:5672 setupd:9486 setupd:9302 nestbox-auth:9497"
+      TARGETS: "rabbitmq:5672 setupd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800"

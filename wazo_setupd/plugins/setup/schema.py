@@ -18,6 +18,7 @@ class SetupSchema(Schema):
     engine_number_start = fields.String(required=True)
     engine_number_end = fields.String(required=True)
     engine_password = fields.String(required=True)
+    engine_internal_address = fields.String(required=True)
     nestbox_host = fields.String(required=True)
     nestbox_port = fields.Integer(
         required=True,

@@ -1,6 +1,8 @@
 # Copyright 2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
+import uuid
+
 from hamcrest import (
     all_of,
     assert_that,
@@ -38,8 +40,9 @@ class TestSetup(BaseIntegrationTest):
             'engine_number_start': '1000',
             'engine_number_end': '1999',
             'engine_password': 'secret',
-            'nestbox_host': 'nestbox-auth',
-            'nestbox_port': 9497,
+            'engine_internal_address': '10.1.1.1',
+            'nestbox_host': 'nestbox',
+            'nestbox_port': 443,
             'nestbox_verify_certificate': False,
             'nestbox_service_id': 'test',
             'nestbox_service_key': 'foobar',
@@ -72,14 +75,20 @@ class TestSetup(BaseIntegrationTest):
         confd.set_wizard({
             'configured': False,
         })
+        instance_uuid = uuid.uuid4()
+        deployd = self.make_deployd()
+        deployd.set_post_instance({
+            'uuid': str(instance_uuid),
+        })
         body = {
             'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
             'engine_number_start': '1000',
             'engine_number_end': '1999',
             'engine_password': 'secret',
-            'nestbox_host': 'nestbox-auth',
-            'nestbox_port': 9497,
+            'engine_internal_address': '10.1.1.1',
+            'nestbox_host': 'nestbox',
+            'nestbox_port': 443,
             'nestbox_verify_certificate': False,
             'nestbox_service_id': 'nestbox-user',
             'nestbox_service_key': 'secret',
@@ -97,4 +106,19 @@ class TestSetup(BaseIntegrationTest):
                 'hostname': 'wazo-engine',
                 'domain': 'example.com',
             }))
+        }))))
+
+        assert_that(deployd.requests().json(), has_entry('requests', has_item(has_entries({
+            'method': 'POST',
+            'path': '/0.1/instances',
+            'json': {
+                'config': {},
+                'https_port': 443,
+                'interface_ip': '10.1.1.1',
+                'name': 'my-wazo',
+                'password': 'secret',
+                'remote_host': 'wazo.example.com',
+                'service_id': 1,
+                'username': 'root'
+            },
         }))))
