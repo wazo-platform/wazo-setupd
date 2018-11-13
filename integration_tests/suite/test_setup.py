@@ -94,7 +94,7 @@ class TestSetup(BaseIntegrationTest):
             'nestbox_service_key': 'secret',
             'nestbox_instance_name': 'my-wazo',
             'nestbox_engine_host': 'wazo.example.com',
-            'nestbox_engine_port': 443,
+            'nestbox_engine_port': 6666,
         }
 
         setupd.setup.create(body)
@@ -107,13 +107,12 @@ class TestSetup(BaseIntegrationTest):
                 'domain': 'example.com',
             }))
         }))))
-
         assert_that(deployd.requests().json(), has_entry('requests', has_item(has_entries({
             'method': 'POST',
             'path': '/0.1/instances',
             'json': {
                 'config': {},
-                'https_port': 443,
+                'https_port': 6666,
                 'interface_ip': '10.1.1.1',
                 'name': 'my-wazo',
                 'password': 'secret',
