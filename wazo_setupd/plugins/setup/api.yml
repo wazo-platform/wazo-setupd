@@ -17,8 +17,8 @@ paths:
           $ref: '#/responses/SetupError'
         '503':
           $ref: '#/responses/AnotherServiceUnavailable'
-parameters:
-  SetupBody:
+definitions:
+  SetupRequest:
     type: object
     properties:
       engine_entity_name:
@@ -64,6 +64,13 @@ parameters:
       nestbox_engine_port:
         description: Port used by Nestbox to contact the engine
         type: string
+parameters:
+  SetupBody:
+    name: body
+    in: body
+    description: Setup options
+    schema:
+      $ref: '#/definitions/SetupRequest'
 responses:
   SetupError:
     description: A error occurred during the setup
