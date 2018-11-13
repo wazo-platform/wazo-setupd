@@ -1,7 +1,10 @@
 # Copyright 2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
+import os
 import logging
+import subprocess
+import yaml
 
 from requests import HTTPError
 from xivo_auth_client import Client as AuthClient
@@ -36,6 +39,11 @@ class SetupService:
                                                setup_infos['nestbox_engine_port'],
                                                setup_infos['engine_internal_address'],
                                                setup_infos['engine_password'])
+        self.inject_nestbox_config(setup_infos['nestbox_host'],
+                                   setup_infos['nestbox_port'],
+                                   setup_infos['nestbox_service_id'],
+                                   setup_infos['nestbox_service_key'],
+                                   instance_uuid)
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
         auth = AuthClient(
@@ -132,4 +140,42 @@ class SetupService:
             "service_id": 1,
         }
         instance = deployd.instances.register(instance_data)
-        return instance.get('uuid')
+        return instance['uuid']
+
+    def inject_nestbox_config(self,
+                              nestbox_host,
+                              nestbox_port,
+                              nestbox_service_id,
+                              nestbox_service_key,
+                              instance_uuid):
+        nestbox_config_file = "/etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml"
+        webhookd_config_file = "/etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml"
+        config = {
+            "nestbox": {
+                "instance_uuid": instance_uuid,
+                "auth": {
+                    "host": nestbox_host,
+                    "port": nestbox_port,
+                    "prefix": "/api/auth",
+                    "service_id": nestbox_service_id,
+                    "service_key": nestbox_service_key,
+                    "verify_certificate": False
+                },
+                "confd": {
+                    "host": nestbox_host,
+                    "port": nestbox_port,
+                    "prefix": "/api/confd",
+                    "verify_certificate": False
+                }
+            }
+        }
+
+        with open(nestbox_config_file, 'w') as _file:
+            yaml.dump(config, _file, default_flow_style=False)
+
+        try:
+            os.symlink(nestbox_config_file, webhookd_config_file)
+        except FileExistsError:
+            pass
+
+        subprocess.run(["systemctl", "restart", "wazo-webhookd"])

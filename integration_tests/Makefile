@@ -23,4 +23,7 @@ setupd-test: egg-info
 	docker build --no-cache -t wazo-setupd-test -f Dockerfile ..
 
 deployd:
-	docker build --no-cache -t wazopbx/wazo-deployd-mock -f docker/wazo-deployd-mock/Dockerfile docker/wazo-deployd-mock
+	docker build -t wazopbx/wazo-deployd-mock -f docker/wazo-deployd-mock/Dockerfile docker/wazo-deployd-mock
+
+webhookd:
+	docker build -t wazopbx/wazo-webhookd-mock -f docker/wazo-webhookd-mock/Dockerfile docker/wazo-webhookd-mock

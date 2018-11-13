@@ -75,10 +75,10 @@ class TestSetup(BaseIntegrationTest):
         confd.set_wizard({
             'configured': False,
         })
-        instance_uuid = uuid.uuid4()
+        instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
         deployd.set_post_instance({
-            'uuid': str(instance_uuid),
+            'uuid': instance_uuid,
         })
         body = {
             'engine_entity_name': 'Wazo',
@@ -122,3 +122,15 @@ class TestSetup(BaseIntegrationTest):
                 'username': 'root'
             },
         }))))
+        webhookd = self.make_webhookd()
+        assert_that(webhookd.get_config().json(), has_entry('nestbox', has_entries({
+           'instance_uuid': instance_uuid,
+           'auth': {
+               'host': 'nestbox',
+               'port': 443,
+               'prefix': '/api/auth',
+               'service_id': 'nestbox-user',
+               'service_key': 'secret',
+               'verify_certificate': False
+           },
+        })))

@@ -1,0 +1,2 @@
+https://github.com/wazo-pbx/xivo-lib-python/archive/master.zip
+pyyaml

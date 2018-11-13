@@ -13,6 +13,7 @@ from xivo_test_helpers.bus import BusClient
 from .confd import ConfdMockClient
 from .deployd import DeploydMockClient
 from .wait_strategy import WaitStrategy
+from .webhookd import WebhookdMockClient
 
 VALID_TOKEN = 'valid-token'
 
@@ -58,6 +59,9 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     def make_deployd(self):
         return DeploydMockClient('localhost', self.service_port(9800, 'nestbox-deployd'))
+
+    def make_webhookd(self):
+        return WebhookdMockClient('localhost', self.service_port(9300, 'webhookd'))
 
     @contextmanager
     def auth_stopped(self):
