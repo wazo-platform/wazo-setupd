@@ -22,7 +22,7 @@ class DeploydMockClient(object):
         return requests.get(self.url('_requests'), verify=False)
 
     def set_post_instance(self, response):
-        body = {'response': 'create_instance',
+        body = {'response': 'post_instance',
                 'content': response}
         requests.post(
             self.url('_set_response'),

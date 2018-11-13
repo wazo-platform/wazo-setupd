@@ -88,12 +88,12 @@ def set_response():
 
 
 @app.route(url_prefix + '/0.1/instances', methods=['POST'])
-def instances():
+def post_instance():
     return jsonify(_responses['post_instance'])
 
 
 @app.route(url_prefix + '/0.1/instances')
-def create_instance():
+def instances():
     return jsonify(_responses['instances'])
 
 
