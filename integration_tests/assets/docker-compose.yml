@@ -12,6 +12,9 @@ services:
     volumes:
       - "./etc/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf"
       - "./ssl:/usr/local/share/ssl"
+    depends_on:
+      - nestbox-auth
+      - nestbox-deployd
 
   nestbox-auth:
     image: "wazopbx/xivo-auth-mock"
