@@ -4,29 +4,14 @@ set -e
 
 DAEMONNAME='wazo-setupd'
 LOG_FILENAME="/var/log/${DAEMONNAME}.log"
-USER=$DAEMONNAME
-GROUP=$USER
-USER_HOME="/var/lib/${USER}"
 
 case "$1" in
     configure)
         previous_version="$2"
 
-        # add/update user
-        if ! getent passwd $USER > /dev/null; then
-            echo "Adding system user $USER" 1>&2
-            adduser --system --group --quiet \
-                --home $USER_HOME \
-                --no-create-home --disabled-login \
-                $USER
-        fi
-
-        adduser --quiet $USER www-data
-
         if [ ! -e "$LOG_FILENAME" ]; then
             touch "$LOG_FILENAME"
         fi
-        chown "$USER:$GROUP" "$LOG_FILENAME"
 
         if [[ -z "${previous_version}" ]]; then
             ln -sf /etc/nginx/locations/https-available/$DAEMONNAME \

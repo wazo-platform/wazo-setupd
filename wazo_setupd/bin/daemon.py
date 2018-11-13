@@ -7,7 +7,6 @@ import sys
 from xivo import xivo_logging
 from xivo.config_helper import set_xivo_uuid, UUIDNotFound
 from xivo.daemonize import pidfile_context
-from xivo.user_rights import change_user
 from wazo_setupd.controller import Controller
 
 from wazo_setupd import config
@@ -19,9 +18,6 @@ FOREGROUND = True  # Always in foreground systemd takes care of daemonizing
 
 def main():
     conf = config.load_config(sys.argv[1:])
-
-    if conf['user']:
-        change_user(conf['user'])
 
     xivo_logging.setup_logging(conf['log_file'], FOREGROUND, conf['debug'], conf['log_level'])
     xivo_logging.silence_loggers(['Flask-Cors', 'urllib3'], logging.WARNING)

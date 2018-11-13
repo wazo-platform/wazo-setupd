@@ -19,7 +19,6 @@ _DEFAULT_CONFIG = {
     'log_file': '/var/log/wazo-setupd.log',
     'log_level': 'info',
     'pid_file': os.path.join(_PID_DIR, 'wazo-setupd.pid'),
-    'user': 'wazo-setupd',
     'auth': {
         'host': 'localhost',
         'port': 9497,
