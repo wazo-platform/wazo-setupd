@@ -9,5 +9,5 @@ class Plugin(object):
 
     def load(self, dependencies):
         api = dependencies['api']
-        service = SetupService()
+        service = SetupService(dependencies['stopper'])
         api.add_resource(SetupResource, '/setup', resource_class_args=[service])

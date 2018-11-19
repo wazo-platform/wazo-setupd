@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  sync:
+    depends_on:
+      - confd
+      - nestbox
+      - nestbox-auth
+      - nestbox-deployd
+      - rabbitmq
+      - setupd
+      - webhookd
+    environment:
+      TARGETS: "rabbitmq:5672 webhookd:9300 setupd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800"
+
+  setupd:
+    volumes:
+      - ./etc/wazo-setupd/conf.d/short-self-stop.yml:/etc/wazo-setupd/conf.d/short-self-stop.yml:ro

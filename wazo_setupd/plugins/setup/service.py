@@ -18,6 +18,9 @@ logger = logging.getLogger(__name__)
 
 class SetupService:
 
+    def __init__(self, stopper):
+        self._stopper = stopper
+
     def setup(self, setup_infos):
         # This step serves as authentication. It must be the first step.
         nestbox_token = self.get_nestbox_token(setup_infos['nestbox_host'],
@@ -44,6 +47,7 @@ class SetupService:
                                    setup_infos['nestbox_service_id'],
                                    setup_infos['nestbox_service_key'],
                                    instance_uuid)
+        self.plan_setupd_stop()
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
         auth = AuthClient(
@@ -179,3 +183,6 @@ class SetupService:
             pass
 
         subprocess.run(["systemctl", "restart", "wazo-webhookd"])
+
+    def plan_setupd_stop(self):
+        self._stopper.trigger()

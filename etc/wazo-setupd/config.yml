@@ -10,6 +10,8 @@ debug: false
 log_level: info
 log_file: /var/log/wazo-setupd.log
 pid_file: /var/run/wazo-setupd/wazo-setupd.pid
+# After a successful setup, wazo-setupd will stop itself after this delay (in seconds)
+self_stop_delay: 10.0
 
 # Connection info to the authentication server
 auth:
