@@ -8,7 +8,7 @@ import threading
 from functools import partial
 from xivo import plugin_helpers
 from xivo.consul_helpers import ServiceCatalogRegistration
-from .rest_api import api, CoreRestApi
+from .http_server import api, CoreRestApi
 from .stopper import Stopper
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 # Copyright 2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-from wazo_setupd.rest_api import AuthResource
+from wazo_setupd.http_server import AuthResource
 from xivo.auth_verifier import required_acl
 
 
