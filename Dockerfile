@@ -18,4 +18,4 @@ RUN true \
 
 EXPOSE 9302
 
-CMD ["wazo-setupd"]
+CMD ["python3", "-u", "/usr/local/bin/wazo-setupd"]

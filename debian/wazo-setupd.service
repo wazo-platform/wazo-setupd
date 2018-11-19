@@ -5,7 +5,7 @@ Before=monit.service
 
 [Service]
 ExecStartPre=/usr/bin/install -d /var/run/wazo-setupd
-ExecStart=/usr/bin/python3 /usr/bin/wazo-setupd
+ExecStart=/usr/bin/python3 -u /usr/bin/wazo-setupd
 
 [Install]
 WantedBy=multi-user.target
