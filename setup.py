@@ -17,7 +17,7 @@ setup(
     package_data={'wazo_setupd.plugins': ['*/api.yml']},
     entry_points={
         'console_scripts': [
-            '{}=wazo_setupd.bin.daemon:main'.format(NAME),
+            '{}=wazo_setupd.main:main'.format(NAME),
         ],
         'wazo_setupd.plugins': [
             'api = wazo_setupd.plugins.api.plugin:Plugin',
