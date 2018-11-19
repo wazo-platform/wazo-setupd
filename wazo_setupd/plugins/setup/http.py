@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0+
 
 from flask import request
-from wazo_setupd.http_server import ErrorCatchingResource
+from wazo_setupd.http import ErrorCatchingResource
 from xivo.auth_verifier import required_acl
 
 from .schemas import setup_schema
