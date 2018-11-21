@@ -44,7 +44,8 @@ services:
     image: wazopbx/xivo-confd-mock
     volumes:
       - ./ssl:/usr/local/share/ssl
-    network_mode: "service:setupd"
+    ports:
+      - "9486"
 
   rabbitmq:
     image: rabbitmq

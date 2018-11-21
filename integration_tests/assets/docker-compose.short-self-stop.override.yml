@@ -10,7 +10,7 @@ services:
       - setupd
       - webhookd
     environment:
-      TARGETS: "rabbitmq:5672 webhookd:9300 setupd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800"
+      TARGETS: "rabbitmq:5672 webhookd:9300 confd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800"
 
   setupd:
     volumes:

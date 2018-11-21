@@ -55,7 +55,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
         )
 
     def make_confd(self):
-        return ConfdMockClient('localhost', self.service_port(9486, 'setupd'))
+        return ConfdMockClient('localhost', self.service_port(9486, 'confd'))
 
     def make_deployd(self):
         return DeploydMockClient('localhost', self.service_port(9800, 'nestbox-deployd'))

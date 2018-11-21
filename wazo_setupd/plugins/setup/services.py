@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 
 class SetupService:
 
-    def __init__(self, stopper):
+    def __init__(self, config, stopper):
+        self._confd_config = config['confd']
         self._stopper = stopper
 
     def setup(self, setup_infos):
@@ -73,10 +74,7 @@ class SetupService:
         return token_data['token']
 
     def post_confd_wizard(self, entity_name, language, number_start, number_end, password):
-        c = ConfdClient('localhost',
-                        port=9486,
-                        https=True,
-                        verify_certificate='/usr/share/xivo-certs/server.crt')
+        c = ConfdClient(**self._confd_config)
 
         if c.wizard.get()['configured']:
             logger.info("Wizard already configured...")
