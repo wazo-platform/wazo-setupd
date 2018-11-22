@@ -45,6 +45,7 @@ class SetupService:
                                                setup_infos['engine_password'])
         self.inject_nestbox_config(setup_infos['nestbox_host'],
                                    setup_infos['nestbox_port'],
+                                   setup_infos['nestbox_verify_certificate'],
                                    setup_infos['nestbox_service_id'],
                                    setup_infos['nestbox_service_key'],
                                    instance_uuid)
@@ -147,6 +148,7 @@ class SetupService:
     def inject_nestbox_config(self,
                               nestbox_host,
                               nestbox_port,
+                              nestbox_verify_certificate,
                               nestbox_service_id,
                               nestbox_service_key,
                               instance_uuid):
@@ -161,13 +163,13 @@ class SetupService:
                     "prefix": "/api/auth",
                     "service_id": nestbox_service_id,
                     "service_key": nestbox_service_key,
-                    "verify_certificate": False
+                    "verify_certificate": nestbox_verify_certificate,
                 },
                 "confd": {
                     "host": nestbox_host,
                     "port": nestbox_port,
                     "prefix": "/api/confd",
-                    "verify_certificate": False
+                    "verify_certificate": nestbox_verify_certificate,
                 }
             }
         }
