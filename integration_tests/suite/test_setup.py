@@ -141,7 +141,7 @@ class TestSetupSelfStop(BaseIntegrationTest):
     asset = 'short-self-stop'
     wait_strategy = NoWaitStrategy()
 
-    def test_setup_valid(self):
+    def test_setup_valid_stops(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
         confd.set_wizard_discover({
@@ -189,3 +189,42 @@ class TestSetupSelfStop(BaseIntegrationTest):
             return not self.service_status('setupd')['State']['Running']
 
         until.true(setupd_is_stopped, timeout=5)
+
+
+class TestSetupNotSelfStop(BaseIntegrationTest):
+
+    asset = 'short-self-stop'
+    wait_strategy = NoWaitStrategy()
+
+    def test_setup_invalid_does_not_stop(self):
+        setupd = self.make_setupd(VALID_TOKEN)
+        body = {
+            'engine_entity_name': 'Wazo',
+            'engine_language': 'en_US',
+            'engine_number_start': '1000',
+            'engine_number_end': '1999',
+            'engine_password': 'secret',
+            'engine_internal_address': '10.1.1.1',
+            'nestbox_host': 'nestbox',
+            'nestbox_port': 443,
+            'nestbox_verify_certificate': False,
+            'nestbox_service_id': 'test',
+            'nestbox_service_key': 'foobar',
+            'nestbox_instance_name': 'my-wazo',
+            'nestbox_engine_host': 'wazo.example.com',
+            'nestbox_engine_port': 443,
+        }
+
+        assert_that(calling(setupd.setup.create).with_args(body),
+                    raises(SetupdError).matching(all_of(has_property('status_code', 500),
+                                                        has_property('error_id', 'setup-token-failed'))))
+
+        def setupd_is_stopped():
+            return not self.service_status('setupd')['State']['Running']
+
+        try:
+            until.true(setupd_is_stopped, timeout=5)
+        except until.NoMoreTries:
+            return
+        else:
+            raise AssertionError('wazo-setupd stopped after failed setup')
