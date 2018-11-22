@@ -10,8 +10,8 @@ services:
     ports:
       - "443"
     volumes:
-      - "./etc/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf"
-      - "./ssl:/usr/local/share/ssl"
+      - "./etc/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf:ro"
+      - "./ssl:/usr/local/share/ssl:ro"
     depends_on:
       - nestbox-auth
       - nestbox-deployd
@@ -21,7 +21,7 @@ services:
     ports:
       - "9497"
     volumes:
-      - "./ssl:/usr/local/share/ssl"
+      - "./ssl:/usr/local/share/ssl:ro"
     command: /usr/local/bin/mock-xivo-auth.py 9497
 
   nestbox-deployd:
@@ -29,7 +29,7 @@ services:
     ports:
       - "9800"
     volumes:
-      - ./ssl/auth:/usr/local/share/ssl/deployd
+      - ./ssl/auth:/usr/local/share/ssl/deployd:ro
     command: /usr/local/bin/wazo-deployd-mock.py 9800
 
   auth:
@@ -37,13 +37,13 @@ services:
     ports:
       - "9497"
     volumes:
-      - ./ssl:/usr/local/share/ssl
+      - ./ssl:/usr/local/share/ssl:ro
     command: /usr/local/bin/mock-xivo-auth.py 9497
 
   confd:
     image: wazopbx/xivo-confd-mock
     volumes:
-      - ./ssl:/usr/local/share/ssl
+      - ./ssl:/usr/local/share/ssl:ro
     ports:
       - "9486"
 
@@ -60,10 +60,10 @@ services:
     environment:
       XIVO_UUID: "cd030e68-ace9-4ad4-bc4e-13c8dec67898"
     volumes:
-      - "../..:/usr/src/wazo-setupd"
-      - "./ssl:/usr/local/share/ssl"
-      - "./ssl/confd:/usr/share/xivo-certs"
-      - "./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml"
+      - "../..:/usr/src/wazo-setupd:ro"
+      - "./ssl:/usr/local/share/ssl:ro"
+      - "./ssl/confd:/usr/share/xivo-certs:ro"
+      - "./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml:ro"
       - "webhookd-config:/etc/wazo-webhookd/conf.d"
       - "nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d"
       # - "${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/usr/local/lib/python3.5/site-packages/xivo"
@@ -81,9 +81,9 @@ services:
     ports:
       - "9300"
     volumes:
-      - ./ssl/auth:/usr/local/share/ssl/webhookd
-      - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d
-      - webhookd-config:/etc/wazo-webhookd/conf.d
+      - ./ssl/auth:/usr/local/share/ssl/webhookd:ro
+      - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d:ro
+      - webhookd-config:/etc/wazo-webhookd/conf.d:ro
     command: /usr/local/bin/wazo-webhookd-mock.py 9300
 
 volumes:
