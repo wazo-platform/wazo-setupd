@@ -8,9 +8,10 @@ services:
       - nestbox-deployd
       - rabbitmq
       - setupd
+      - sysconfd
       - webhookd
     environment:
-      TARGETS: "rabbitmq:5672 webhookd:9300 confd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800"
+      TARGETS: "rabbitmq:5672 webhookd:9300 confd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800 sysconfd:8668"
 
   setupd:
     volumes:

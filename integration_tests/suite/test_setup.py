@@ -136,6 +136,14 @@ class TestSetup(BaseIntegrationTest):
                'verify_certificate': False
            },
         })))
+        sysconfd = self.make_sysconfd()
+        assert_that(sysconfd.requests().json(), has_entry('requests', has_item(has_entries({
+            'method': 'POST',
+            'path': '/services',
+            'json': {
+                'wazo-webhookd': 'restart',
+            },
+        }))))
 
 
 class TestSetupSelfStop(BaseIntegrationTest):

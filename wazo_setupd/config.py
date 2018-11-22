@@ -65,6 +65,10 @@ _DEFAULT_CONFIG = {
         'retry_interval': 2,
         'extra_tags': [],
     },
+    'sysconfd': {
+        'host': 'localhost',
+        'port': 8668,
+    },
     'enabled_plugins': {
         'api': True,
         'config': True,

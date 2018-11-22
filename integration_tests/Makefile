@@ -13,6 +13,7 @@ pull-images:
 	docker pull wazopbx/wait
 	docker pull wazopbx/xivo-auth-mock
 	docker pull wazopbx/xivo-confd-mock
+	docker pull wazopbx/xivo-sysconfd-mock
 
 setupd:
 	docker pull python:3.5.3

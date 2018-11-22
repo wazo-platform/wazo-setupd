@@ -1,9 +1,8 @@
 # Copyright 2018 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
-import os
 import logging
-import subprocess
+import requests
 import yaml
 
 from requests import HTTPError
@@ -20,6 +19,7 @@ class SetupService:
 
     def __init__(self, config, stopper):
         self._confd_config = config['confd']
+        self._sysconfd_config = config['sysconfd']
         self._stopper = stopper
 
     def setup(self, setup_infos):
@@ -177,13 +177,16 @@ class SetupService:
         with open(nestbox_config_file, 'w') as _file:
             yaml.dump(config, _file, default_flow_style=False)
 
-        completed_process = subprocess.run(["systemctl", "restart", "wazo-webhookd"],
-                                           stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE)
-        if completed_process.stdout:
-            logger.debug('systemctl stdout: %s', completed_process.stdout)
-        if completed_process.stderr:
-            logger.warning('systemctl srderr: %s', completed_process.stderr)
+        session = requests.Session()
+        session.trust_env = False
+        url = 'http://{host}:{port}/services'.format(host=self._sysconfd_config['host'],
+                                                     port=self._sysconfd_config['port'])
+        data = {'wazo-webhookd': 'restart'}
+        response = session.post(url, json=data)
+        if response.status_code != 200:
+            raise SetupError('xivo-sysconfd failure',
+                             error_id='xivo-sysconfd-failure',
+                             details={'sysconfd-error': response.text})
 
     def plan_setupd_stop(self):
         self._stopper.trigger()

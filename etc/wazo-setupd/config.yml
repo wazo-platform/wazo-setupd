@@ -85,6 +85,11 @@ service_discovery:
   retry_interval: 2
   extra_tags: []
 
+# Connection info to the system configuration server
+sysconfd:
+  host: localhost
+  port: 8668
+
 enabled_plugins:
   api: true
   config: true

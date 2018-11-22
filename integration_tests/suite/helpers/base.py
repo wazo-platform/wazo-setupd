@@ -12,6 +12,7 @@ from xivo_test_helpers.bus import BusClient
 
 from .confd import ConfdMockClient
 from .deployd import DeploydMockClient
+from .sysconfd import SysconfdMockClient
 from .wait_strategy import WaitStrategy
 from .webhookd import WebhookdMockClient
 
@@ -59,6 +60,9 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     def make_deployd(self):
         return DeploydMockClient('localhost', self.service_port(9800, 'nestbox-deployd'))
+
+    def make_sysconfd(self):
+        return SysconfdMockClient('localhost', self.service_port(8668, 'sysconfd'))
 
     def make_webhookd(self):
         return WebhookdMockClient('localhost', self.service_port(9300, 'webhookd'))

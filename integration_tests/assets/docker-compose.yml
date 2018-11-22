@@ -71,6 +71,11 @@ services:
       - "9486"  # from confd
       - "9302"
 
+  sysconfd:
+    image: wazopbx/xivo-sysconfd-mock
+    ports:
+      - "8668"
+
   webhookd:
     image: wazopbx/wazo-webhookd-mock
     ports:
