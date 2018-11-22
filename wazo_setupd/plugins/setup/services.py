@@ -182,7 +182,13 @@ class SetupService:
         except FileExistsError:
             pass
 
-        subprocess.run(["systemctl", "restart", "wazo-webhookd"])
+        completed_process = subprocess.run(["systemctl", "restart", "wazo-webhookd"],
+                                           stdout=subprocess.PIPE,
+                                           stderr=subprocess.PIPE)
+        if completed_process.stdout:
+            logger.debug('systemctl stdout: %s', completed_process.stdout)
+        if completed_process.stderr:
+            logger.warning('systemctl srderr: %s', completed_process.stderr)
 
     def plan_setupd_stop(self):
         self._stopper.trigger()
