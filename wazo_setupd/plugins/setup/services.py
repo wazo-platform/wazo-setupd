@@ -33,7 +33,8 @@ class SetupService:
                                setup_infos['engine_language'],
                                setup_infos['engine_number_start'],
                                setup_infos['engine_number_end'],
-                               setup_infos['engine_password'])
+                               setup_infos['engine_password'],
+                               setup_infos['engine_license'])
         instance_uuid = self.register_instance(nestbox_token,
                                                setup_infos['nestbox_host'],
                                                setup_infos['nestbox_port'],
@@ -74,7 +75,7 @@ class SetupService:
             )
         return token_data['token']
 
-    def post_confd_wizard(self, entity_name, language, number_start, number_end, password):
+    def post_confd_wizard(self, entity_name, language, number_start, number_end, password, license_accepted):
         c = ConfdClient(**self._confd_config)
 
         if c.wizard.get()['configured']:
@@ -88,7 +89,7 @@ class SetupService:
 
         wizard = {
             "admin_password": password,
-            "license": True,
+            "license": license_accepted,
             "timezone": discover['timezone'],
             "language": language,
             "entity_name": entity_name,
