@@ -4,7 +4,7 @@ After=network.target
 Before=monit.service
 
 [Service]
-ExecStartPre=/usr/bin/install -d /var/run/wazo-setupd
+ExecStartPre=/usr/bin/install -o wazo-setupd -g wazo-setupd -d /var/run/wazo-setupd
 ExecStart=/usr/bin/python3 -u /usr/bin/wazo-setupd
 
 [Install]
