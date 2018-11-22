@@ -4,6 +4,8 @@ COPY ./contribs/docker/certs /usr/share/xivo-certs
 RUN true \
     && mkdir -p /etc/wazo-setupd/conf.d \
     && mkdir -p /etc/wazo-nestbox-plugin/conf.d \
+    && mkdir -p /etc/wazo-webhookd/conf.d \
+    && ln -s /etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml /etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml \
     && install -d /var/run/wazo-setupd \
     && touch /var/log/wazo-setupd.log \
     && apt-get -yqq autoremove \

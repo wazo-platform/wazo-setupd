@@ -154,7 +154,6 @@ class SetupService:
                               nestbox_service_key,
                               instance_uuid):
         nestbox_config_file = "/etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml"
-        webhookd_config_file = "/etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml"
         config = {
             "nestbox": {
                 "instance_uuid": instance_uuid,
@@ -177,11 +176,6 @@ class SetupService:
 
         with open(nestbox_config_file, 'w') as _file:
             yaml.dump(config, _file, default_flow_style=False)
-
-        try:
-            os.symlink(nestbox_config_file, webhookd_config_file)
-        except FileExistsError:
-            pass
 
         completed_process = subprocess.run(["systemctl", "restart", "wazo-webhookd"],
                                            stdout=subprocess.PIPE,
