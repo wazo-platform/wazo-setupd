@@ -41,13 +41,13 @@ definitions:
         type: string
       engine_license:
         description: Whether the GNU GPLv3 license is accepted
-        type: string
+        type: boolean
       nestbox_host:
         description: Host of the Nestbox where the engine will register
         type: string
       nestbox_port:
         description: Port of the Nestbox where the engine will register
-        type: string
+        type: integer
       nestbox_verify_certificate:
         description: Should the certificate used for HTTPS be verified? The setup will abort if the certificate fails the verification.
         type: boolean
@@ -66,7 +66,7 @@ definitions:
         type: string
       nestbox_engine_port:
         description: Port used by Nestbox to contact the engine
-        type: string
+        type: integer
 parameters:
   SetupBody:
     name: body
