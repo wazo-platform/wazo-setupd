@@ -93,4 +93,5 @@ sysconfd:
 enabled_plugins:
   api: true
   config: true
+  setup: true
   status: true
