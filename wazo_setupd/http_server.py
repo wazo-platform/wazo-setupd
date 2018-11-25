@@ -7,7 +7,7 @@ import os
 from datetime import timedelta
 
 from cheroot import wsgi
-from flask import Flask, request
+from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
 from xivo import http_helpers
@@ -21,19 +21,13 @@ app = Flask('wazo-setupd')
 api = Api(app, prefix='/{}'.format(VERSION))
 
 
-def log_request_params(response):
-    http_helpers.log_request_hide_token(response)
-    logger.debug('request data: %s', request.data or '""')
-    logger.debug('response body: %s', response.data.strip() if response.data else '""')
-    return response
-
-
 class CoreRestApi:
 
     def __init__(self, global_config):
         self.config = global_config['rest_api']
         http_helpers.add_logger(app, logger)
-        app.after_request(log_request_params)
+        app.before_request(http_helpers.log_before_request)
+        app.after_request(http_helpers.log_request)
         app.secret_key = os.urandom(24)
         app.permanent_session_lifetime = timedelta(minutes=5)
         auth_verifier.set_config(global_config['auth'])
