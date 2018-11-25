@@ -15,8 +15,10 @@ from hamcrest import (
 from xivo_test_helpers import until
 from xivo_test_helpers.hamcrest.raises import raises
 
-from .helpers.base import BaseIntegrationTest
-from .helpers.base import VALID_TOKEN
+from .helpers.base import (
+    BaseIntegrationTest,
+    VALID_TOKEN,
+)
 from .helpers.wait_strategy import NoWaitStrategy
 
 from wazo_setupd_client.exceptions import SetupdError
@@ -30,8 +32,12 @@ class TestSetup(BaseIntegrationTest):
     def test_setup_empty(self):
         setupd = self.make_setupd(VALID_TOKEN)
 
-        assert_that(calling(setupd.setup.create).with_args({}),
-                    raises(SetupdError).matching(has_property('status_code', 400)))
+        assert_that(
+            calling(setupd.setup.create).with_args({}),
+            raises(SetupdError).matching(
+                has_property('status_code', 400)
+            )
+        )
 
     def test_setup_invalid_credentials(self):
         setupd = self.make_setupd(VALID_TOKEN)
@@ -53,9 +59,13 @@ class TestSetup(BaseIntegrationTest):
             'nestbox_engine_port': 443,
         }
 
-        assert_that(calling(setupd.setup.create).with_args(body),
-                    raises(SetupdError).matching(all_of(has_property('status_code', 500),
-                                                        has_property('error_id', 'setup-token-failed'))))
+        assert_that(
+            calling(setupd.setup.create).with_args(body),
+            raises(SetupdError).matching(all_of(
+                has_property('status_code', 500),
+                has_property('error_id', 'setup-token-failed'),
+            ))
+        )
 
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
@@ -227,9 +237,13 @@ class TestSetupNotSelfStop(BaseIntegrationTest):
             'nestbox_engine_port': 443,
         }
 
-        assert_that(calling(setupd.setup.create).with_args(body),
-                    raises(SetupdError).matching(all_of(has_property('status_code', 500),
-                                                        has_property('error_id', 'setup-token-failed'))))
+        assert_that(
+            calling(setupd.setup.create).with_args(body),
+            raises(SetupdError).matching(all_of(
+                has_property('status_code', 500),
+                has_property('error_id', 'setup-token-failed'),
+            ))
+        )
 
         def setupd_is_stopped():
             return not self.service_status('setupd')['State']['Running']

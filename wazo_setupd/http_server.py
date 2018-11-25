@@ -8,8 +8,8 @@ from datetime import timedelta
 
 from cheroot import wsgi
 from flask import Flask
-from flask_restful import Api
 from flask_cors import CORS
+from flask_restful import Api
 from xivo import http_helpers
 
 from .http import auth_verifier
@@ -44,11 +44,17 @@ class CoreRestApi:
         bind_addr = (self.config['listen'], self.config['port'])
 
         wsgi_app = wsgi.WSGIPathInfoDispatcher({'/': app})
-        self.server = wsgi.WSGIServer(bind_addr=bind_addr,
-                                      wsgi_app=wsgi_app)
-        self.server.ssl_adapter = http_helpers.ssl_adapter(self.config['certificate'],
-                                                           self.config['private_key'])
-        logger.debug('WSGIServer starting... uid: %s, listen: %s:%s', os.getuid(), bind_addr[0], bind_addr[1])
+        self.server = wsgi.WSGIServer(bind_addr=bind_addr, wsgi_app=wsgi_app)
+        self.server.ssl_adapter = http_helpers.ssl_adapter(
+            self.config['certificate'],
+            self.config['private_key']
+        )
+        logger.debug(
+            'WSGIServer starting... uid: %s, listen: %s:%s',
+            os.getuid(),
+            bind_addr[0],
+            bind_addr[1]
+        )
         for route in http_helpers.list_routes(app):
             logger.debug(route)
 

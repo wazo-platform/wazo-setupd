@@ -10,4 +10,4 @@ paths:
         - config
       responses:
         '200':
-          'description': The configuration of the service
+          description: The configuration of the service

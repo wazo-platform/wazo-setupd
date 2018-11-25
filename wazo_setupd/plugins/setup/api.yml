@@ -10,7 +10,7 @@ paths:
         - setup
       responses:
         '201':
-          'description': The setup has been completed
+          description: The setup has been completed
         '400':
           $ref: '#/responses/InvalidRequest'
         '500':

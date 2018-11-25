@@ -6,9 +6,9 @@ import requests
 import yaml
 
 from requests import HTTPError
+from wazo_deployd_client import Client as DeploydClient
 from xivo_auth_client import Client as AuthClient
 from xivo_confd_client import Client as ConfdClient
-from wazo_deployd_client import Client as DeploydClient
 
 from .exceptions import SetupError
 
@@ -24,32 +24,40 @@ class SetupService:
 
     def setup(self, setup_infos):
         # This step serves as authentication. It must be the first step.
-        nestbox_token = self.get_nestbox_token(setup_infos['nestbox_host'],
-                                               setup_infos['nestbox_port'],
-                                               setup_infos['nestbox_verify_certificate'],
-                                               setup_infos['nestbox_service_id'],
-                                               setup_infos['nestbox_service_key'])
-        self.post_confd_wizard(setup_infos['engine_entity_name'],
-                               setup_infos['engine_language'],
-                               setup_infos['engine_number_start'],
-                               setup_infos['engine_number_end'],
-                               setup_infos['engine_password'],
-                               setup_infos['engine_license'])
-        instance_uuid = self.register_instance(nestbox_token,
-                                               setup_infos['nestbox_host'],
-                                               setup_infos['nestbox_port'],
-                                               setup_infos['nestbox_verify_certificate'],
-                                               setup_infos['nestbox_instance_name'],
-                                               setup_infos['nestbox_engine_host'],
-                                               setup_infos['nestbox_engine_port'],
-                                               setup_infos['engine_internal_address'],
-                                               setup_infos['engine_password'])
-        self.inject_nestbox_config(setup_infos['nestbox_host'],
-                                   setup_infos['nestbox_port'],
-                                   setup_infos['nestbox_verify_certificate'],
-                                   setup_infos['nestbox_service_id'],
-                                   setup_infos['nestbox_service_key'],
-                                   instance_uuid)
+        nestbox_token = self.get_nestbox_token(
+            setup_infos['nestbox_host'],
+            setup_infos['nestbox_port'],
+            setup_infos['nestbox_verify_certificate'],
+            setup_infos['nestbox_service_id'],
+            setup_infos['nestbox_service_key'],
+        )
+        self.post_confd_wizard(
+            setup_infos['engine_entity_name'],
+            setup_infos['engine_language'],
+            setup_infos['engine_number_start'],
+            setup_infos['engine_number_end'],
+            setup_infos['engine_password'],
+            setup_infos['engine_license'],
+        )
+        instance_uuid = self.register_instance(
+            nestbox_token,
+            setup_infos['nestbox_host'],
+            setup_infos['nestbox_port'],
+            setup_infos['nestbox_verify_certificate'],
+            setup_infos['nestbox_instance_name'],
+            setup_infos['nestbox_engine_host'],
+            setup_infos['nestbox_engine_port'],
+            setup_infos['engine_internal_address'],
+            setup_infos['engine_password'],
+        )
+        self.inject_nestbox_config(
+            setup_infos['nestbox_host'],
+            setup_infos['nestbox_port'],
+            setup_infos['nestbox_verify_certificate'],
+            setup_infos['nestbox_service_id'],
+            setup_infos['nestbox_service_key'],
+            instance_uuid,
+        )
         self.plan_setupd_stop()
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
@@ -128,11 +136,13 @@ class SetupService:
                           nestbox_engine_port,
                           engine_internal_address,
                           engine_password):
-        deployd = DeploydClient(nestbox_host,
-                                port=nestbox_port,
-                                token=token,
-                                prefix="/api/deployd",
-                                verify_certificate=nestbox_verify_certificate)
+        deployd = DeploydClient(
+            nestbox_host,
+            port=nestbox_port,
+            token=token,
+            prefix="/api/deployd",
+            verify_certificate=nestbox_verify_certificate,
+        )
         instance_data = {
             "remote_host": nestbox_engine_host,
             "https_port": nestbox_engine_port,
@@ -179,8 +189,10 @@ class SetupService:
 
         session = requests.Session()
         session.trust_env = False
-        url = 'http://{host}:{port}/services'.format(host=self._sysconfd_config['host'],
-                                                     port=self._sysconfd_config['port'])
+        url = 'http://{host}:{port}/services'.format(
+            host=self._sysconfd_config['host'],
+            port=self._sysconfd_config['port'],
+        )
         data = {'wazo-webhookd': 'restart'}
         response = session.post(url, json=data)
         if response.status_code != 200:
