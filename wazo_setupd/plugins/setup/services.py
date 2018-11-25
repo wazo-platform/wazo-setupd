@@ -14,6 +14,8 @@ from .exceptions import SetupError
 
 logger = logging.getLogger(__name__)
 
+ENGINE_SERVICE_ID = 1
+
 
 class SetupService:
 
@@ -151,7 +153,7 @@ class SetupService:
             "username": "root",
             "password": engine_password,
             "config": {},
-            "service_id": 1,
+            "service_id": ENGINE_SERVICE_ID,
         }
         instance = deployd.instances.register(instance_data)
         return instance['uuid']
