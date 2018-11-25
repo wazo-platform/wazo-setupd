@@ -4,7 +4,7 @@
 from .http import ConfigResource
 
 
-class Plugin(object):
+class Plugin:
 
     def load(self, dependencies):
         api = dependencies['api']

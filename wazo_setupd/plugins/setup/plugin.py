@@ -5,7 +5,7 @@ from .http import SetupResource
 from .services import SetupService
 
 
-class Plugin(object):
+class Plugin:
 
     def load(self, dependencies):
         api = dependencies['api']

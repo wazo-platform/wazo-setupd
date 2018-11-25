@@ -4,7 +4,7 @@
 import requests
 
 
-class SysconfdMockClient(object):
+class SysconfdMockClient:
 
     def __init__(self, host, port):
         self._host = host

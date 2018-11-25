@@ -4,7 +4,7 @@
 import requests
 
 
-class WebhookdMockClient(object):
+class WebhookdMockClient:
 
     def __init__(self, host, port):
         self._host = host

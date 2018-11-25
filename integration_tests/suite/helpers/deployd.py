@@ -4,7 +4,7 @@
 import requests
 
 
-class DeploydMockClient(object):
+class DeploydMockClient:
 
     def __init__(self, host, port):
         self._host = host

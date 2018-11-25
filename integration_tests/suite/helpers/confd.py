@@ -4,7 +4,7 @@
 import requests
 
 
-class ConfdMockClient(object):
+class ConfdMockClient:
 
     def __init__(self, host, port):
         self._host = host
