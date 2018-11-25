@@ -1,6 +1,6 @@
 .PHONY: test-setup test egg-info pull-images setupd
 
-test-setup: egg-info pull-images setupd deployd
+test-setup: egg-info pull-images setupd deployd webhookd
 
 test:
 	pytest -x
