@@ -16,8 +16,7 @@ pull-images:
 	docker pull wazopbx/xivo-sysconfd-mock
 
 setupd:
-	docker pull python:3.5.3
-	docker build -t wazopbx/wazo-setupd ..
+	docker build --pull -t wazopbx/wazo-setupd ..
 	$(MAKE) setupd-test
 
 setupd-test: egg-info
