@@ -4,8 +4,9 @@
 import logging
 import os
 
-from cheroot import wsgi
 from datetime import timedelta
+
+from cheroot import wsgi
 from flask import Flask, request
 from flask_restful import Api
 from flask_cors import CORS
