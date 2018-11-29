@@ -1,9 +1,15 @@
-version: '3'
+version: '3.7'
 services:
   sync:
     depends_on:
       - auth
+      - confd
+      - nestbox
+      - nestbox-auth
+      - nestbox-deployd
       - rabbitmq
       - setupd
+      - sysconfd
+      - webhookd
     environment:
-      TARGETS: "rabbitmq:5672 setupd:9302 auth:9497"
+      TARGETS: rabbitmq:5672 webhookd:9300 confd:9486 setupd:9302 nestbox:443 nestbox-auth:9497 nestbox-deployd:9800 auth:9497 sysconfd:8668

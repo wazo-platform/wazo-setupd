@@ -10,7 +10,23 @@ Package: wazo-setupd
 Architecture: all
 Section: python
 Depends: ${python3:Depends},
-         ${misc:Depends}
+         ${misc:Depends},
+         python3-cheroot,
+         python3-consul,
+         python3-flask,
+         python3-flask-cors,
+         python3-flask-restful,
+         python3-jinja2,
+         python3-kombu,
+         python3-marshmallow,
+         python3-stevedore,
+         python3-yaml,
+         wazo-deployd-client,
+         wazo-nestbox-plugin,
+         xivo-auth-client-python3,
+         xivo-bus,
+         xivo-confd-client-python3,
+         xivo-lib-python
 Description: wazo-setupd daemon for Wazo Engine
  Wazo is a system based on a powerful IPBX, to bring an easy to
  install solution for telephony and related services.

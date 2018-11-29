@@ -1,5 +1,8 @@
-from mock import Mock
+# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# SPDX-License-Identifier: GPL-3.0+
+
 from unittest import TestCase
+from mock import Mock
 
 from ..controller import _sigterm_handler
 

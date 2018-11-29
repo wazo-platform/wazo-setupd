@@ -4,7 +4,7 @@
 from .resource import StatusResource
 
 
-class Plugin(object):
+class Plugin:
 
     def load(self, dependencies):
         api = dependencies['api']

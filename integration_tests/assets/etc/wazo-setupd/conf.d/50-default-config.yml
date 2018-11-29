@@ -1,6 +1,11 @@
 auth:
   host: auth
   verify_certificate: /usr/local/share/ssl/auth/server.crt
+confd:
+  host: confd
+  verify_certificate: /usr/local/share/ssl/confd/server.crt
+sysconfd:
+  host: sysconfd
 bus:
   host: rabbitmq
 service_discovery:

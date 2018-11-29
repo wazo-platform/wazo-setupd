@@ -7,4 +7,4 @@ COPY . /usr/src/wazo-setupd
 WORKDIR /usr/src/wazo-setupd
 RUN python setup.py develop
 
-CMD ["wazo-setupd", "-d"]
+CMD ["python3", "-u", "/usr/local/bin/wazo-setupd", "-d"]

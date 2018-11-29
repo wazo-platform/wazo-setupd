@@ -8,9 +8,9 @@ from xivo import xivo_logging
 from xivo.config_helper import set_xivo_uuid, UUIDNotFound
 from xivo.daemonize import pidfile_context
 from xivo.user_rights import change_user
-from wazo_setupd.controller import Controller
 
 from wazo_setupd import config
+from wazo_setupd.controller import Controller
 
 logger = logging.getLogger(__name__)
 

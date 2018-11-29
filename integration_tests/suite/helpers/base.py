@@ -10,7 +10,11 @@ from xivo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
 from xivo_test_helpers.auth import AuthClient
 from xivo_test_helpers.bus import BusClient
 
+from .confd import ConfdMockClient
+from .deployd import DeploydMockClient
+from .sysconfd import SysconfdMockClient
 from .wait_strategy import WaitStrategy
+from .webhookd import WebhookdMockClient
 
 VALID_TOKEN = 'valid-token'
 
@@ -30,18 +34,30 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
     @classmethod
     def make_setupd(cls, token):
         return SetupdClient('localhost',
-                             cls.service_port(9302, 'setupd'),
-                             token=token,
-                             verify_certificate=False)
+                            cls.service_port(9302, 'setupd'),
+                            token=token,
+                            verify_certificate=False)
 
     def make_auth(self):
-        return AuthClient('localhost', self.service_port(9497, 'auth'))
+        return AuthClient('localhost', self.service_port(9497, 'nestbox-auth'))
 
     def make_bus(self):
         return BusClient.from_connection_fields(
             host='localhost',
             port=self.service_port(5672, 'rabbitmq')
         )
+
+    def make_confd(self):
+        return ConfdMockClient('localhost', self.service_port(9486, 'confd'))
+
+    def make_deployd(self):
+        return DeploydMockClient('localhost', self.service_port(9800, 'nestbox-deployd'))
+
+    def make_sysconfd(self):
+        return SysconfdMockClient('localhost', self.service_port(8668, 'sysconfd'))
+
+    def make_webhookd(self):
+        return WebhookdMockClient('localhost', self.service_port(9300, 'webhookd'))
 
     @contextmanager
     def auth_stopped(self):

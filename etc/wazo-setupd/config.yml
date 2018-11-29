@@ -10,6 +10,8 @@ debug: false
 log_level: info
 log_file: /var/log/wazo-setupd.log
 pid_file: /var/run/wazo-setupd/wazo-setupd.pid
+# After a successful setup, wazo-setupd will stop itself after this delay (in seconds)
+self_stop_delay: 10.0
 
 # Connection info to the authentication server
 auth:
@@ -25,6 +27,12 @@ bus:
   port: 5672
   exchange_name: xivo
   exchange_type: topic
+
+# Connection info to the configuration server
+confd:
+  host: localhost
+  port: 9486
+  verify_certificate: /usr/share/xivo-certs/server.crt
 
 # consul connection informations
 consul:
@@ -77,7 +85,13 @@ service_discovery:
   retry_interval: 2
   extra_tags: []
 
+# Connection info to the system configuration server
+sysconfd:
+  host: localhost
+  port: 8668
+
 enabled_plugins:
   api: true
   config: true
+  setup: true
   status: true

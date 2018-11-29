@@ -20,6 +20,7 @@ _DEFAULT_CONFIG = {
     'log_level': 'info',
     'pid_file': os.path.join(_PID_DIR, 'wazo-setupd.pid'),
     'user': 'wazo-setupd',
+    'self_stop_delay': 10.0,
     'auth': {
         'host': 'localhost',
         'port': 9497,
@@ -33,6 +34,11 @@ _DEFAULT_CONFIG = {
         'exchange_name': 'xivo',
         'exchange_type': 'topic',
         'exchange_headers_name': 'wazo-headers',
+    },
+    'confd': {
+        'host': 'localhost',
+        'port': 9486,
+        'verify_certificate': _CERT_FILE,
     },
     'consul': {
         'scheme': 'https',
@@ -60,9 +66,14 @@ _DEFAULT_CONFIG = {
         'retry_interval': 2,
         'extra_tags': [],
     },
+    'sysconfd': {
+        'host': 'localhost',
+        'port': 8668,
+    },
     'enabled_plugins': {
         'api': True,
         'config': True,
+        'setup': True,
         'status': True,
     },
 }

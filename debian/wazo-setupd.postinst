@@ -3,34 +3,37 @@
 set -e
 
 DAEMONNAME='wazo-setupd'
-LOG_FILENAME="/var/log/${DAEMONNAME}.log"
-USER=$DAEMONNAME
+USER='wazo-setupd'
+HOME="/var/lib/${USER}"
 GROUP=$USER
-USER_HOME="/var/lib/${USER}"
+LOG_FILENAME="/var/log/${DAEMONNAME}.log"
+NESTBOX_CONFIG_FILENAME="/etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml"
 
 case "$1" in
     configure)
         previous_version="$2"
 
         # add/update user
-        if ! getent passwd $USER > /dev/null; then
+        if ! getent passwd $USER > /dev/null ; then
             echo "Adding system user $USER" 1>&2
-            adduser --system --group --quiet \
-                --home $USER_HOME \
-                --no-create-home --disabled-login \
-                $USER
+            adduser --quiet --system --group \
+                    --home "${HOME}" \
+                    $USER
         fi
-
         adduser --quiet $USER www-data
 
         if [ ! -e "$LOG_FILENAME" ]; then
-            touch "$LOG_FILENAME"
+            install -m 0644 -o $USER -g $GROUP "$LOG_FILENAME"
         fi
-        chown "$USER:$GROUP" "$LOG_FILENAME"
 
         if [[ -z "${previous_version}" ]]; then
+            # Add nginx configuration on new installations
             ln -sf /etc/nginx/locations/https-available/$DAEMONNAME \
                    /etc/nginx/locations/https-enabled/$DAEMONNAME
+        fi
+        if [ ! -e "$NESTBOX_CONFIG_FILENAME" ]; then
+            # Create config file filled by wazo-setupd with correct permissions
+            install -D -m 0640 -o $USER -g root /dev/null "$NESTBOX_CONFIG_FILENAME"
         fi
     ;;
 

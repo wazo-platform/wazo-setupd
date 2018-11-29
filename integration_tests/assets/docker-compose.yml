@@ -1,30 +1,91 @@
-version: '3'
+version: '3.7'
 services:
   sync:
     image: wazopbx/wait
     environment:
-      TIMEOUT: "${INTEGRATION_TEST_TIMEOUT}"
+      TIMEOUT: '${INTEGRATION_TEST_TIMEOUT}'
+
+  nestbox:
+    image: nginx
+    ports:
+      - '443'
+    volumes:
+      - ./etc/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf:ro
+      - ./ssl:/usr/local/share/ssl:ro
+    depends_on:
+      - nestbox-auth
+      - nestbox-deployd
+
+  nestbox-auth:
+    image: wazopbx/xivo-auth-mock
+    ports:
+      - '9497'
+    volumes:
+      - ./ssl:/usr/local/share/ssl:ro
+    command: /usr/local/bin/mock-xivo-auth.py 9497
+
+  nestbox-deployd:
+    image: wazopbx/wazo-deployd-mock
+    ports:
+      - '9800'
+    volumes:
+      - ./ssl/auth:/usr/local/share/ssl/deployd:ro
+    command: /usr/local/bin/wazo-deployd-mock.py 9800
 
   auth:
-    image: "wazopbx/xivo-auth-mock"
+    image: wazopbx/xivo-auth-mock
     ports:
-      - "9497"
+      - '9497'
     volumes:
-      - "./ssl:/usr/local/share/ssl"
+      - ./ssl:/usr/local/share/ssl:ro
+    command: /usr/local/bin/mock-xivo-auth.py 9497
+
+  confd:
+    image: wazopbx/xivo-confd-mock
+    volumes:
+      - ./ssl:/usr/local/share/ssl:ro
+    ports:
+      - '9486'
 
   rabbitmq:
     image: rabbitmq
     ports:
-      - "5672"
+      - '5672'
+    volumes:
+      - type: tmpfs
+        target: /var/lib/rabbitmq
 
   setupd:
-    image: "wazo-setupd-test"
+    image: wazo-setupd-test
     environment:
-      XIVO_UUID: "cd030e68-ace9-4ad4-bc4e-13c8dec67898"
+      XIVO_UUID: cd030e68-ace9-4ad4-bc4e-13c8dec67898
     volumes:
-      - "../..:/usr/src/wazo-setupd"
-      - "./ssl:/usr/local/share/ssl"
-      - "./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml"
-      # - "${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/usr/local/lib/python3.5/site-packages/xivo"
+      - ../..:/usr/src/wazo-setupd:ro
+      - ./ssl:/usr/local/share/ssl:ro
+      - ./ssl/confd:/usr/share/xivo-certs:ro
+      - ./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml:ro
+      - webhookd-config:/etc/wazo-webhookd/conf.d
+      - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d
+      # - '${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/usr/local/lib/python3.5/site-packages/xivo'
     ports:
-      - "9302"
+      - '9486'  # from confd
+      - '9302'
+
+  sysconfd:
+    image: wazopbx/xivo-sysconfd-mock
+    ports:
+      - '8668'
+
+  webhookd:
+    image: wazopbx/wazo-webhookd-mock
+    ports:
+      - '9300'
+    volumes:
+      - ./ssl/auth:/usr/local/share/ssl/webhookd:ro
+      - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d:ro
+      - webhookd-config:/etc/wazo-webhookd/conf.d:ro
+    command: /usr/local/bin/wazo-webhookd-mock.py 9300
+
+volumes:
+  webhookd-config:
+  nestbox-plugin-config:
