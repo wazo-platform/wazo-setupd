@@ -23,7 +23,7 @@ case "$1" in
         adduser --quiet $USER www-data
 
         if [ ! -e "$LOG_FILENAME" ]; then
-            install -m 0644 -o $USER -g $GROUP "$LOG_FILENAME"
+            install -m 0644 -o $USER -g $GROUP /dev/null "$LOG_FILENAME"
         fi
 
         if [[ -z "${previous_version}" ]]; then
