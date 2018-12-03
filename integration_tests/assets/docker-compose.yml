@@ -22,7 +22,6 @@ services:
       - '9497'
     volumes:
       - ./ssl:/usr/local/share/ssl:ro
-    command: /usr/local/bin/mock-xivo-auth.py 9497
 
   nestbox-deployd:
     image: wazopbx/wazo-deployd-mock
@@ -38,7 +37,6 @@ services:
       - '9497'
     volumes:
       - ./ssl:/usr/local/share/ssl:ro
-    command: /usr/local/bin/mock-xivo-auth.py 9497
 
   confd:
     image: wazopbx/xivo-confd-mock
