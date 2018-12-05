@@ -66,7 +66,6 @@ services:
       - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d
       # - '${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/usr/local/lib/python3.5/site-packages/xivo'
     ports:
-      - '9486'  # from confd
       - '9302'
 
   sysconfd:
