@@ -22,7 +22,7 @@ docker pull wazopbx/wazo-setupd
 ### Running wazo-setupd
 
 ```sh
-docker run -e"XIVO_UUID=<the wazo UUID>" wazopbx/wazo-setupd
+docker run wazopbx/wazo-setupd
 ```
 
 ### Building the image
