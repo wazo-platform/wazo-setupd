@@ -2,7 +2,6 @@ FROM p0bailey/docker-flask
 
 MAINTAINER Wazo Maintainers <dev@wazo.community>
 
-VOLUME ["/usr/local/share/ssl"]
 COPY server.crt /usr/local/share/ssl/webhookd/server.crt
 COPY server.key /usr/local/share/ssl/webhookd/server.key
 
