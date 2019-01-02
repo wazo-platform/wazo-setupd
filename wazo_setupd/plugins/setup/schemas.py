@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 from marshmallow import Schema
@@ -14,7 +14,7 @@ class SetupSchema(Schema):
         strict = True
 
     engine_entity_name = fields.String(required=True)
-    engine_language = fields.String(required=True)
+    engine_language = fields.String(required=True, validate=validate.OneOf(['en_US', 'fr_FR']))
     engine_number_start = fields.String(required=True)
     engine_number_end = fields.String(required=True)
     engine_password = fields.String(required=True)

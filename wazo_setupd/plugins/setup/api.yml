@@ -25,7 +25,7 @@ definitions:
         description: The first entity on the Wazo Engine
         type: string
       engine_language:
-        description: The interface language for the Wazo Engine
+        description: The interface language for the Wazo Engine (either `en_US` or `fr_FR`)
         type: string
       engine_number_start:
         description: Beginning of the range of phone numbers for users on the engine
