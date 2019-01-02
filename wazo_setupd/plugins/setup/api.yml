@@ -88,6 +88,7 @@ parameters:
   SetupBody:
     name: body
     in: body
+    required: true
     description: Setup options
     schema:
       $ref: '#/definitions/SetupRequest'
