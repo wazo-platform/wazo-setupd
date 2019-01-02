@@ -22,12 +22,12 @@ class SetupSchema(Schema):
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
     nestbox_host = fields.String(required=True)
     nestbox_port = fields.Integer(
-        required=True,
         validate=validate.Range(
             min=0,
             max=65535,
             error='Not a valid TCP/IP port number.'
-        )
+        ),
+        missing=443,
     )
     nestbox_verify_certificate = fields.Boolean(missing=True)
     nestbox_service_id = fields.String(required=True)
@@ -35,12 +35,12 @@ class SetupSchema(Schema):
     nestbox_instance_name = fields.String(required=True)
     nestbox_engine_host = fields.String(required=True)
     nestbox_engine_port = fields.Integer(
-        required=True,
         validate=validate.Range(
             min=0,
             max=65535,
             error='Not a valid TCP/IP port number.'
-        )
+        ),
+        missing=443,
     )
 
 

@@ -48,6 +48,7 @@ definitions:
       nestbox_port:
         description: Port of the Nestbox where the engine will register
         type: integer
+        default: 443
       nestbox_verify_certificate:
         description: Should the certificate used for HTTPS be verified? The setup will abort if the certificate fails the verification.
         type: boolean
@@ -67,6 +68,7 @@ definitions:
       nestbox_engine_port:
         description: Port used by Nestbox to contact the engine
         type: integer
+        default: 443
     required:
       - engine_entity_name
       - engine_language
@@ -76,13 +78,11 @@ definitions:
       - engine_internal_address
       - engine_license
       - nestbox_host
-      - nestbox_port
       - nestbox_verify_certificate
       - nestbox_service_id
       - nestbox_service_key
       - nestbox_instance_name
       - nestbox_engine_host
-      - nestbox_engine_port
 
 parameters:
   SetupBody:
