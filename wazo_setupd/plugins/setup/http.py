@@ -1,8 +1,7 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0+
 
 from flask import request
-from xivo.auth_verifier import required_acl
 
 from wazo_setupd.http import ErrorCatchingResource
 
@@ -14,7 +13,6 @@ class SetupResource(ErrorCatchingResource):
     def __init__(self, service):
         self.service = service
 
-    @required_acl('setupd.setup.create')
     def post(self):
         setup_infos = setup_schema.load(request.json).data
 

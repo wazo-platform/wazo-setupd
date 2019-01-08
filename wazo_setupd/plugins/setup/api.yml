@@ -2,7 +2,6 @@ paths:
   /setup:
     post:
       summary: Setup the Wazo Engine
-      description: '**Required ACL:** `setupd.setup.create`'
       operationId: create
       parameters:
         - $ref: '#/parameters/SetupBody'
