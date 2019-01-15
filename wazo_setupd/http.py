@@ -1,5 +1,5 @@
 # Copyright 2018 The Wazo Authors  (see the AUTHORS file)
-# SPDX-License-Identifier: GPL-3.0+
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from flask_restful import Resource
 from xivo import mallow_helpers
