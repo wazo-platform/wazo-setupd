@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from hamcrest import (
@@ -24,6 +24,6 @@ class TestStatusAllOK(BaseIntegrationTest):
 
         def status_ok():
             result = setupd.status.get()
-            assert_that(result['rest-api'], has_entries({'status': 'ok'}))
+            assert_that(result['rest_api'], has_entries({'status': 'ok'}))
 
         until.assert_(status_ok, timeout=5)

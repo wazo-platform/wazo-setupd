@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from xivo.auth_verifier import required_acl
@@ -11,7 +11,7 @@ class StatusResource(AuthResource):
     @required_acl('setupd.status.read')
     def get(self):
         result = {
-            'rest-api': {
+            'rest_api': {
                 'status': 'ok',
             }
         }
