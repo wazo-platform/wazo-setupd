@@ -76,12 +76,6 @@ definitions:
       - engine_password
       - engine_internal_address
       - engine_license
-      - nestbox_host
-      - nestbox_verify_certificate
-      - nestbox_service_id
-      - nestbox_service_key
-      - nestbox_instance_name
-      - nestbox_engine_host
 
 parameters:
   SetupBody:

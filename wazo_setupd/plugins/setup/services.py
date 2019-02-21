@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -25,14 +25,18 @@ class SetupService:
         self._stopper = stopper
 
     def setup(self, setup_infos):
-        # This step serves as authentication. It must be the first step.
-        nestbox_token = self.get_nestbox_token(
-            setup_infos['nestbox_host'],
-            setup_infos['nestbox_port'],
-            setup_infos['nestbox_verify_certificate'],
-            setup_infos['nestbox_service_id'],
-            setup_infos['nestbox_service_key'],
-        )
+        nestbox_registration_enabled = 'nestbox_host' in setup_infos
+
+        if nestbox_registration_enabled:
+            # This step serves as authentication. It must be the first step.
+            nestbox_token = self.get_nestbox_token(
+                setup_infos['nestbox_host'],
+                setup_infos['nestbox_port'],
+                setup_infos['nestbox_verify_certificate'],
+                setup_infos['nestbox_service_id'],
+                setup_infos['nestbox_service_key'],
+            )
+
         self.post_confd_wizard(
             setup_infos['engine_entity_name'],
             setup_infos['engine_language'],
@@ -41,25 +45,28 @@ class SetupService:
             setup_infos['engine_password'],
             setup_infos['engine_license'],
         )
-        instance_uuid = self.register_instance(
-            nestbox_token,
-            setup_infos['nestbox_host'],
-            setup_infos['nestbox_port'],
-            setup_infos['nestbox_verify_certificate'],
-            setup_infos['nestbox_instance_name'],
-            setup_infos['nestbox_engine_host'],
-            setup_infos['nestbox_engine_port'],
-            setup_infos['engine_internal_address'],
-            setup_infos['engine_password'],
-        )
-        self.inject_nestbox_config(
-            setup_infos['nestbox_host'],
-            setup_infos['nestbox_port'],
-            setup_infos['nestbox_verify_certificate'],
-            setup_infos['nestbox_service_id'],
-            setup_infos['nestbox_service_key'],
-            instance_uuid,
-        )
+
+        if nestbox_registration_enabled:
+            instance_uuid = self.register_instance(
+                nestbox_token,
+                setup_infos['nestbox_host'],
+                setup_infos['nestbox_port'],
+                setup_infos['nestbox_verify_certificate'],
+                setup_infos['nestbox_instance_name'],
+                setup_infos['nestbox_engine_host'],
+                setup_infos['nestbox_engine_port'],
+                setup_infos['engine_internal_address'],
+                setup_infos['engine_password'],
+            )
+            self.inject_nestbox_config(
+                setup_infos['nestbox_host'],
+                setup_infos['nestbox_port'],
+                setup_infos['nestbox_verify_certificate'],
+                setup_infos['nestbox_service_id'],
+                setup_infos['nestbox_service_key'],
+                instance_uuid,
+            )
+
         self.plan_setupd_stop()
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
