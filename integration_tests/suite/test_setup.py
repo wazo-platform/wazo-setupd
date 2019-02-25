@@ -11,6 +11,7 @@ from hamcrest import (
     has_entries,
     has_entry,
     has_item,
+    has_items,
     has_property,
 )
 from xivo_test_helpers import until
@@ -21,7 +22,6 @@ from .helpers.base import (
     VALID_TOKEN,
 )
 from .helpers.wait_strategy import (
-    ConnectedWaitStrategy,
     NoWaitStrategy,
 )
 
@@ -177,13 +177,15 @@ class TestSetupValid(BaseIntegrationTest):
            },
         })))
         sysconfd = self.make_sysconfd()
-        assert_that(sysconfd.requests().json(), has_entry('requests', has_item(has_entries({
-            'method': 'POST',
-            'path': '/services',
-            'json': {
-                'wazo-webhookd': 'restart',
-            },
-        }))))
+        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
+            has_entries({
+                'method': 'POST',
+                'path': '/services',
+                'json': {
+                    'wazo-webhookd': 'restart',
+                },
+            })
+        )))
 
 
 class TestSetupValidNoNestbox(BaseIntegrationTest):
@@ -240,7 +242,12 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
         webhookd = self.make_webhookd()
         assert_that(webhookd.get_config().json(), empty())
         sysconfd = self.make_sysconfd()
-        assert_that(sysconfd.requests().json(), has_entry('requests', empty()))
+        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
+            has_entries({
+                'method': 'GET',
+                'path': '/remove_nestbox_dependencies',
+            })
+        )))
 
 
 class TestSetupSelfStop(BaseIntegrationTest):
