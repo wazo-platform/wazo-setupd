@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -6,7 +6,6 @@ import requests
 import yaml
 
 from requests import HTTPError
-from wazo_deployd_client import Client as DeploydClient
 from xivo_auth_client import Client as AuthClient
 from xivo_confd_client import Client as ConfdClient
 
@@ -25,6 +24,16 @@ class SetupService:
         self._stopper = stopper
 
     def setup(self, setup_infos):
+        nestbox_registration_enabled = 'nestbox_host' in setup_infos
+
+        if nestbox_registration_enabled:
+            self.setup_with_nestbox(setup_infos)
+        else:
+            self.setup_without_nestbox(setup_infos)
+
+        self.plan_setupd_stop()
+
+    def setup_with_nestbox(self, setup_infos):
         # This step serves as authentication. It must be the first step.
         nestbox_token = self.get_nestbox_token(
             setup_infos['nestbox_host'],
@@ -33,6 +42,7 @@ class SetupService:
             setup_infos['nestbox_service_id'],
             setup_infos['nestbox_service_key'],
         )
+
         self.post_confd_wizard(
             setup_infos['engine_entity_name'],
             setup_infos['engine_language'],
@@ -41,6 +51,7 @@ class SetupService:
             setup_infos['engine_password'],
             setup_infos['engine_license'],
         )
+
         instance_uuid = self.register_instance(
             nestbox_token,
             setup_infos['nestbox_host'],
@@ -60,7 +71,17 @@ class SetupService:
             setup_infos['nestbox_service_key'],
             instance_uuid,
         )
-        self.plan_setupd_stop()
+
+    def setup_without_nestbox(self, setup_infos):
+        self.remove_nestbox_dependencies()
+        self.post_confd_wizard(
+            setup_infos['engine_entity_name'],
+            setup_infos['engine_language'],
+            setup_infos['engine_number_start'],
+            setup_infos['engine_number_end'],
+            setup_infos['engine_password'],
+            setup_infos['engine_license'],
+        )
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
         auth = AuthClient(
@@ -128,6 +149,22 @@ class SetupService:
 
         c.wizard.create(wizard)
 
+    def remove_nestbox_dependencies(self):
+        url = "http://{host}:{port}/remove_nestbox_dependencies".format(
+            host=self._sysconfd_config['host'],
+            port=self._sysconfd_config['port'],
+        )
+        try:
+            response = requests.get(url)
+        except requests.RequestsException as e:
+            raise SetupError('xivo-sysconfd connection error',
+                             error_id='xivo-sysconfd-connection-error',
+                             details={'original_error': e})
+        if response.status_code != 200:
+            raise SetupError('xivo-sysconfd failure',
+                             error_id='xivo-sysconfd-failure',
+                             details={'sysconfd-error': response.text})
+
     def register_instance(self,
                           token,
                           nestbox_host,
@@ -138,6 +175,10 @@ class SetupService:
                           nestbox_engine_port,
                           engine_internal_address,
                           engine_password):
+        # wazo-deployd-client was just installed by xivo-sysconfd, at the
+        # request of wazo-setupd, thus we need a lazy import
+        from wazo_deployd_client import Client as DeploydClient
+
         deployd = DeploydClient(
             nestbox_host,
             port=nestbox_port,
@@ -196,7 +237,12 @@ class SetupService:
             port=self._sysconfd_config['port'],
         )
         data = {'wazo-webhookd': 'restart'}
-        response = session.post(url, json=data)
+        try:
+            response = session.post(url, json=data)
+        except requests.RequestsException as e:
+            raise SetupError('xivo-sysconfd connection error',
+                             error_id='xivo-sysconfd-connection-error',
+                             details={'original_error': e})
         if response.status_code != 200:
             raise SetupError('xivo-sysconfd failure',
                              error_id='xivo-sysconfd-failure',

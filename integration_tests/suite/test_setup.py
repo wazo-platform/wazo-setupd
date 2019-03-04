@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import uuid
@@ -7,9 +7,11 @@ from hamcrest import (
     all_of,
     assert_that,
     calling,
+    empty,
     has_entries,
     has_entry,
     has_item,
+    has_items,
     has_property,
 )
 from xivo_test_helpers import until
@@ -19,12 +21,14 @@ from .helpers.base import (
     BaseIntegrationTest,
     VALID_TOKEN,
 )
-from .helpers.wait_strategy import NoWaitStrategy
+from .helpers.wait_strategy import (
+    NoWaitStrategy,
+)
 
 from wazo_setupd_client.exceptions import SetupdError
 
 
-class TestSetup(BaseIntegrationTest):
+class TestSetupErrors(BaseIntegrationTest):
 
     asset = 'base'
     wait_strategy = NoWaitStrategy()
@@ -36,6 +40,26 @@ class TestSetup(BaseIntegrationTest):
             calling(setupd.setup.create).with_args({}),
             raises(SetupdError).matching(
                 has_property('status_code', 400)
+            )
+        )
+
+    def test_setup_missing_nestbox(self):
+        setupd = self.make_setupd(VALID_TOKEN)
+        body = {
+            'engine_entity_name': 'Wazo',
+            'engine_language': 'en_US',
+            'engine_number_start': '1000',
+            'engine_number_end': '1999',
+            'engine_password': 'secret',
+            'engine_internal_address': '10.1.1.1',
+            'engine_license': True,
+            'nestbox_host': 'nestbox',
+        }
+
+        assert_that(
+            calling(setupd.setup.create).with_args(body),
+            raises(SetupdError).matching(
+                has_property('status_code', 400),
             )
         )
 
@@ -66,6 +90,12 @@ class TestSetup(BaseIntegrationTest):
                 has_property('error_id', 'setup-token-failed'),
             ))
         )
+
+
+class TestSetupValid(BaseIntegrationTest):
+
+    asset = 'base'
+    wait_strategy = NoWaitStrategy()
 
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
@@ -147,13 +177,77 @@ class TestSetup(BaseIntegrationTest):
            },
         })))
         sysconfd = self.make_sysconfd()
-        assert_that(sysconfd.requests().json(), has_entry('requests', has_item(has_entries({
+        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
+            has_entries({
+                'method': 'POST',
+                'path': '/services',
+                'json': {
+                    'wazo-webhookd': 'restart',
+                },
+            })
+        )))
+
+
+class TestSetupValidNoNestbox(BaseIntegrationTest):
+
+    asset = 'base'
+    wait_strategy = NoWaitStrategy()
+
+    def test_setup_valid_without_nestbox(self):
+        setupd = self.make_setupd(VALID_TOKEN)
+        confd = self.make_confd()
+        confd.set_wizard_discover({
+            "timezone": 'America/Montreal',
+            "hostname": 'wazo-engine',
+            "domain": 'example.com',
+            'interfaces': [
+                {'interface': 'my-interface',
+                 'ip_address': '10.1.1.1',
+                 'netmask': '255.0.0.0'}
+            ],
+            'gateways': [
+                {'gateway': '10.254.254.254'}
+            ],
+            "nameservers": ['10.2.2.2']
+        })
+        confd.set_wizard({
+            'configured': False,
+        })
+        instance_uuid = str(uuid.uuid4())
+        deployd = self.make_deployd()
+        deployd.set_post_instance({
+            'uuid': instance_uuid,
+        })
+        body = {
+            'engine_entity_name': 'Wazo',
+            'engine_language': 'en_US',
+            'engine_number_start': '1000',
+            'engine_number_end': '1999',
+            'engine_password': 'secret',
+            'engine_internal_address': '10.1.1.1',
+            'engine_license': True,
+        }
+
+        setupd.setup.create(body)
+
+        assert_that(confd.requests().json(), has_entry('requests', has_item(has_entries({
             'method': 'POST',
-            'path': '/services',
-            'json': {
-                'wazo-webhookd': 'restart',
-            },
+            'path': '/1.1/wizard',
+            'json': has_entry('network', has_entries({
+                'hostname': 'wazo-engine',
+                'domain': 'example.com',
+            }))
         }))))
+        assert_that(deployd.requests().json(), has_entry('requests', empty()))
+        webhookd = self.make_webhookd()
+        assert_that(webhookd.get_config().json(), empty())
+        sysconfd = self.make_sysconfd()
+        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
+            has_entries({
+                'method': 'GET',
+                'path': '/remove_nestbox_dependencies',
+            })
+        )))
 
 
 class TestSetupSelfStop(BaseIntegrationTest):
