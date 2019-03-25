@@ -1,5 +1,14 @@
 # Changelog
 
+## 19.05
+
+* The following fields have been remove from the `/1.0/setup` body
+
+  - engine_entity_name
+  - engine_number_start
+  - engine_number_end
+
+
 ## 18.14
 
 * New endpoints:

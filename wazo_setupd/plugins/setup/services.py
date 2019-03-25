@@ -44,10 +44,7 @@ class SetupService:
         )
 
         self.post_confd_wizard(
-            setup_infos['engine_entity_name'],
             setup_infos['engine_language'],
-            setup_infos['engine_number_start'],
-            setup_infos['engine_number_end'],
             setup_infos['engine_password'],
             setup_infos['engine_license'],
         )
@@ -75,10 +72,7 @@ class SetupService:
     def setup_without_nestbox(self, setup_infos):
         self.remove_nestbox_dependencies()
         self.post_confd_wizard(
-            setup_infos['engine_entity_name'],
             setup_infos['engine_language'],
-            setup_infos['engine_number_start'],
-            setup_infos['engine_number_end'],
             setup_infos['engine_password'],
             setup_infos['engine_license'],
         )
@@ -106,7 +100,7 @@ class SetupService:
             )
         return token_data['token']
 
-    def post_confd_wizard(self, entity_name, language, number_start, number_end, password, license_accepted):
+    def post_confd_wizard(self, language, password, license_accepted):
         c = ConfdClient(**self._confd_config)
 
         if c.wizard.get()['configured']:
@@ -123,7 +117,6 @@ class SetupService:
             "license": license_accepted,
             "timezone": discover['timezone'],
             "language": language,
-            "entity_name": entity_name,
             "network": {
                 "hostname": discover['hostname'],
                 "domain": discover['domain'],
@@ -133,18 +126,6 @@ class SetupService:
                 "gateway": discover['gateways'][0]['gateway'],
                 "nameservers": discover['nameservers']
             },
-            "context_incall": {
-                "display_name": "Incalls",
-                "did_length": 4
-            },
-            "context_internal": {
-                "display_name": "Default",
-                "number_start": number_start,
-                "number_end": number_end
-            },
-            "context_outcall": {
-                "display_name": "Outcalls"
-            }
         }
 
         c.wizard.create(wizard)
