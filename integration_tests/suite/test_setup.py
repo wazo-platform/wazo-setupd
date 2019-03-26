@@ -46,10 +46,7 @@ class TestSetupErrors(BaseIntegrationTest):
     def test_setup_missing_nestbox(self):
         setupd = self.make_setupd(VALID_TOKEN)
         body = {
-            'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
-            'engine_number_start': '1000',
-            'engine_number_end': '1999',
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,
@@ -66,10 +63,7 @@ class TestSetupErrors(BaseIntegrationTest):
     def test_setup_invalid_credentials(self):
         setupd = self.make_setupd(VALID_TOKEN)
         body = {
-            'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
-            'engine_number_start': '1000',
-            'engine_number_end': '1999',
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,
@@ -123,10 +117,7 @@ class TestSetupValid(BaseIntegrationTest):
             'uuid': instance_uuid,
         })
         body = {
-            'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
-            'engine_number_start': '1000',
-            'engine_number_end': '1999',
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,
@@ -219,10 +210,7 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
             'uuid': instance_uuid,
         })
         body = {
-            'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
-            'engine_number_start': '1000',
-            'engine_number_end': '1999',
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,
@@ -281,10 +269,7 @@ class TestSetupSelfStop(BaseIntegrationTest):
             'uuid': instance_uuid,
         })
         body = {
-            'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
-            'engine_number_start': '1000',
-            'engine_number_end': '1999',
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,
@@ -314,10 +299,7 @@ class TestSetupNotSelfStop(BaseIntegrationTest):
     def test_setup_invalid_does_not_stop(self):
         setupd = self.make_setupd(VALID_TOKEN)
         body = {
-            'engine_entity_name': 'Wazo',
             'engine_language': 'en_US',
-            'engine_number_start': '1000',
-            'engine_number_end': '1999',
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,

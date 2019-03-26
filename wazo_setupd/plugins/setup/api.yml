@@ -20,17 +20,8 @@ definitions:
   SetupRequest:
     type: object
     properties:
-      engine_entity_name:
-        description: The first entity on the Wazo Engine
-        type: string
       engine_language:
         description: The interface language for the Wazo Engine (either `en_US` or `fr_FR`)
-        type: string
-      engine_number_start:
-        description: Beginning of the range of phone numbers for users on the engine
-        type: string
-      engine_number_end:
-        description: End of the range of phone numbers for users on the engine
         type: string
       engine_password:
         description: Password of the first administrator ``root`` on the engine
@@ -69,10 +60,7 @@ definitions:
         type: integer
         default: 443
     required:
-      - engine_entity_name
       - engine_language
-      - engine_number_start
-      - engine_number_end
       - engine_password
       - engine_internal_address
       - engine_license

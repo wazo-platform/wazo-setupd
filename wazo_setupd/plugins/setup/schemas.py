@@ -13,10 +13,7 @@ from xivo.mallow import (
 
 class SetupSchema(Schema):
 
-    engine_entity_name = fields.String(required=True)
     engine_language = fields.String(required=True, validate=validate.OneOf(['en_US', 'fr_FR']))
-    engine_number_start = fields.String(required=True)
-    engine_number_end = fields.String(required=True)
     engine_password = fields.String(required=True)
     engine_internal_address = fields.String(required=True)
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
