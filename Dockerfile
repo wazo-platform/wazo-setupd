@@ -1,4 +1,4 @@
-FROM python:3.5.3
+FROM python:3.5-stretch
 
 COPY ./contribs/docker/certs /usr/share/xivo-certs
 RUN true \
@@ -11,7 +11,8 @@ RUN true \
     && install -d -o wazo-setupd -g wazo-setupd /var/run/wazo-setupd/ \
     && install -o wazo-setupd -g wazo-setupd /dev/null /var/log/wazo-setupd.log \
     && apt-get -yqq autoremove \
-    && openssl req -x509 -newkey rsa:4096 -keyout /usr/share/xivo-certs/server.key -out /usr/share/xivo-certs/server.crt -nodes -config /usr/share/xivo-certs/openssl.cfg -days 3650
+    && openssl req -x509 -newkey rsa:4096 -keyout /usr/share/xivo-certs/server.key -out /usr/share/xivo-certs/server.crt -nodes -config /usr/share/xivo-certs/openssl.cfg -days 3650 \
+    && chown wazo-setupd:wazo-setupd /usr/share/xivo-certs/*
 
 COPY . /usr/src/wazo-setupd
 WORKDIR /usr/src/wazo-setupd
