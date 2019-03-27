@@ -187,7 +187,7 @@ class SetupService:
                               nestbox_service_id,
                               nestbox_service_key,
                               instance_uuid):
-        nestbox_config_file = "/etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml"
+        generated_config_file = "/usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml"
         config = {
             "nestbox": {
                 "instance_uuid": instance_uuid,
@@ -208,7 +208,7 @@ class SetupService:
             }
         }
 
-        with open(nestbox_config_file, 'w') as _file:
+        with open(generated_config_file, 'w') as _file:
             yaml.dump(config, _file, default_flow_style=False)
 
         session = requests.Session()
