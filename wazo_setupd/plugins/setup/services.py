@@ -217,7 +217,10 @@ class SetupService:
             host=self._sysconfd_config['host'],
             port=self._sysconfd_config['port'],
         )
-        data = {'wazo-webhookd': 'restart'}
+        data = {
+            'wazo-auth': 'restart',
+            'wazo-webhookd': 'restart',
+        }
         try:
             response = session.post(url, json=data)
         except requests.RequestsException as e:
