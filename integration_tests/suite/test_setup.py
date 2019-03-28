@@ -173,6 +173,7 @@ class TestSetupValid(BaseIntegrationTest):
                 'method': 'POST',
                 'path': '/services',
                 'json': {
+                    'wazo-auth': 'restart',
                     'wazo-webhookd': 'restart',
                 },
             })
