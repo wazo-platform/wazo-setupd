@@ -7,7 +7,7 @@ import yaml
 
 from requests import HTTPError
 from wazo_auth_client import Client as AuthClient
-from xivo_confd_client import Client as ConfdClient
+from wazo_confd_client import Client as ConfdClient
 
 from .exceptions import SetupError
 
