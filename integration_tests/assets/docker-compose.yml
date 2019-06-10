@@ -41,7 +41,7 @@ services:
       - auth-config:/etc/wazo-auth/conf.d:ro
 
   confd:
-    image: wazopbx/xivo-confd-mock
+    image: wazopbx/wazo-confd-mock
     volumes:
       - ./ssl:/usr/local/share/ssl:ro
     ports:
