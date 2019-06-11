@@ -9,7 +9,6 @@ egg-info:
 	cd .. && python setup.py egg_info
 
 pull-images:
-	docker pull swaggerapi/swagger-validator
 	docker pull wazopbx/wait
 	docker pull wazopbx/wazo-auth-mock
 	docker pull wazopbx/wazo-confd-mock
