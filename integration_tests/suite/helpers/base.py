@@ -27,7 +27,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(BaseIntegrationTest, cls).setUpClass()
+        super().setUpClass()
         setupd = cls.make_setupd(VALID_TOKEN)
         cls.wait_strategy.wait(setupd)
 
