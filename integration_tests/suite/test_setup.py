@@ -157,15 +157,15 @@ class TestSetupValid(BaseIntegrationTest):
         }))))
         webhookd = self.make_webhookd()
         assert_that(webhookd.get_config().json(), has_entry('nestbox', has_entries({
-           'instance_uuid': instance_uuid,
-           'auth': {
-               'host': 'nestbox',
-               'port': 443,
-               'prefix': '/api/auth',
-               'service_id': 'nestbox-user',
-               'service_key': 'secret',
-               'verify_certificate': False
-           },
+            'instance_uuid': instance_uuid,
+            'auth': {
+                'host': 'nestbox',
+                'port': 443,
+                'prefix': '/api/auth',
+                'service_id': 'nestbox-user',
+                'service_key': 'secret',
+                'verify_certificate': False
+            },
         })))
         sysconfd = self.make_sysconfd()
         assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
