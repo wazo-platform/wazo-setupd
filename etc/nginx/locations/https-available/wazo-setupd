@@ -1,5 +1,6 @@
 location ^~ /api/setupd/ {
     proxy_pass https://127.0.0.1:9302/;
+    proxy_read_timeout 180s;
 
     proxy_set_header    Host                $http_host;
     proxy_set_header    X-Script-Name       /api/setupd;
