@@ -14,7 +14,7 @@ class SetupResource(ErrorCatchingResource):
         self.service = service
 
     def post(self):
-        setup_infos = setup_schema.load(request.json).data
+        setup_infos = setup_schema.load(request.json)
 
         self.service.setup(setup_infos)
 
