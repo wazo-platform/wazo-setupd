@@ -213,7 +213,6 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
-            'engine_internal_address': '10.1.1.1',
             'engine_license': True,
         }
 
