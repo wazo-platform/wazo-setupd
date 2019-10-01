@@ -15,8 +15,8 @@ class SetupSchema(Schema):
 
     engine_language = fields.String(required=True, validate=validate.OneOf(['en_US', 'fr_FR']))
     engine_password = fields.String(required=True)
-    engine_internal_address = fields.String(required=True)
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
+    engine_internal_address = fields.String()
     nestbox_host = fields.String()
     nestbox_port = fields.Integer(
         validate=validate.Range(
@@ -53,6 +53,8 @@ class SetupSchema(Schema):
             raise ValidationError('Missing keys for Nestbox configuration: nestbox_instance_name')
         if 'nestbox_engine_host' not in data:
             raise ValidationError('Missing keys for Nestbox configuration: nestbox_engine_host')
+        if 'engine_internal_address' not in data:
+            raise ValidationError('Missing keys for Nestbox configuration: engine_internal_address')
 
 
 setup_schema = SetupSchema()

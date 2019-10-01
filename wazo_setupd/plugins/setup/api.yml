@@ -33,7 +33,7 @@ definitions:
         description: Whether the GNU GPLv3 license is accepted
         type: boolean
       nestbox_host:
-        description: Host of the Nestbox where the engine will register. Specifying this key will make nestbox keys mandatory. Wazo will be connected to the specified Nestbox instance.
+        description: Host of the Nestbox where the engine will register. Specifying this key will make nestbox and `engine_internal_address` keys mandatory. Wazo will be connected to the specified Nestbox instance.
         type: string
       nestbox_port:
         description: Port of the Nestbox where the engine will register
@@ -62,7 +62,6 @@ definitions:
     required:
       - engine_language
       - engine_password
-      - engine_internal_address
       - engine_license
 
 parameters:
