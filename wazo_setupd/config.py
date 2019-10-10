@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import argparse
@@ -10,7 +10,7 @@ from xivo.xivo_logging import get_log_level_by_name
 
 _CERT_FILE = '/usr/share/xivo-certs/server.crt'
 _DEFAULT_HTTPS_PORT = 9302
-_PID_DIR = '/var/run/wazo-setupd'
+_PID_DIR = '/run/wazo-setupd'
 
 _DEFAULT_CONFIG = {
     'config_file': '/etc/wazo-setupd/config.yml',
