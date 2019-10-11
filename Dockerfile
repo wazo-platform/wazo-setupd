@@ -12,7 +12,7 @@ RUN true \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-auth/conf.d/50-wazo-plugin-nestbox.yml \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml \
-    && install -d -o wazo-setupd -g wazo-setupd /var/run/wazo-setupd/ \
+    && install -d -o wazo-setupd -g wazo-setupd /run/wazo-setupd/ \
     && install -o wazo-setupd -g wazo-setupd /dev/null /var/log/wazo-setupd.log \
     && apt-get -yqq autoremove \
     && openssl req -x509 -newkey rsa:4096 -keyout /usr/share/xivo-certs/server.key -out /usr/share/xivo-certs/server.crt -nodes -config /usr/share/xivo-certs/openssl.cfg -days 3650 \
