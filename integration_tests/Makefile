@@ -1,6 +1,4 @@
-.PHONY: test-setup test egg-info pull-images setupd
-
-test-setup: egg-info pull-images setupd deployd webhookd
+test-setup: egg-info setupd setupd-test deployd webhookd
 
 test:
 	pytest -x
@@ -8,15 +6,8 @@ test:
 egg-info:
 	cd .. && python setup.py egg_info
 
-pull-images:
-	docker pull wazopbx/wait
-	docker pull wazopbx/wazo-auth-mock
-	docker pull wazopbx/wazo-confd-mock
-	docker pull wazopbx/xivo-sysconfd-mock
-
 setupd:
 	docker build -t wazopbx/wazo-setupd ..
-	$(MAKE) setupd-test
 
 setupd-test: egg-info
 	docker build --no-cache -t wazo-setupd-test -f Dockerfile-setupd ..
@@ -26,3 +17,5 @@ deployd:
 
 webhookd:
 	docker build -t wazopbx/wazo-webhookd-mock -f docker/wazo-webhookd-mock/Dockerfile docker/wazo-webhookd-mock
+
+.PHONY: test-setup test egg-info setupd setupd-test deployd webhookd
