@@ -4,7 +4,6 @@
 import uuid
 
 from hamcrest import (
-    all_of,
     assert_that,
     calling,
     empty,
@@ -12,7 +11,7 @@ from hamcrest import (
     has_entry,
     has_item,
     has_items,
-    has_property,
+    has_properties,
     not_,
 )
 from xivo_test_helpers import until
@@ -39,9 +38,7 @@ class TestSetupErrors(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args({}),
-            raises(SetupdError).matching(
-                has_property('status_code', 400)
-            )
+            raises(SetupdError).matching(has_properties(status_code=400)),
         )
 
     def test_setup_missing_nestbox(self):
@@ -56,9 +53,7 @@ class TestSetupErrors(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args(body),
-            raises(SetupdError).matching(
-                has_property('status_code', 400),
-            )
+            raises(SetupdError).matching(has_properties(status_code=400)),
         )
 
     def test_setup_invalid_credentials(self):
@@ -80,9 +75,9 @@ class TestSetupErrors(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args(body),
-            raises(SetupdError).matching(all_of(
-                has_property('status_code', 500),
-                has_property('error_id', 'setup-token-failed'),
+            raises(SetupdError).matching(has_properties(
+                status_code=500,
+                error_id='setup-token-failed',
             ))
         )
 
@@ -407,9 +402,9 @@ class TestSetupNotSelfStop(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args(body),
-            raises(SetupdError).matching(all_of(
-                has_property('status_code', 500),
-                has_property('error_id', 'setup-token-failed'),
+            raises(SetupdError).matching(has_properties(
+                status_code=500,
+                error_id='setup-token-failed',
             ))
         )
 
