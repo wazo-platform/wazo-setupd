@@ -8,7 +8,6 @@ from hamcrest import (
     calling,
     empty,
     has_entries,
-    has_entry,
     has_item,
     has_items,
     has_properties,
@@ -134,51 +133,58 @@ class TestSetupValid(BaseIntegrationTest):
 
         setupd.setup.create(body)
 
-        assert_that(confd.requests().json(), has_entry('requests', has_item(has_entries({
-            'method': 'POST',
-            'path': '/1.1/wizard',
-            'json': has_entry('network', has_entries({
-                'hostname': 'wazo-engine',
-                'domain': 'example.com',
-            }))
-        }))))
-        assert_that(deployd.requests().json(), has_entry('requests', has_item(has_entries({
-            'method': 'POST',
-            'path': '/0.1/instances',
-            'json': {
-                'config': {},
-                'https_port': 6666,
-                'interface_ip': '10.1.1.1',
-                'name': 'my-wazo',
-                'password': 'secret',
-                'remote_host': 'wazo.example.com',
-                'service_id': 1,
-                'username': 'root'
-            },
-        }))))
+        assert_that(
+            confd.requests().json(),
+            has_entries(requests=has_item(has_entries(
+                method='POST',
+                path='/1.1/wizard',
+                json=has_entries(network=has_entries(
+                    hostname='wazo-engine',
+                    domain='example.com',
+                )),
+            ))),
+        )
+        assert_that(
+            deployd.requests().json(),
+            has_entries(requests=has_item(has_entries(
+                method='POST',
+                path='/0.1/instances',
+                json=has_entries(
+                    config={},
+                    https_port=6666,
+                    interface_ip='10.1.1.1',
+                    name='my-wazo',
+                    password='secret',
+                    remote_host='wazo.example.com',
+                    service_id=1,
+                    username='root',
+                )
+            )))
+        )
         webhookd = self.make_webhookd()
-        assert_that(webhookd.get_config().json(), has_entry('nestbox', has_entries({
-            'instance_uuid': instance_uuid,
-            'auth': {
-                'host': 'nestbox',
-                'port': 443,
-                'prefix': '/api/auth',
-                'service_id': 'nestbox-user',
-                'service_key': 'secret',
-                'verify_certificate': False
-            },
-        })))
-        sysconfd = self.make_sysconfd()
-        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
-            has_entries({
-                'method': 'POST',
-                'path': '/services',
-                'json': {
-                    'wazo-auth': 'restart',
-                    'wazo-webhookd': 'restart',
+        assert_that(
+            webhookd.get_config().json(),
+            has_entries(nestbox=has_entries(
+                instance_uuid=instance_uuid,
+                auth={
+                    'host': 'nestbox',
+                    'port': 443,
+                    'prefix': '/api/auth',
+                    'service_id': 'nestbox-user',
+                    'service_key': 'secret',
+                    'verify_certificate': False
                 },
-            })
-        )))
+            )),
+        )
+        sysconfd = self.make_sysconfd()
+        assert_that(
+            sysconfd.requests().json(),
+            has_entries(requests=has_items(has_entries(
+                method='POST',
+                path='/services',
+                json={'wazo-auth': 'restart', 'wazo-webhookd': 'restart'},
+            ))),
+        )
 
     def test_setup_valid_already_registered_on_nestbox(self):
         setupd = self.make_setupd(VALID_TOKEN)
@@ -220,51 +226,50 @@ class TestSetupValid(BaseIntegrationTest):
 
         setupd.setup.create(body)
 
-        assert_that(confd.requests().json(), has_entry('requests', has_item(has_entries({
-            'method': 'POST',
-            'path': '/1.1/wizard',
-            'json': has_entry('network', has_entries({
-                'hostname': 'wazo-engine',
-                'domain': 'example.com',
-            }))
-        }))))
-        assert_that(deployd.requests().json(), not_(has_entry('requests', has_item(has_entries({
-            'method': 'POST',
-            'path': '/0.1/instances',
-            'json': {
-                'config': {},
-                'https_port': 6666,
-                'interface_ip': '10.1.1.1',
-                'name': 'my-wazo',
-                'password': 'secret',
-                'remote_host': 'wazo.example.com',
-                'service_id': 1,
-                'username': 'root'
-            },
-        })))))
+        assert_that(
+            confd.requests().json(),
+            has_entries(requests=has_item(has_entries(
+                method='POST',
+                path='/1.1/wizard',
+                json=has_entries(network=has_entries(
+                    hostname='wazo-engine',
+                    domain='example.com',
+                )),
+            ))),
+        )
+        assert_that(
+            deployd.requests().json(),
+            not_(has_entries(requests=has_item(has_entries(
+                method='POST',
+                path='/0.1/instances',
+            )))),
+        )
         webhookd = self.make_webhookd()
-        assert_that(webhookd.get_config().json(), has_entry('nestbox', has_entries({
-            'instance_uuid': instance_uuid,
-            'auth': {
-                'host': 'nestbox',
-                'port': 443,
-                'prefix': '/api/auth',
-                'service_id': 'nestbox-user',
-                'service_key': 'secret',
-                'verify_certificate': False
-            },
-        })))
-        sysconfd = self.make_sysconfd()
-        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
-            has_entries({
-                'method': 'POST',
-                'path': '/services',
-                'json': {
-                    'wazo-auth': 'restart',
-                    'wazo-webhookd': 'restart',
+        assert_that(
+            webhookd.get_config().json(),
+            has_entries(nestbox=has_entries(
+                instance_uuid=instance_uuid,
+                auth={
+                    'host': 'nestbox',
+                    'port': 443,
+                    'prefix': '/api/auth',
+                    'service_id': 'nestbox-user',
+                    'service_key': 'secret',
+                    'verify_certificate': False
                 },
-            })
-        )))
+            )),
+        )
+        sysconfd = self.make_sysconfd()
+        assert_that(
+            sysconfd.requests().json(),
+            has_entries(requests=has_items(
+                has_entries(
+                    method='POST',
+                    path='/services',
+                    json={'wazo-auth': 'restart', 'wazo-webhookd': 'restart'},
+                ),
+            )),
+        )
 
 
 class TestSetupValidNoNestbox(BaseIntegrationTest):
@@ -305,24 +310,28 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
 
         setupd.setup.create(body)
 
-        assert_that(confd.requests().json(), has_entry('requests', has_item(has_entries({
-            'method': 'POST',
-            'path': '/1.1/wizard',
-            'json': has_entry('network', has_entries({
-                'hostname': 'wazo-engine',
-                'domain': 'example.com',
-            }))
-        }))))
-        assert_that(deployd.requests().json(), has_entry('requests', empty()))
+        assert_that(
+            confd.requests().json(),
+            has_entries(requests=has_item(has_entries(
+                method='POST',
+                path='/1.1/wizard',
+                json=has_entries(network=has_entries(
+                    hostname='wazo-engine',
+                    domain='example.com',
+                )),
+            ))),
+        )
+        assert_that(deployd.requests().json(), has_entries(requests=empty()))
         webhookd = self.make_webhookd()
         assert_that(webhookd.get_config().json(), empty())
         sysconfd = self.make_sysconfd()
-        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
-            has_entries({
-                'method': 'GET',
-                'path': '/remove_nestbox_dependencies',
-            })
-        )))
+        assert_that(
+            sysconfd.requests().json(),
+            has_entries(requests=has_items(has_entries(
+                method='GET',
+                path='/remove_nestbox_dependencies',
+            ))),
+        )
 
 
 class TestSetupSelfStop(BaseIntegrationTest):
