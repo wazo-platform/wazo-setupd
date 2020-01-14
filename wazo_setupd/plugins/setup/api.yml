@@ -32,6 +32,12 @@ definitions:
       engine_license:
         description: Whether the GNU GPLv3 license is accepted
         type: boolean
+      engine_instance_uuid:
+        description: |
+          The UUID identifying this instance on Nestbox.
+
+          The engine_instance_uuid should only be specified if the instance has already been registered on the specified Nestbox. Omitting this field for an instance that is already registered will create a duplicate entry on the Nestbox.
+        type: string
       nestbox_host:
         description: Host of the Nestbox where the engine will register. Specifying this key will make nestbox and `engine_internal_address` keys mandatory. Wazo will be connected to the specified Nestbox instance.
         type: string

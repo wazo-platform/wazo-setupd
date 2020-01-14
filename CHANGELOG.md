@@ -1,5 +1,12 @@
 # Changelog
 
+## 20.02
+
+* The following fields have been added to the `/1.0/setup` body
+
+  - engine_instance_uuid
+
+
 ## 19.05
 
 * The following fields have been remove from the `/1.0/setup` body

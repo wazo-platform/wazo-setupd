@@ -1,4 +1,4 @@
-# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import uuid
@@ -13,6 +13,7 @@ from hamcrest import (
     has_item,
     has_items,
     has_property,
+    not_,
 )
 from xivo_test_helpers import until
 from xivo_test_helpers.hamcrest.raises import raises
@@ -91,6 +92,11 @@ class TestSetupValid(BaseIntegrationTest):
     asset = 'base'
     wait_strategy = NoWaitStrategy()
 
+    def setUp(self):
+        super().setUp()
+        deployd = self.make_deployd()
+        deployd.reset()
+
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
@@ -155,6 +161,92 @@ class TestSetupValid(BaseIntegrationTest):
                 'username': 'root'
             },
         }))))
+        webhookd = self.make_webhookd()
+        assert_that(webhookd.get_config().json(), has_entry('nestbox', has_entries({
+            'instance_uuid': instance_uuid,
+            'auth': {
+                'host': 'nestbox',
+                'port': 443,
+                'prefix': '/api/auth',
+                'service_id': 'nestbox-user',
+                'service_key': 'secret',
+                'verify_certificate': False
+            },
+        })))
+        sysconfd = self.make_sysconfd()
+        assert_that(sysconfd.requests().json(), has_entry('requests', has_items(
+            has_entries({
+                'method': 'POST',
+                'path': '/services',
+                'json': {
+                    'wazo-auth': 'restart',
+                    'wazo-webhookd': 'restart',
+                },
+            })
+        )))
+
+    def test_setup_valid_already_registered_on_nestbox(self):
+        setupd = self.make_setupd(VALID_TOKEN)
+        confd = self.make_confd()
+        confd.set_wizard_discover({
+            "timezone": 'America/Montreal',
+            "hostname": 'wazo-engine',
+            "domain": 'example.com',
+            'interfaces': [
+                {'interface': 'my-interface',
+                 'ip_address': '10.1.1.1',
+                 'netmask': '255.0.0.0'}
+            ],
+            'gateways': [
+                {'gateway': '10.254.254.254'}
+            ],
+            "nameservers": ['10.2.2.2']
+        })
+        confd.set_wizard({
+            'configured': False,
+        })
+        instance_uuid = str(uuid.uuid4())
+        deployd = self.make_deployd()
+        body = {
+            'engine_language': 'en_US',
+            'engine_password': 'secret',
+            'engine_internal_address': '10.1.1.1',
+            'engine_license': True,
+            'engine_instance_uuid': instance_uuid,
+            'nestbox_host': 'nestbox',
+            'nestbox_port': 443,
+            'nestbox_verify_certificate': False,
+            'nestbox_service_id': 'nestbox-user',
+            'nestbox_service_key': 'secret',
+            'nestbox_instance_name': 'my-wazo',
+            'nestbox_engine_host': 'wazo.example.com',
+            'nestbox_engine_port': 6666,
+        }
+
+        setupd.setup.create(body)
+
+        assert_that(confd.requests().json(), has_entry('requests', has_item(has_entries({
+            'method': 'POST',
+            'path': '/1.1/wizard',
+            'json': has_entry('network', has_entries({
+                'hostname': 'wazo-engine',
+                'domain': 'example.com',
+            }))
+        }))))
+        assert_that(deployd.requests().json(), not_(has_entry('requests', has_item(has_entries({
+            'method': 'POST',
+            'path': '/0.1/instances',
+            'json': {
+                'config': {},
+                'https_port': 6666,
+                'interface_ip': '10.1.1.1',
+                'name': 'my-wazo',
+                'password': 'secret',
+                'remote_host': 'wazo.example.com',
+                'service_id': 1,
+                'username': 'root'
+            },
+        })))))
         webhookd = self.make_webhookd()
         assert_that(webhookd.get_config().json(), has_entry('nestbox', has_entries({
             'instance_uuid': instance_uuid,
