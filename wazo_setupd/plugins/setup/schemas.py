@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from marshmallow import validates_schema
@@ -17,6 +16,7 @@ class SetupSchema(Schema):
     engine_password = fields.String(required=True)
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
     engine_internal_address = fields.String()
+    engine_instance_uuid = fields.UUID(missing=None)
     nestbox_host = fields.String()
     nestbox_port = fields.Integer(
         validate=validate.Range(

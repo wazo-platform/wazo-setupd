@@ -49,7 +49,7 @@ class SetupService:
             setup_infos['engine_license'],
         )
 
-        instance_uuid = self.register_instance(
+        instance_uuid = setup_infos['engine_instance_uuid'] or self.register_instance(
             nestbox_token,
             setup_infos['nestbox_host'],
             setup_infos['nestbox_port'],
