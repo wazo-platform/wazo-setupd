@@ -244,6 +244,14 @@ class TestSetupValid(BaseIntegrationTest):
                 path='/0.1/instances',
             )))),
         )
+        assert_that(
+            deployd.requests().json(),
+            has_entries(requests=has_item(has_entries(
+                method='PUT',
+                path='/0.1/instances/{}'.format(instance_uuid),
+                json=has_entries(installed=True),
+            ))),
+        )
         webhookd = self.make_webhookd()
         assert_that(
             webhookd.get_config().json(),

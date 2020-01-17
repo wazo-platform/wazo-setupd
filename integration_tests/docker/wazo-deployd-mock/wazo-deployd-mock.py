@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright 2015-2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2015-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
@@ -90,6 +90,11 @@ def set_response():
 @app.route(url_prefix + '/0.1/instances', methods=['POST'])
 def post_instance():
     return jsonify(_responses['post_instance'])
+
+
+@app.route(url_prefix + '/0.1/instances/<uuid:instance_uuid>', methods=['PUT'])
+def put_instance(instance_uuid):
+    return jsonify(request.json)
 
 
 @app.route(url_prefix + '/0.1/instances')
