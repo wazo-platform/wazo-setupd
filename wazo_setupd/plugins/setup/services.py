@@ -49,7 +49,7 @@ class SetupService:
             setup_infos['engine_license'],
         )
 
-        instance_uuid = setup_infos['engine_instance_uuid'] or self.register_instance(
+        instance_uuid = self.register_instance(
             nestbox_token,
             setup_infos['nestbox_host'],
             setup_infos['nestbox_port'],
@@ -59,6 +59,7 @@ class SetupService:
             setup_infos['nestbox_engine_port'],
             setup_infos['engine_internal_address'],
             setup_infos['engine_password'],
+            setup_infos['engine_instance_uuid']
         )
         self.inject_nestbox_config(
             setup_infos['nestbox_host'],
@@ -155,7 +156,8 @@ class SetupService:
                           nestbox_engine_host,
                           nestbox_engine_port,
                           engine_internal_address,
-                          engine_password):
+                          engine_password,
+                          engine_uuid):
         # wazo-deployd-client was just installed by xivo-sysconfd, at the
         # request of wazo-setupd, thus we need a lazy import
         from wazo_deployd_client import Client as DeploydClient
@@ -177,8 +179,14 @@ class SetupService:
             "config": {},
             "service_id": ENGINE_SERVICE_ID,
         }
-        instance = deployd.instances.register(instance_data)
-        return instance['uuid']
+        if not engine_uuid:
+            instance = deployd.instances.register(instance_data)
+            return instance['uuid']
+
+        instance_data["installed"] = True
+        deployd.instances.update(engine_uuid, instance_data)
+
+        return engine_uuid
 
     def inject_nestbox_config(self,
                               nestbox_host,
