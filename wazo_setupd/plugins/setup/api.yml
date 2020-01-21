@@ -1,5 +1,19 @@
 paths:
   /setup:
+    get:
+      summary: Get the engine setup status
+      operationId: get_setup_status
+      description: |
+        Get information from the engine to know if it's already configured and
+        if the necessary service for its completion are running.
+      tags:
+        - setup
+      responses:
+        '200':
+          description: Engine setup status
+          schema:
+            $ref: '#/definitions/SetupConfigured'
+
     post:
       summary: Setup the Wazo Engine
       operationId: create
@@ -69,6 +83,15 @@ definitions:
       - engine_language
       - engine_password
       - engine_license
+  SetupConfigured:
+    title: SetupConfigured
+    properties:
+      configured:
+        type: boolean
+        description: Whether Wazo has already been configured or not
+      provd_ready:
+        type: boolean
+        description: Whether wazo-provd is ready to receive requests or not
 
 parameters:
   SetupBody:

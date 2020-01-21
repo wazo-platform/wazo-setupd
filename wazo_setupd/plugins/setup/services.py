@@ -101,6 +101,10 @@ class SetupService:
             )
         return token_data['token']
 
+    def get_status(self):
+        c = ConfdClient(**self._confd_config)
+        return c.wizard.get()
+
     def post_confd_wizard(self, language, password, license_accepted):
         c = ConfdClient(**self._confd_config)
 

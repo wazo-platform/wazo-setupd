@@ -6,6 +6,10 @@
 
   - engine_instance_uuid
 
+* A new resource has been added to know if `setup` can be executed
+
+  - GET /1.0/setup
+
 
 ## 19.05
 
@@ -19,11 +23,14 @@
 ## 18.14
 
 * New endpoints:
+
   - POST /1.0/setup
+
 
 ## 18.13
 
 * New endpoints:
+
   - GET /1.0/api/api.yml
   - GET /1.0/config
   - GET /1.0/status

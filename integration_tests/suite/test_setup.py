@@ -81,6 +81,23 @@ class TestSetupErrors(BaseIntegrationTest):
         )
 
 
+class TestGetSetup(BaseIntegrationTest):
+
+    asset = 'base'
+    wait_strategy = NoWaitStrategy()
+
+    def test_setup_valid(self):
+        setupd = self.make_setupd(VALID_TOKEN)
+        confd = self.make_confd()
+        confd.set_wizard({
+            'configured': False,
+            'provd_ready': True,
+        })
+
+        result = setupd.setup.get()
+        assert_that(result, has_entries(configured=False, provd_ready=True))
+
+
 class TestSetupValid(BaseIntegrationTest):
 
     asset = 'base'

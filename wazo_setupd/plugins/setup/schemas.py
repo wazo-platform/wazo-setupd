@@ -57,4 +57,10 @@ class SetupSchema(Schema):
             raise ValidationError('Missing keys for Nestbox configuration: engine_internal_address')
 
 
+class StatusSchema(Schema):
+    configured = fields.Boolean()
+    provd_ready = fields.Boolean()
+
+
 setup_schema = SetupSchema()
+status_schema = StatusSchema()
