@@ -1,4 +1,4 @@
-# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -109,6 +109,13 @@ class SetupService:
             return
 
         discover = c.wizard.discover()
+
+        if len(discover['nameservers']) > 2:
+            # NOTE(fblackburn): Should parse confd error when it will return json errors
+            raise SetupError(
+                message='Too many nameservers configured on host, maximum authorized is two',
+                error_id='setup-nameservers-failed',
+            )
 
         if not discover.get('domain'):
             discover['domain'] = 'localdomain'
