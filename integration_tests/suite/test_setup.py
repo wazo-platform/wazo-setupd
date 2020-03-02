@@ -80,6 +80,29 @@ class TestSetupErrors(BaseIntegrationTest):
             ))
         )
 
+    def test_setup_when_more_than_two_nameservers(self):
+        setupd = self.make_setupd(VALID_TOKEN)
+        confd = self.make_confd()
+        confd.set_wizard_discover({
+            "nameservers": ['10.2.2.2', '10.2.2.3', '10.2.2.4', '10.2.2.5']
+        })
+        confd.set_wizard({
+            'configured': False,
+        })
+        body = {
+            'engine_language': 'en_US',
+            'engine_password': 'secret',
+            'engine_license': True,
+        }
+
+        assert_that(
+            calling(setupd.setup.create).with_args(body),
+            raises(SetupdError).matching(has_properties(
+                status_code=500,
+                error_id='setup-nameservers-failed',
+            ))
+        )
+
 
 class TestSetupValid(BaseIntegrationTest):
 
