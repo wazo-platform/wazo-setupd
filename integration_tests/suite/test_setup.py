@@ -84,7 +84,7 @@ class TestSetupErrors(BaseIntegrationTest):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
         confd.set_wizard_discover({
-            "nameservers": ['10.2.2.2', '10.2.2.3', '10.2.2.4']
+            "nameservers": ['10.2.2.2', '10.2.2.3', '10.2.2.4', '10.2.2.5']
         })
         confd.set_wizard({
             'configured': False,

@@ -110,10 +110,10 @@ class SetupService:
 
         discover = c.wizard.discover()
 
-        if len(discover['nameservers']) > 2:
+        if len(discover['nameservers']) > 3:
             # NOTE(fblackburn): Should parse confd error when it will return json errors
             raise SetupError(
-                message='Too many nameservers configured on host, maximum authorized is two',
+                message='Too many nameservers configured on host, maximum authorized is three',
                 error_id='setup-nameservers-failed',
             )
 
