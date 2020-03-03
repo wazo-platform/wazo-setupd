@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import requests
@@ -27,6 +27,14 @@ class ConfdMockClient:
     def set_wizard(self, response):
         body = {'response': 'wizard',
                 'content': response}
+        requests.post(
+            self.url('_set_response'),
+            json=body,
+            verify=False,
+        )
+
+    def set_rtp(self, response):
+        body = {'response': 'asterisk/rtp/general', 'content': response}
         requests.post(
             self.url('_set_response'),
             json=body,

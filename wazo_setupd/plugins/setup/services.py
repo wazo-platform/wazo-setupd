@@ -19,6 +19,7 @@ ENGINE_SERVICE_ID = 1
 class SetupService:
 
     def __init__(self, config, stopper):
+        self._auth_config = config['auth']
         self._confd_config = config['confd']
         self._sysconfd_config = config['sysconfd']
         self._stopper = stopper
@@ -70,6 +71,12 @@ class SetupService:
             instance_uuid,
         )
 
+        self.setup_rtp(
+            setup_infos['engine_password'],
+            setup_infos['engine_rtp_icesupport'],
+            setup_infos['engine_rtp_stunaddr'],
+        )
+
     def setup_without_nestbox(self, setup_infos):
         self.remove_nestbox_dependencies()
         self.post_confd_wizard(
@@ -77,6 +84,22 @@ class SetupService:
             setup_infos['engine_password'],
             setup_infos['engine_license'],
         )
+
+    def get_engine_token(self, engine_password):
+        auth = AuthClient(
+            username='root',
+            password=engine_password,
+            **self._auth_config
+        )
+        try:
+            token_data = auth.token.new('wazo_user', expiration=60)
+        except HTTPError:
+            raise SetupError(
+                message='Failed to create authorization token',
+                error_id='setup-token-failed',
+                details=self._auth_config,
+            )
+        return token_data['token']
 
     def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
         auth = AuthClient(
@@ -137,6 +160,18 @@ class SetupService:
         }
 
         c.wizard.create(wizard)
+
+    def setup_rtp(self, engine_password, icesupport, stunaddr):
+        if not icesupport and not stunaddr:
+            return
+
+        token = self.get_engine_token(engine_password)
+        client = ConfdClient(token=token, **self._confd_config)
+        rtp_config = client.rtp_general.get()['options']
+        rtp_config['stunaddr'] = stunaddr
+        if icesupport:
+            rtp_config['icesupport'] = 'yes'
+        client.rtp_general.update({'options': rtp_config})
 
     def remove_nestbox_dependencies(self):
         url = "http://{host}:{port}/remove_nestbox_dependencies".format(

@@ -17,6 +17,8 @@ class SetupSchema(Schema):
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
     engine_internal_address = fields.String()
     engine_instance_uuid = fields.UUID(missing=None)
+    engine_rtp_icesupport = fields.Boolean(required=False, missing=False)
+    engine_rtp_stunaddr = fields.String(validate=validate.Length(min=1, max=1024), missing=None)
     nestbox_host = fields.String()
     nestbox_port = fields.Integer(
         validate=validate.Range(
@@ -55,6 +57,18 @@ class SetupSchema(Schema):
             raise ValidationError('Missing keys for Nestbox configuration: nestbox_engine_host')
         if 'engine_internal_address' not in data:
             raise ValidationError('Missing keys for Nestbox configuration: engine_internal_address')
+
+    @validates_schema
+    def check_rtp_fields(self, data):
+        if not data.get('engine_rtp_icesupport'):
+            return
+
+        required_field = 'engine_rtp_stunaddr'
+        if not data.get(required_field):
+            raise ValidationError(
+                'Missing keys for rtp configuration: {}'.format(required_field),
+                field_name=required_field,
+            )
 
 
 setup_schema = SetupSchema()
