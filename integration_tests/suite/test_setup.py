@@ -20,9 +20,7 @@ from .helpers.base import (
     BaseIntegrationTest,
     VALID_TOKEN,
 )
-from .helpers.wait_strategy import (
-    NoWaitStrategy,
-)
+from .helpers.wait_strategy import NoWaitStrategy
 
 from wazo_setupd_client.exceptions import SetupdError
 
@@ -74,21 +72,20 @@ class TestSetupErrors(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args(body),
-            raises(SetupdError).matching(has_properties(
-                status_code=500,
-                error_id='setup-token-failed',
-            ))
+            raises(SetupdError).matching(
+                has_properties(status_code=500, error_id='setup-token-failed',)
+            ),
         )
 
     def test_setup_when_more_than_three_nameservers(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
-        confd.set_wizard_discover({
-            "nameservers": ['10.2.2.2', '10.2.2.3', '10.2.2.4', '10.2.2.5']
-        })
-        confd.set_wizard({
-            'configured': False,
-        })
+        confd.set_wizard_discover(
+            {"nameservers": ['10.2.2.2', '10.2.2.3', '10.2.2.4', '10.2.2.5']}
+        )
+        confd.set_wizard(
+            {'configured': False,}
+        )
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -97,10 +94,9 @@ class TestSetupErrors(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args(body),
-            raises(SetupdError).matching(has_properties(
-                status_code=500,
-                error_id='setup-nameservers-failed',
-            ))
+            raises(SetupdError).matching(
+                has_properties(status_code=500, error_id='setup-nameservers-failed',)
+            ),
         )
 
 
@@ -137,9 +133,9 @@ class TestSetupValid(BaseIntegrationTest):
         confd.set_rtp({'options': {'rtpstart': '10000', 'rtpend': '20000'}})
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
-        deployd.set_post_instance({
-            'uuid': instance_uuid,
-        })
+        deployd.set_post_instance(
+            {'uuid': instance_uuid}
+        )
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -161,14 +157,19 @@ class TestSetupValid(BaseIntegrationTest):
 
         assert_that(
             confd.requests().json(),
-            has_entries(requests=has_item(has_entries(
-                method='POST',
-                path='/1.1/wizard',
-                json=has_entries(network=has_entries(
-                    hostname='wazo-engine',
-                    domain='example.com',
-                )),
-            ))),
+            has_entries(
+                requests=has_item(
+                    has_entries(
+                        method='POST',
+                        path='/1.1/wizard',
+                        json=has_entries(
+                            network=has_entries(
+                                hostname='wazo-engine', domain='example.com',
+                            )
+                        ),
+                    )
+                )
+            ),
         )
         assert_that(
             confd.requests().json(),
@@ -185,66 +186,78 @@ class TestSetupValid(BaseIntegrationTest):
         )
         assert_that(
             deployd.requests().json(),
-            has_entries(requests=has_item(has_entries(
-                method='POST',
-                path='/0.1/instances',
-                json=has_entries(
-                    config={},
-                    https_port=6666,
-                    interface_ip='10.1.1.1',
-                    name='my-wazo',
-                    password='secret',
-                    remote_host='wazo.example.com',
-                    service_id=1,
-                    username='root',
+            has_entries(
+                requests=has_item(
+                    has_entries(
+                        method='POST',
+                        path='/0.1/instances',
+                        json=has_entries(
+                            config={},
+                            https_port=6666,
+                            interface_ip='10.1.1.1',
+                            name='my-wazo',
+                            password='secret',
+                            remote_host='wazo.example.com',
+                            service_id=1,
+                            username='root',
+                        ),
+                    )
                 )
-            )))
+            ),
         )
         webhookd = self.make_webhookd()
         assert_that(
             webhookd.get_config().json(),
-            has_entries(nestbox=has_entries(
-                instance_uuid=instance_uuid,
-                auth={
-                    'host': 'nestbox',
-                    'port': 443,
-                    'prefix': '/api/auth',
-                    'service_id': 'nestbox-user',
-                    'service_key': 'secret',
-                    'verify_certificate': False
-                },
-            )),
+            has_entries(
+                nestbox=has_entries(
+                    instance_uuid=instance_uuid,
+                    auth={
+                        'host': 'nestbox',
+                        'port': 443,
+                        'prefix': '/api/auth',
+                        'service_id': 'nestbox-user',
+                        'service_key': 'secret',
+                        'verify_certificate': False,
+                    },
+                )
+            ),
         )
         sysconfd = self.make_sysconfd()
         assert_that(
             sysconfd.requests().json(),
-            has_entries(requests=has_items(has_entries(
-                method='POST',
-                path='/services',
-                json={'wazo-auth': 'restart', 'wazo-webhookd': 'restart'},
-            ))),
+            has_entries(
+                requests=has_items(
+                    has_entries(
+                        method='POST',
+                        path='/services',
+                        json={'wazo-auth': 'restart', 'wazo-webhookd': 'restart'},
+                    )
+                )
+            ),
         )
 
     def test_setup_valid_already_registered_on_nestbox(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
-        confd.set_wizard_discover({
-            "timezone": 'America/Montreal',
-            "hostname": 'wazo-engine',
-            "domain": 'example.com',
-            'interfaces': [
-                {'interface': 'my-interface',
-                 'ip_address': '10.1.1.1',
-                 'netmask': '255.0.0.0'}
-            ],
-            'gateways': [
-                {'gateway': '10.254.254.254'}
-            ],
-            "nameservers": ['10.2.2.2']
-        })
-        confd.set_wizard({
-            'configured': False,
-        })
+        confd.set_wizard_discover(
+            {
+                "timezone": 'America/Montreal',
+                "hostname": 'wazo-engine',
+                "domain": 'example.com',
+                'interfaces': [
+                    {
+                        'interface': 'my-interface',
+                        'ip_address': '10.1.1.1',
+                        'netmask': '255.0.0.0',
+                    }
+                ],
+                'gateways': [{'gateway': '10.254.254.254'}],
+                "nameservers": ['10.2.2.2'],
+            }
+        )
+        confd.set_wizard(
+            {'configured': False,}
+        )
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
         body = {
@@ -267,55 +280,71 @@ class TestSetupValid(BaseIntegrationTest):
 
         assert_that(
             confd.requests().json(),
-            has_entries(requests=has_item(has_entries(
-                method='POST',
-                path='/1.1/wizard',
-                json=has_entries(network=has_entries(
-                    hostname='wazo-engine',
-                    domain='example.com',
-                )),
-            ))),
+            has_entries(
+                requests=has_item(
+                    has_entries(
+                        method='POST',
+                        path='/1.1/wizard',
+                        json=has_entries(
+                            network=has_entries(
+                                hostname='wazo-engine', domain='example.com',
+                            )
+                        ),
+                    )
+                )
+            ),
         )
         assert_that(
             deployd.requests().json(),
-            not_(has_entries(requests=has_item(has_entries(
-                method='POST',
-                path='/0.1/instances',
-            )))),
+            not_(
+                has_entries(
+                    requests=has_item(
+                        has_entries(method='POST', path='/0.1/instances',)
+                    )
+                )
+            ),
         )
         assert_that(
             deployd.requests().json(),
-            has_entries(requests=has_item(has_entries(
-                method='PUT',
-                path='/0.1/instances/{}'.format(instance_uuid),
-                json=has_entries(installed=True),
-            ))),
+            has_entries(
+                requests=has_item(
+                    has_entries(
+                        method='PUT',
+                        path='/0.1/instances/{}'.format(instance_uuid),
+                        json=has_entries(installed=True),
+                    )
+                )
+            ),
         )
         webhookd = self.make_webhookd()
         assert_that(
             webhookd.get_config().json(),
-            has_entries(nestbox=has_entries(
-                instance_uuid=instance_uuid,
-                auth={
-                    'host': 'nestbox',
-                    'port': 443,
-                    'prefix': '/api/auth',
-                    'service_id': 'nestbox-user',
-                    'service_key': 'secret',
-                    'verify_certificate': False
-                },
-            )),
+            has_entries(
+                nestbox=has_entries(
+                    instance_uuid=instance_uuid,
+                    auth={
+                        'host': 'nestbox',
+                        'port': 443,
+                        'prefix': '/api/auth',
+                        'service_id': 'nestbox-user',
+                        'service_key': 'secret',
+                        'verify_certificate': False,
+                    },
+                )
+            ),
         )
         sysconfd = self.make_sysconfd()
         assert_that(
             sysconfd.requests().json(),
-            has_entries(requests=has_items(
-                has_entries(
-                    method='POST',
-                    path='/services',
-                    json={'wazo-auth': 'restart', 'wazo-webhookd': 'restart'},
-                ),
-            )),
+            has_entries(
+                requests=has_items(
+                    has_entries(
+                        method='POST',
+                        path='/services',
+                        json={'wazo-auth': 'restart', 'wazo-webhookd': 'restart'},
+                    ),
+                )
+            ),
         )
 
 
@@ -327,28 +356,30 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
     def test_setup_valid_without_nestbox(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
-        confd.set_wizard_discover({
-            "timezone": 'America/Montreal',
-            "hostname": 'wazo-engine',
-            "domain": 'example.com',
-            'interfaces': [
-                {'interface': 'my-interface',
-                 'ip_address': '10.1.1.1',
-                 'netmask': '255.0.0.0'}
-            ],
-            'gateways': [
-                {'gateway': '10.254.254.254'}
-            ],
-            "nameservers": ['10.2.2.2']
-        })
-        confd.set_wizard({
-            'configured': False,
-        })
+        confd.set_wizard_discover(
+            {
+                "timezone": 'America/Montreal',
+                "hostname": 'wazo-engine',
+                "domain": 'example.com',
+                'interfaces': [
+                    {
+                        'interface': 'my-interface',
+                        'ip_address': '10.1.1.1',
+                        'netmask': '255.0.0.0',
+                    }
+                ],
+                'gateways': [{'gateway': '10.254.254.254'}],
+                "nameservers": ['10.2.2.2'],
+            }
+        )
+        confd.set_wizard(
+            {'configured': False,}
+        )
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
-        deployd.set_post_instance({
-            'uuid': instance_uuid,
-        })
+        deployd.set_post_instance(
+            {'uuid': instance_uuid,}
+        )
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -359,14 +390,19 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
 
         assert_that(
             confd.requests().json(),
-            has_entries(requests=has_item(has_entries(
-                method='POST',
-                path='/1.1/wizard',
-                json=has_entries(network=has_entries(
-                    hostname='wazo-engine',
-                    domain='example.com',
-                )),
-            ))),
+            has_entries(
+                requests=has_item(
+                    has_entries(
+                        method='POST',
+                        path='/1.1/wizard',
+                        json=has_entries(
+                            network=has_entries(
+                                hostname='wazo-engine', domain='example.com',
+                            )
+                        ),
+                    )
+                )
+            ),
         )
         assert_that(deployd.requests().json(), has_entries(requests=empty()))
         webhookd = self.make_webhookd()
@@ -374,10 +410,11 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
         sysconfd = self.make_sysconfd()
         assert_that(
             sysconfd.requests().json(),
-            has_entries(requests=has_items(has_entries(
-                method='GET',
-                path='/remove_nestbox_dependencies',
-            ))),
+            has_entries(
+                requests=has_items(
+                    has_entries(method='GET', path='/remove_nestbox_dependencies',)
+                )
+            ),
         )
 
 
@@ -389,28 +426,30 @@ class TestSetupSelfStop(BaseIntegrationTest):
     def test_setup_valid_stops(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
-        confd.set_wizard_discover({
-            "timezone": 'America/Montreal',
-            "hostname": 'wazo-engine',
-            "domain": 'example.com',
-            'interfaces': [
-                {'interface': 'my-interface',
-                 'ip_address': '10.1.1.1',
-                 'netmask': '255.0.0.0'}
-            ],
-            'gateways': [
-                {'gateway': '10.254.254.254'}
-            ],
-            "nameservers": ['10.2.2.2']
-        })
-        confd.set_wizard({
-            'configured': False,
-        })
+        confd.set_wizard_discover(
+            {
+                "timezone": 'America/Montreal',
+                "hostname": 'wazo-engine',
+                "domain": 'example.com',
+                'interfaces': [
+                    {
+                        'interface': 'my-interface',
+                        'ip_address': '10.1.1.1',
+                        'netmask': '255.0.0.0',
+                    }
+                ],
+                'gateways': [{'gateway': '10.254.254.254'}],
+                "nameservers": ['10.2.2.2'],
+            }
+        )
+        confd.set_wizard(
+            {'configured': False,}
+        )
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
-        deployd.set_post_instance({
-            'uuid': instance_uuid,
-        })
+        deployd.set_post_instance(
+            {'uuid': instance_uuid,}
+        )
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -458,10 +497,9 @@ class TestSetupNotSelfStop(BaseIntegrationTest):
 
         assert_that(
             calling(setupd.setup.create).with_args(body),
-            raises(SetupdError).matching(has_properties(
-                status_code=500,
-                error_id='setup-token-failed',
-            ))
+            raises(SetupdError).matching(
+                has_properties(status_code=500, error_id='setup-token-failed',)
+            ),
         )
 
         def setupd_is_stopped():

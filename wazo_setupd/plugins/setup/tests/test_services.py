@@ -10,7 +10,6 @@ from ..services import SetupService
 
 
 class TestSetupService(TestCase):
-
     def setUp(self):
         self.auth_config = {}
         self.confd_config = {}
@@ -22,10 +21,7 @@ class TestSetupService(TestCase):
         }
         self.stopper = Mock()
 
-        self.service = SetupService(
-            self.config,
-            self.stopper,
-        )
+        self.service = SetupService(self.config, self.stopper,)
 
     def test_setup_rtp(self):
         with self.confd_mock() as client:
@@ -40,10 +36,9 @@ class TestSetupService(TestCase):
                 }
                 client.rtp_general.get.return_value = {'options': dict(rtp_config)}
                 self.service.setup_rtp(s.password, False, 'myserver')
-                client.rtp_general.update.assert_called_once_with({'options': {
-                    'stunaddr': 'myserver',
-                    **rtp_config
-                }})
+                client.rtp_general.update.assert_called_once_with(
+                    {'options': {'stunaddr': 'myserver', **rtp_config}}
+                )
 
         with self.confd_mock() as client:
             with self.get_engine_token_mock():
@@ -53,11 +48,15 @@ class TestSetupService(TestCase):
                 }
                 client.rtp_general.get.return_value = {'options': dict(rtp_config)}
                 self.service.setup_rtp(s.password, True, 'myserver')
-                client.rtp_general.update.assert_called_once_with({'options': {
-                    'icesupport': 'yes',
-                    'stunaddr': 'myserver',
-                    **rtp_config
-                }})
+                client.rtp_general.update.assert_called_once_with(
+                    {
+                        'options': {
+                            'icesupport': 'yes',
+                            'stunaddr': 'myserver',
+                            **rtp_config,
+                        }
+                    }
+                )
 
     @contextmanager
     def get_engine_token_mock(self):

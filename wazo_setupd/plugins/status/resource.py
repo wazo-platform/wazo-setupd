@@ -7,12 +7,7 @@ from wazo_setupd.http import AuthResource
 
 
 class StatusResource(AuthResource):
-
     @required_acl('setupd.status.read')
     def get(self):
-        result = {
-            'rest_api': {
-                'status': 'ok',
-            }
-        }
+        result = {'rest_api': {'status': 'ok',}}
         return result, 200

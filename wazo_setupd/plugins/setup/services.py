@@ -17,7 +17,6 @@ ENGINE_SERVICE_ID = 1
 
 
 class SetupService:
-
     def __init__(self, config, stopper):
         self._auth_config = config['auth']
         self._confd_config = config['confd']
@@ -60,7 +59,7 @@ class SetupService:
             setup_infos['nestbox_engine_port'],
             setup_infos['engine_internal_address'],
             setup_infos['engine_password'],
-            setup_infos['engine_instance_uuid']
+            setup_infos['engine_instance_uuid'],
         )
         self.inject_nestbox_config(
             setup_infos['nestbox_host'],
@@ -87,9 +86,7 @@ class SetupService:
 
     def get_engine_token(self, engine_password):
         auth = AuthClient(
-            username='root',
-            password=engine_password,
-            **self._auth_config
+            username='root', password=engine_password, **self._auth_config
         )
         try:
             token_data = auth.token.new('wazo_user', expiration=60)
@@ -101,7 +98,14 @@ class SetupService:
             )
         return token_data['token']
 
-    def get_nestbox_token(self, nestbox_host, nestbox_port, nestbox_verify_certificate, service_id, service_key):
+    def get_nestbox_token(
+        self,
+        nestbox_host,
+        nestbox_port,
+        nestbox_verify_certificate,
+        service_id,
+        service_key,
+    ):
         auth = AuthClient(
             nestbox_host,
             port=nestbox_port,
@@ -120,7 +124,7 @@ class SetupService:
                     'auth_host': nestbox_host,
                     'auth_port': nestbox_port,
                     'service_key': service_id,
-                }
+                },
             )
         return token_data['token']
 
@@ -155,7 +159,7 @@ class SetupService:
                 "ip_address": discover['interfaces'][0]['ip_address'],
                 "netmask": discover['interfaces'][0]['netmask'],
                 "gateway": discover['gateways'][0]['gateway'],
-                "nameservers": discover['nameservers']
+                "nameservers": discover['nameservers'],
             },
         }
 
@@ -175,31 +179,36 @@ class SetupService:
 
     def remove_nestbox_dependencies(self):
         url = "http://{host}:{port}/remove_nestbox_dependencies".format(
-            host=self._sysconfd_config['host'],
-            port=self._sysconfd_config['port'],
+            host=self._sysconfd_config['host'], port=self._sysconfd_config['port'],
         )
         try:
             response = requests.get(url)
         except requests.RequestsException as e:
-            raise SetupError('xivo-sysconfd connection error',
-                             error_id='xivo-sysconfd-connection-error',
-                             details={'original_error': e})
+            raise SetupError(
+                'xivo-sysconfd connection error',
+                error_id='xivo-sysconfd-connection-error',
+                details={'original_error': e},
+            )
         if response.status_code != 200:
-            raise SetupError('xivo-sysconfd failure',
-                             error_id='xivo-sysconfd-failure',
-                             details={'sysconfd-error': response.text})
+            raise SetupError(
+                'xivo-sysconfd failure',
+                error_id='xivo-sysconfd-failure',
+                details={'sysconfd-error': response.text},
+            )
 
-    def register_instance(self,
-                          token,
-                          nestbox_host,
-                          nestbox_port,
-                          nestbox_verify_certificate,
-                          nestbox_instance_name,
-                          nestbox_engine_host,
-                          nestbox_engine_port,
-                          engine_internal_address,
-                          engine_password,
-                          engine_uuid):
+    def register_instance(
+        self,
+        token,
+        nestbox_host,
+        nestbox_port,
+        nestbox_verify_certificate,
+        nestbox_instance_name,
+        nestbox_engine_host,
+        nestbox_engine_port,
+        engine_internal_address,
+        engine_password,
+        engine_uuid,
+    ):
         # wazo-deployd-client was just installed by xivo-sysconfd, at the
         # request of wazo-setupd, thus we need a lazy import
         from wazo_deployd_client import Client as DeploydClient
@@ -230,13 +239,15 @@ class SetupService:
 
         return engine_uuid
 
-    def inject_nestbox_config(self,
-                              nestbox_host,
-                              nestbox_port,
-                              nestbox_verify_certificate,
-                              nestbox_service_id,
-                              nestbox_service_key,
-                              instance_uuid):
+    def inject_nestbox_config(
+        self,
+        nestbox_host,
+        nestbox_port,
+        nestbox_verify_certificate,
+        nestbox_service_id,
+        nestbox_service_key,
+        instance_uuid,
+    ):
         generated_config_file = "/usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml"
         config = {
             "nestbox": {
@@ -254,7 +265,7 @@ class SetupService:
                     "port": nestbox_port,
                     "prefix": "/api/confd",
                     "verify_certificate": nestbox_verify_certificate,
-                }
+                },
             }
         }
 
@@ -264,8 +275,7 @@ class SetupService:
         session = requests.Session()
         session.trust_env = False
         url = 'http://{host}:{port}/services'.format(
-            host=self._sysconfd_config['host'],
-            port=self._sysconfd_config['port'],
+            host=self._sysconfd_config['host'], port=self._sysconfd_config['port'],
         )
         data = {
             'wazo-auth': 'restart',
@@ -274,13 +284,17 @@ class SetupService:
         try:
             response = session.post(url, json=data)
         except requests.RequestsException as e:
-            raise SetupError('xivo-sysconfd connection error',
-                             error_id='xivo-sysconfd-connection-error',
-                             details={'original_error': e})
+            raise SetupError(
+                'xivo-sysconfd connection error',
+                error_id='xivo-sysconfd-connection-error',
+                details={'original_error': e},
+            )
         if response.status_code != 200:
-            raise SetupError('xivo-sysconfd failure',
-                             error_id='xivo-sysconfd-failure',
-                             details={'sysconfd-error': response.text})
+            raise SetupError(
+                'xivo-sysconfd failure',
+                error_id='xivo-sysconfd-failure',
+                details={'sysconfd-error': response.text},
+            )
 
     def plan_setupd_stop(self):
         self._stopper.trigger()

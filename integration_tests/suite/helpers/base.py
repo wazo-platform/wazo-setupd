@@ -21,7 +21,9 @@ VALID_TOKEN = 'valid-token'
 
 class BaseIntegrationTest(AssetLaunchingTestCase):
 
-    assets_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'assets'))
+    assets_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), '..', '..', 'assets')
+    )
     service = 'setupd'
     wait_strategy = WaitStrategy()
 
@@ -33,25 +35,28 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     @classmethod
     def make_setupd(cls, token):
-        return SetupdClient('localhost',
-                            cls.service_port(9302, 'setupd'),
-                            token=token,
-                            verify_certificate=False)
+        return SetupdClient(
+            'localhost',
+            cls.service_port(9302, 'setupd'),
+            token=token,
+            verify_certificate=False,
+        )
 
     def make_auth(self):
         return AuthClient('localhost', self.service_port(9497, 'nestbox-auth'))
 
     def make_bus(self):
         return BusClient.from_connection_fields(
-            host='localhost',
-            port=self.service_port(5672, 'rabbitmq')
+            host='localhost', port=self.service_port(5672, 'rabbitmq')
         )
 
     def make_confd(self):
         return ConfdMockClient('localhost', self.service_port(9486, 'confd'))
 
     def make_deployd(self):
-        return DeploydMockClient('localhost', self.service_port(9800, 'nestbox-deployd'))
+        return DeploydMockClient(
+            'localhost', self.service_port(9800, 'nestbox-deployd')
+        )
 
     def make_sysconfd(self):
         return SysconfdMockClient('localhost', self.service_port(8668, 'sysconfd'))
