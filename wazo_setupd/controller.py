@@ -29,7 +29,7 @@ class Controller:
         plugin_helpers.load(
             namespace='wazo_setupd.plugins',
             names=config['enabled_plugins'],
-            dependencies={'api': api, 'config': config, 'stopper': self.stopper,},
+            dependencies={'api': api, 'config': config, 'stopper': self.stopper},
         )
         self.stopper_thread = threading.Thread(target=self.stopper.wait)
 

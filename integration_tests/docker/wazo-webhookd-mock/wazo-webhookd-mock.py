@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
@@ -75,7 +75,7 @@ def print_request_response(response):
             'headers': dict(request.headers),
         },
     )
-    logger.debug('response: %s', {'body': response.data,})
+    logger.debug('response: %s', {'body': response.data})
     return response
 
 

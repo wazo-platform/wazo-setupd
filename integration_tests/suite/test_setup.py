@@ -83,9 +83,7 @@ class TestSetupErrors(BaseIntegrationTest):
         confd.set_wizard_discover(
             {"nameservers": ['10.2.2.2', '10.2.2.3', '10.2.2.4', '10.2.2.5']}
         )
-        confd.set_wizard(
-            {'configured': False,}
-        )
+        confd.set_wizard({'configured': False})
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -113,29 +111,27 @@ class TestSetupValid(BaseIntegrationTest):
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
-        confd.set_wizard_discover({
-            "timezone": 'America/Montreal',
-            "hostname": 'wazo-engine',
-            "domain": 'example.com',
-            'interfaces': [
-                {'interface': 'my-interface',
-                 'ip_address': '10.1.1.1',
-                 'netmask': '255.0.0.0'}
-            ],
-            'gateways': [
-                {'gateway': '10.254.254.254'}
-            ],
-            "nameservers": ['10.2.2.2']
-        })
-        confd.set_wizard({
-            'configured': False,
-        })
+        confd.set_wizard_discover(
+            {
+                "timezone": 'America/Montreal',
+                "hostname": 'wazo-engine',
+                "domain": 'example.com',
+                'interfaces': [
+                    {
+                        'interface': 'my-interface',
+                        'ip_address': '10.1.1.1',
+                        'netmask': '255.0.0.0',
+                    }
+                ],
+                'gateways': [{'gateway': '10.254.254.254'}],
+                "nameservers": ['10.2.2.2'],
+            }
+        )
+        confd.set_wizard({'configured': False})
         confd.set_rtp({'options': {'rtpstart': '10000', 'rtpend': '20000'}})
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
-        deployd.set_post_instance(
-            {'uuid': instance_uuid}
-        )
+        deployd.set_post_instance({'uuid': instance_uuid})
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -173,16 +169,22 @@ class TestSetupValid(BaseIntegrationTest):
         )
         assert_that(
             confd.requests().json(),
-            has_entries(requests=has_item(has_entries(
-                method='PUT',
-                path='/1.1/asterisk/rtp/general',
-                json=has_entries(options=has_entries(
-                    rtpstart='10000',
-                    rtpend='20000',
-                    icesupport='yes',
-                    stunaddr='stun.example.com:3478',
-                ))
-            )))
+            has_entries(
+                requests=has_item(
+                    has_entries(
+                        method='PUT',
+                        path='/1.1/asterisk/rtp/general',
+                        json=has_entries(
+                            options=has_entries(
+                                rtpstart='10000',
+                                rtpend='20000',
+                                icesupport='yes',
+                                stunaddr='stun.example.com:3478',
+                            )
+                        ),
+                    )
+                )
+            ),
         )
         assert_that(
             deployd.requests().json(),
@@ -255,9 +257,7 @@ class TestSetupValid(BaseIntegrationTest):
                 "nameservers": ['10.2.2.2'],
             }
         )
-        confd.set_wizard(
-            {'configured': False,}
-        )
+        confd.set_wizard({'configured': False})
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
         body = {
@@ -372,14 +372,10 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
                 "nameservers": ['10.2.2.2'],
             }
         )
-        confd.set_wizard(
-            {'configured': False,}
-        )
+        confd.set_wizard({'configured': False})
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
-        deployd.set_post_instance(
-            {'uuid': instance_uuid,}
-        )
+        deployd.set_post_instance({'uuid': instance_uuid})
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',
@@ -442,14 +438,10 @@ class TestSetupSelfStop(BaseIntegrationTest):
                 "nameservers": ['10.2.2.2'],
             }
         )
-        confd.set_wizard(
-            {'configured': False,}
-        )
+        confd.set_wizard({'configured': False})
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
-        deployd.set_post_instance(
-            {'uuid': instance_uuid,}
-        )
+        deployd.set_post_instance({'uuid': instance_uuid})
         body = {
             'engine_language': 'en_US',
             'engine_password': 'secret',

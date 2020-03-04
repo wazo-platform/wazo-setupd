@@ -65,7 +65,7 @@ def print_request_response(response):
             'headers': dict(request.headers),
         },
     )
-    logger.debug('response: %s', {'body': response.data,})
+    logger.debug('response: %s', {'body': response.data})
     return response
 
 
