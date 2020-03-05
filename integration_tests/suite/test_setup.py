@@ -80,7 +80,7 @@ class TestSetupErrors(BaseIntegrationTest):
             ))
         )
 
-    def test_setup_when_more_than_two_nameservers(self):
+    def test_setup_when_more_than_three_nameservers(self):
         setupd = self.make_setupd(VALID_TOKEN)
         confd = self.make_confd()
         confd.set_wizard_discover({
@@ -134,6 +134,7 @@ class TestSetupValid(BaseIntegrationTest):
         confd.set_wizard({
             'configured': False,
         })
+        confd.set_rtp({'options': {'rtpstart': '10000', 'rtpend': '20000'}})
         instance_uuid = str(uuid.uuid4())
         deployd = self.make_deployd()
         deployd.set_post_instance({
@@ -144,6 +145,8 @@ class TestSetupValid(BaseIntegrationTest):
             'engine_password': 'secret',
             'engine_internal_address': '10.1.1.1',
             'engine_license': True,
+            'engine_rtp_icesupport': True,
+            'engine_rtp_stunaddr': 'stun.example.com:3478',
             'nestbox_host': 'nestbox',
             'nestbox_port': 443,
             'nestbox_verify_certificate': False,
@@ -166,6 +169,19 @@ class TestSetupValid(BaseIntegrationTest):
                     domain='example.com',
                 )),
             ))),
+        )
+        assert_that(
+            confd.requests().json(),
+            has_entries(requests=has_item(has_entries(
+                method='PUT',
+                path='/1.1/asterisk/rtp/general',
+                json=has_entries(options=has_entries(
+                    rtpstart='10000',
+                    rtpend='20000',
+                    icesupport='yes',
+                    stunaddr='stun.example.com:3478',
+                ))
+            )))
         )
         assert_that(
             deployd.requests().json(),

@@ -1,5 +1,13 @@
 # Changelog
 
+## 20.04
+
+* The following fields have been added to the `/1.0/setup` body
+
+  - engine_rtp_icesupport
+  - engine_rtp_stunaddr
+
+
 ## 20.02
 
 * The following fields have been added to the `/1.0/setup` body
