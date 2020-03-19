@@ -7,7 +7,6 @@ from wazo_setupd.http import AuthResource
 
 
 class ConfigResource(AuthResource):
-
     def __init__(self, config):
         self._config = config
 

@@ -9,7 +9,6 @@ from .schemas import setup_schema
 
 
 class SetupResource(ErrorCatchingResource):
-
     def __init__(self, service):
         self.service = service
 

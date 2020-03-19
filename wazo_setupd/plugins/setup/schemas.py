@@ -12,19 +12,21 @@ from xivo.mallow import (
 
 class SetupSchema(Schema):
 
-    engine_language = fields.String(required=True, validate=validate.OneOf(['en_US', 'fr_FR']))
+    engine_language = fields.String(
+        required=True, validate=validate.OneOf(['en_US', 'fr_FR'])
+    )
     engine_password = fields.String(required=True)
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
     engine_internal_address = fields.String()
     engine_instance_uuid = fields.UUID(missing=None)
     engine_rtp_icesupport = fields.Boolean(required=False, missing=False)
-    engine_rtp_stunaddr = fields.String(validate=validate.Length(min=1, max=1024), missing=None)
+    engine_rtp_stunaddr = fields.String(
+        validate=validate.Length(min=1, max=1024), missing=None
+    )
     nestbox_host = fields.String()
     nestbox_port = fields.Integer(
         validate=validate.Range(
-            min=0,
-            max=65535,
-            error='Not a valid TCP/IP port number.'
+            min=0, max=65535, error='Not a valid TCP/IP port number.'
         ),
         missing=443,
     )
@@ -35,9 +37,7 @@ class SetupSchema(Schema):
     nestbox_engine_host = fields.String()
     nestbox_engine_port = fields.Integer(
         validate=validate.Range(
-            min=0,
-            max=65535,
-            error='Not a valid TCP/IP port number.'
+            min=0, max=65535, error='Not a valid TCP/IP port number.'
         ),
         missing=443,
     )
@@ -48,15 +48,25 @@ class SetupSchema(Schema):
             return
 
         if 'nestbox_service_id' not in data:
-            raise ValidationError('Missing keys for Nestbox configuration: nestbox_service_id')
+            raise ValidationError(
+                'Missing keys for Nestbox configuration: nestbox_service_id'
+            )
         if 'nestbox_service_key' not in data:
-            raise ValidationError('Missing keys for Nestbox configuration: nestbox_service_key')
+            raise ValidationError(
+                'Missing keys for Nestbox configuration: nestbox_service_key'
+            )
         if 'nestbox_instance_name' not in data:
-            raise ValidationError('Missing keys for Nestbox configuration: nestbox_instance_name')
+            raise ValidationError(
+                'Missing keys for Nestbox configuration: nestbox_instance_name'
+            )
         if 'nestbox_engine_host' not in data:
-            raise ValidationError('Missing keys for Nestbox configuration: nestbox_engine_host')
+            raise ValidationError(
+                'Missing keys for Nestbox configuration: nestbox_engine_host'
+            )
         if 'engine_internal_address' not in data:
-            raise ValidationError('Missing keys for Nestbox configuration: engine_internal_address')
+            raise ValidationError(
+                'Missing keys for Nestbox configuration: engine_internal_address'
+            )
 
     @validates_schema
     def check_rtp_fields(self, data):

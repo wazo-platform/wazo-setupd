@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 class Controller:
-
     def __init__(self, config):
         self._service_discovery_args = [
             'wazo-setupd',
@@ -30,11 +29,7 @@ class Controller:
         plugin_helpers.load(
             namespace='wazo_setupd.plugins',
             names=config['enabled_plugins'],
-            dependencies={
-                'api': api,
-                'config': config,
-                'stopper': self.stopper,
-            }
+            dependencies={'api': api, 'config': config, 'stopper': self.stopper},
         )
         self.stopper_thread = threading.Thread(target=self.stopper.wait)
 

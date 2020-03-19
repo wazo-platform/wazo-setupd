@@ -3,12 +3,10 @@
 
 
 class WaitStrategy:
-
     def wait(self, setupd):
         raise NotImplementedError()
 
 
 class NoWaitStrategy(WaitStrategy):
-
     def wait(self, setupd):
         pass

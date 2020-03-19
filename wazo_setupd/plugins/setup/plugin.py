@@ -6,7 +6,6 @@ from .services import SetupService
 
 
 class Plugin:
-
     def load(self, dependencies):
         api = dependencies['api']
         service = SetupService(dependencies['config'], dependencies['stopper'])

@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class Stopper:
-
     def __init__(self, stop_delay, controller):
         self._stop_delay = stop_delay
         self._event = threading.Event()

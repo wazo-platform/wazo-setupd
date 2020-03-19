@@ -42,27 +42,30 @@ def _reset():
 def log_request():
     if not request.path.startswith('/_'):
         path = request.path
-        log = {'method': request.method,
-               'path': path,
-               'query': request.args.items(multi=True),
-               'body': request.data,
-               'json': request.json,
-               'headers': dict(request.headers)}
+        log = {
+            'method': request.method,
+            'path': path,
+            'query': request.args.items(multi=True),
+            'body': request.data,
+            'json': request.json,
+            'headers': dict(request.headers),
+        }
         _requests.append(log)
 
 
 @app.after_request
 def print_request_response(response):
-    logger.debug('request: %s', {
-        'method': request.method,
-        'path': request.path,
-        'query': request.args.items(multi=True),
-        'body': request.data,
-        'headers': dict(request.headers)
-    })
-    logger.debug('response: %s', {
-        'body': response.data,
-    })
+    logger.debug(
+        'request: %s',
+        {
+            'method': request.method,
+            'path': request.path,
+            'query': request.args.items(multi=True),
+            'body': request.data,
+            'headers': dict(request.headers),
+        },
+    )
+    logger.debug('response: %s', {'body': response.data})
     return response
 
 
@@ -105,5 +108,8 @@ def instances():
 if __name__ == '__main__':
     _reset()
 
-    context = ('/usr/local/share/ssl/deployd/server.crt', '/usr/local/share/ssl/deployd/server.key')
+    context = (
+        '/usr/local/share/ssl/deployd/server.crt',
+        '/usr/local/share/ssl/deployd/server.key',
+    )
     app.run(host='0.0.0.0', port=port, ssl_context=context, debug=True)
