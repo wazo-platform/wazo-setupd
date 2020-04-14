@@ -1,4 +1,4 @@
-# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import argparse
@@ -21,7 +21,7 @@ _DEFAULT_CONFIG = {
     'pid_file': os.path.join(_PID_DIR, 'wazo-setupd.pid'),
     'user': 'wazo-setupd',
     'self_stop_delay': 10.0,
-    'auth': {'host': 'localhost', 'port': 9497, 'verify_certificate': _CERT_FILE},
+    'auth': {'host': 'localhost', 'port': 9497, 'prefix': None, 'https': False},
     'bus': {
         'username': 'guest',
         'password': 'guest',
