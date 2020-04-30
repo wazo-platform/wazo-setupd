@@ -2,7 +2,6 @@ auth:
   host: auth
 confd:
   host: confd
-  verify_certificate: /usr/local/share/ssl/confd/server.crt
 sysconfd:
   host: sysconfd
 bus:

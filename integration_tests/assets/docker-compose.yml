@@ -54,8 +54,6 @@ services:
       XIVO_UUID: cd030e68-ace9-4ad4-bc4e-13c8dec67898
     volumes:
       - ../..:/usr/src/wazo-setupd:ro
-      - ./ssl:/usr/local/share/ssl:ro
-      - ./ssl/confd:/usr/share/xivo-certs:ro
       - ./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml:ro
       - auth-config:/etc/wazo-auth/conf.d
       - webhookd-config:/etc/wazo-webhookd/conf.d

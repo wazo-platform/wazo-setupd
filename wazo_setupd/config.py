@@ -8,7 +8,6 @@ from xivo.chain_map import ChainMap
 from xivo.config_helper import read_config_file_hierarchy
 from xivo.xivo_logging import get_log_level_by_name
 
-_CERT_FILE = '/usr/share/xivo-certs/server.crt'
 _DEFAULT_HTTPS_PORT = 9302
 _PID_DIR = '/run/wazo-setupd'
 
@@ -31,7 +30,7 @@ _DEFAULT_CONFIG = {
         'exchange_type': 'topic',
         'exchange_headers_name': 'wazo-headers',
     },
-    'confd': {'host': 'localhost', 'port': 9486, 'verify_certificate': _CERT_FILE},
+    'confd': {'host': 'localhost', 'port': 9486, 'prefix': None, 'https': False},
     'consul': {
         'scheme': 'http',
         'host': 'localhost',
@@ -41,7 +40,7 @@ _DEFAULT_CONFIG = {
     'rest_api': {
         'listen': '0.0.0.0',
         'port': _DEFAULT_HTTPS_PORT,
-        'certificate': _CERT_FILE,
+        'certificate': '/usr/share/xivo-certs/server.crt',
         'private_key': '/usr/share/xivo-certs/server.key',
         'cors': {'enabled': True, 'allow_headers': ['Content-Type', 'X-Auth-Token']},
     },
