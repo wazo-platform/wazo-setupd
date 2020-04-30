@@ -25,8 +25,6 @@ services:
     image: wazopbx/wazo-deployd-mock
     ports:
       - '9800'
-    volumes:
-      - ./ssl/confd:/usr/local/share/ssl/deployd:ro
     command: /usr/local/bin/wazo-deployd-mock.py 9800
 
   auth:
@@ -39,8 +37,6 @@ services:
 
   confd:
     image: wazopbx/wazo-confd-mock
-    volumes:
-      - ./ssl:/usr/local/share/ssl:ro
     ports:
       - '9486'
 
@@ -79,7 +75,6 @@ services:
     ports:
       - '9300'
     volumes:
-      - ./ssl/confd:/usr/local/share/ssl/webhookd:ro
       - setupd-generated-config:/usr/share/wazo-setupd:ro
       - webhookd-config:/etc/wazo-webhookd/conf.d:ro
     command: /usr/local/bin/wazo-webhookd-mock.py 9300
