@@ -17,8 +17,8 @@ This mock exposes an interface similar to the official wazo-setupd with a few ex
 
 Certificates can be customized and placed in the following location:
 
-`server.crt` `/usr/local/share/ssl/confd/server.crt`
-`server.key` `/usr/local/share/ssl/confd/server.key`
+`server.crt` `/usr/local/share/ssl/deployd/server.crt`
+`server.key` `/usr/local/share/ssl/deployd/server.key`
 
 
 ## How to generate certificates
