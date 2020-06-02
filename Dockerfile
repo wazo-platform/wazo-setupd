@@ -1,5 +1,19 @@
-FROM python:3.7-buster
+FROM python:3.7-slim-buster AS compile-image
+LABEL maintainer="Wazo Maintainers <dev@wazo.community>"
 
+RUN python -m venv /opt/venv
+# Activate virtual env
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY . /usr/src/wazo-setupd
+WORKDIR /usr/src/wazo-setupd
+RUN pip install -r requirements.txt
+RUN python setup.py install
+
+FROM python:3.7-slim-buster AS build-image
+COPY --from=compile-image /opt/venv /opt/venv
+
+COPY ./etc/wazo-setupd /etc/wazo-setupd
 COPY ./contribs/docker/certs /usr/share/xivo-certs
 RUN true \
     && adduser --quiet --system --group --home /var/lib/wazo-setupd wazo-setupd \
@@ -14,17 +28,13 @@ RUN true \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml \
     && install -d -o wazo-setupd -g wazo-setupd /run/wazo-setupd/ \
     && install -o wazo-setupd -g wazo-setupd /dev/null /var/log/wazo-setupd.log \
-    && apt-get -yqq autoremove \
     && openssl req -x509 -newkey rsa:4096 -keyout /usr/share/xivo-certs/server.key -out /usr/share/xivo-certs/server.crt -nodes -config /usr/share/xivo-certs/openssl.cfg -days 3650 \
     && chown wazo-setupd:wazo-setupd /usr/share/xivo-certs/*
 
-COPY . /usr/src/wazo-setupd
-WORKDIR /usr/src/wazo-setupd
-RUN true \
-  && pip install -r /usr/src/wazo-setupd/requirements.txt \
-  && python setup.py install \
-  && cp -r etc/* /etc
-
 EXPOSE 9302
 
-CMD ["python3", "-u", "/usr/local/bin/wazo-setupd"]
+ENV PYTHONUNBUFFERED=TRUE
+
+# Activate virtual env
+ENV PATH="/opt/venv/bin:$PATH"
+CMD ["wazo-setupd"]

@@ -59,7 +59,7 @@ services:
       - webhookd-config:/etc/wazo-webhookd/conf.d
       - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d
       - setupd-generated-config:/usr/share/wazo-setupd
-      # - '${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/usr/local/lib/python3.7/site-packages/xivo'
+      # - '${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/opt/venv/lib/python3.7/site-packages/xivo'
     ports:
       - '9302'
 
