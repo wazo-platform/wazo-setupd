@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -44,9 +44,13 @@ class CoreRestApi:
 
         wsgi_app = wsgi.WSGIPathInfoDispatcher({'/': app})
         self.server = wsgi.WSGIServer(bind_addr=bind_addr, wsgi_app=wsgi_app)
-        self.server.ssl_adapter = http_helpers.ssl_adapter(
-            self.config['certificate'], self.config['private_key']
-        )
+        if self.config['certificate'] and self.config['private_key']:
+            logger.warning(
+                'Using service SSL configuration is deprecated. Please use NGINX instead.'
+            )
+            self.server.ssl_adapter = http_helpers.ssl_adapter(
+                self.config['certificate'], self.config['private_key']
+            )
         logger.debug(
             'WSGIServer starting... uid: %s, listen: %s:%s',
             os.getuid(),

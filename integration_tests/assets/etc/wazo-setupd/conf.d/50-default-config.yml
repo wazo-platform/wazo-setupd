@@ -1,4 +1,6 @@
 debug: true
+rest_api:
+  listen: 0.0.0.0
 auth:
   host: auth
 confd:
