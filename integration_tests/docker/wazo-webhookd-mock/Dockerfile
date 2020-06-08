@@ -2,9 +2,6 @@ FROM p0bailey/docker-flask
 
 MAINTAINER Wazo Maintainers <dev@wazo.community>
 
-COPY server.crt /usr/local/share/ssl/webhookd/server.crt
-COPY server.key /usr/local/share/ssl/webhookd/server.key
-
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
