@@ -31,12 +31,7 @@ _DEFAULT_CONFIG = {
         'exchange_headers_name': 'wazo-headers',
     },
     'confd': {'host': 'localhost', 'port': 9486, 'prefix': None, 'https': False},
-    'consul': {
-        'scheme': 'http',
-        'host': 'localhost',
-        'port': 8500,
-        'verify': '/usr/share/xivo-certs/server.crt',
-    },
+    'consul': {'scheme': 'http', 'host': 'localhost', 'port': 8500},
     'rest_api': {
         'listen': '0.0.0.0',
         'port': _DEFAULT_HTTPS_PORT,
