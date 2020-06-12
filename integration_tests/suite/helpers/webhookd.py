@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import requests
@@ -10,15 +10,15 @@ class WebhookdMockClient:
         self._port = port
 
     def url(self, *parts):
-        return 'https://{host}:{port}/{path}'.format(
+        return 'http://{host}:{port}/{path}'.format(
             host=self._host, port=self._port, path='/'.join(parts)
         )
 
     def reset(self):
-        requests.post(self.url('_reset'), verify=False)
+        requests.post(self.url('_reset'))
 
     def requests(self):
-        return requests.get(self.url('_requests'), verify=False)
+        return requests.get(self.url('_requests'))
 
     def get_config(self):
-        return requests.get(self.url('1.0', 'config'), verify=False,)
+        return requests.get(self.url('1.0', 'config'))

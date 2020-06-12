@@ -9,7 +9,6 @@ GROUP=$USER
 LOG_FILENAME="/var/log/${DAEMONNAME}.log"
 GENERATED_CONFIG_DIR="/usr/share/wazo-setupd"
 GENERATED_CONFIG_FILENAME="${GENERATED_CONFIG_DIR}/50-wazo-plugin-nestbox.yml"
-OLD_NESTBOX_CONFIG_FILENAME="/etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml"
 
 case "$1" in
     configure)
@@ -22,7 +21,6 @@ case "$1" in
                     --home "${HOME}" \
                     $USER
         fi
-        adduser --quiet $USER www-data
 
         if [ ! -e "$LOG_FILENAME" ]; then
             install -m 0644 -o $USER -g $GROUP /dev/null "$LOG_FILENAME"
@@ -32,18 +30,18 @@ case "$1" in
             # Add nginx configuration on new installations
             ln -sf /etc/nginx/locations/https-available/$DAEMONNAME \
                    /etc/nginx/locations/https-enabled/$DAEMONNAME
+        elif dpkg --compare-versions "${previous_version}" lt '20.09'; then
+            if getent group www-data | grep -q $USER; then
+                deluser --quiet $USER www-data
+            fi
         fi
+
         if [ ! -d "${GENERATED_CONFIG_DIR}" ]; then
             mkdir -p "${GENERATED_CONFIG_DIR}"
         fi
         if [ ! -e "${GENERATED_CONFIG_FILENAME}" ]; then
-            # In wazo 19.05 we stopped using the plugin configuration as the file to link to other services
-            if [ -e "${OLD_NESTBOX_CONFIG_FILENAME}" ]; then
-                mv "${OLD_NESTBOX_CONFIG_FILENAME}" "${GENERATED_CONFIG_FILENAME}"
-            else
-                # Create config file filled by wazo-setupd with correct permissions
-                install -D -m 0640 -o $USER -g root /dev/null "${GENERATED_CONFIG_FILENAME}"
-            fi
+            # Create config file filled by wazo-setupd with correct permissions
+            install -D -m 0640 -o $USER -g root /dev/null "${GENERATED_CONFIG_FILENAME}"
         fi
     ;;
 

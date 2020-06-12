@@ -113,9 +113,4 @@ def subscriptions():
 
 if __name__ == '__main__':
     _reset()
-
-    context = (
-        '/usr/local/share/ssl/webhookd/server.crt',
-        '/usr/local/share/ssl/webhookd/server.key',
-    )
-    app.run(host='0.0.0.0', port=port, ssl_context=context, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)
