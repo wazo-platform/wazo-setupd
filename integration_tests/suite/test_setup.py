@@ -462,7 +462,7 @@ class TestSetupSelfStop(BaseIntegrationTest):
         def setupd_is_stopped():
             return not self.service_status('setupd')['State']['Running']
 
-        until.true(setupd_is_stopped, timeout=5)
+        until.true(setupd_is_stopped, timeout=10)
 
 
 class TestSetupNotSelfStop(BaseIntegrationTest):
@@ -498,7 +498,7 @@ class TestSetupNotSelfStop(BaseIntegrationTest):
             return not self.service_status('setupd')['State']['Running']
 
         try:
-            until.true(setupd_is_stopped, timeout=5)
+            until.true(setupd_is_stopped, timeout=10)
         except until.NoMoreTries:
             return
         else:
