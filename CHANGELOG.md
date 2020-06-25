@@ -1,5 +1,9 @@
 # Changelog
 
+## 20.09
+
+* Deprecate SSL configuration
+
 ## 20.04
 
 * The following fields have been added to the `/1.0/setup` body
