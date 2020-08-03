@@ -1,11 +1,9 @@
 [Unit]
 Description=wazo-setupd daemon
 After=network.target
-Before=monit.service
 
 [Service]
 Environment=PYTHONUNBUFFERED=TRUE
-ExecStartPre=/usr/bin/install -o wazo-setupd -g wazo-setupd -d /run/wazo-setupd
 ExecStart=/usr/bin/wazo-setupd
 
 [Install]

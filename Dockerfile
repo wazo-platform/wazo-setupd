@@ -25,7 +25,6 @@ RUN true \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-auth/conf.d/50-wazo-plugin-nestbox.yml \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-nestbox-plugin/conf.d/50-wazo-plugin-nestbox.yml \
     && ln -s /usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml /etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml \
-    && install -d -o wazo-setupd -g wazo-setupd /run/wazo-setupd/ \
     && install -o wazo-setupd -g wazo-setupd /dev/null /var/log/wazo-setupd.log
 
 EXPOSE 9302

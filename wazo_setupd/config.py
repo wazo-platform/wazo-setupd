@@ -2,14 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import argparse
-import os
 
 from xivo.chain_map import ChainMap
 from xivo.config_helper import read_config_file_hierarchy
 from xivo.xivo_logging import get_log_level_by_name
 
 _DEFAULT_HTTP_PORT = 9302
-_PID_DIR = '/run/wazo-setupd'
 
 _DEFAULT_CONFIG = {
     'config_file': '/etc/wazo-setupd/config.yml',
@@ -17,7 +15,6 @@ _DEFAULT_CONFIG = {
     'extra_config_files': '/etc/wazo-setupd/conf.d',
     'log_file': '/var/log/wazo-setupd.log',
     'log_level': 'info',
-    'pid_file': os.path.join(_PID_DIR, 'wazo-setupd.pid'),
     'user': 'wazo-setupd',
     'self_stop_delay': 10.0,
     'auth': {'host': 'localhost', 'port': 9497, 'prefix': None, 'https': False},
