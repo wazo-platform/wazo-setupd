@@ -14,30 +14,38 @@ class TestSetupSchema(TestCase):
         body = self._make_body()
         result = SetupSchema().load(body)
         assert_that(
-            result, has_entries(engine_rtp_icesupport=False, engine_rtp_stunaddr=None,)
+            result,
+            has_entries(
+                engine_rtp_icesupport=False,
+                engine_rtp_stunaddr=None,
+            ),
         )
 
         body = self._make_body(
-            engine_rtp_icesupport=True, engine_rtp_stunaddr='mystunserver:1234',
+            engine_rtp_icesupport=True,
+            engine_rtp_stunaddr='mystunserver:1234',
         )
         result = SetupSchema().load(body)
         assert_that(
             result,
             has_entries(
-                engine_rtp_icesupport=True, engine_rtp_stunaddr='mystunserver:1234',
+                engine_rtp_icesupport=True,
+                engine_rtp_stunaddr='mystunserver:1234',
             ),
         )
 
         body = self._make_body(engine_rtp_icesupport=True)
         assert_that(
-            calling(SetupSchema().load).with_args(body), raises(ValidationError),
+            calling(SetupSchema().load).with_args(body),
+            raises(ValidationError),
         )
 
         body = self._make_body(
             engine_rtp_icesupport=True, engine_rtp_stunaddr=STUNADDR_TOO_LONG
         )
         assert_that(
-            calling(SetupSchema().load).with_args(body), raises(ValidationError),
+            calling(SetupSchema().load).with_args(body),
+            raises(ValidationError),
         )
 
     def _make_body(

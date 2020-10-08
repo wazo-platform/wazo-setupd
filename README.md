@@ -7,7 +7,7 @@ A micro service to initialize a [Wazo](http://wazo.community) Engine.
 
 ## Docker
 
-The official docker image for this service is `wazopbx/wazo-setupd`.
+The official docker image for this service is `wazoplatform/wazo-setupd`.
 
 
 ### Getting the image
@@ -15,14 +15,14 @@ The official docker image for this service is `wazopbx/wazo-setupd`.
 To download the latest image from the docker hub
 
 ```sh
-docker pull wazopbx/wazo-setupd
+docker pull wazoplatform/wazo-setupd
 ```
 
 
 ### Running wazo-setupd
 
 ```sh
-docker run wazopbx/wazo-setupd
+docker run wazoplatform/wazo-setupd
 ```
 
 ### Building the image
@@ -30,5 +30,5 @@ docker run wazopbx/wazo-setupd
 Building the docker image:
 
 ```sh
-docker build -t wazopbx/wazo-setupd .
+docker build -t wazoplatform/wazo-setupd .
 ```
