@@ -73,7 +73,10 @@ class TestSetupErrors(BaseIntegrationTest):
         assert_that(
             calling(setupd.setup.create).with_args(body),
             raises(SetupdError).matching(
-                has_properties(status_code=500, error_id='setup-token-failed',)
+                has_properties(
+                    status_code=500,
+                    error_id='setup-token-failed',
+                )
             ),
         )
 
@@ -93,7 +96,10 @@ class TestSetupErrors(BaseIntegrationTest):
         assert_that(
             calling(setupd.setup.create).with_args(body),
             raises(SetupdError).matching(
-                has_properties(status_code=500, error_id='setup-nameservers-failed',)
+                has_properties(
+                    status_code=500,
+                    error_id='setup-nameservers-failed',
+                )
             ),
         )
 
@@ -160,7 +166,8 @@ class TestSetupValid(BaseIntegrationTest):
                         path='/1.1/wizard',
                         json=has_entries(
                             network=has_entries(
-                                hostname='wazo-engine', domain='example.com',
+                                hostname='wazo-engine',
+                                domain='example.com',
                             )
                         ),
                     )
@@ -287,7 +294,8 @@ class TestSetupValid(BaseIntegrationTest):
                         path='/1.1/wizard',
                         json=has_entries(
                             network=has_entries(
-                                hostname='wazo-engine', domain='example.com',
+                                hostname='wazo-engine',
+                                domain='example.com',
                             )
                         ),
                     )
@@ -299,7 +307,10 @@ class TestSetupValid(BaseIntegrationTest):
             not_(
                 has_entries(
                     requests=has_item(
-                        has_entries(method='POST', path='/0.1/instances',)
+                        has_entries(
+                            method='POST',
+                            path='/0.1/instances',
+                        )
                     )
                 )
             ),
@@ -393,7 +404,8 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
                         path='/1.1/wizard',
                         json=has_entries(
                             network=has_entries(
-                                hostname='wazo-engine', domain='example.com',
+                                hostname='wazo-engine',
+                                domain='example.com',
                             )
                         ),
                     )
@@ -408,7 +420,10 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
             sysconfd.requests().json(),
             has_entries(
                 requests=has_items(
-                    has_entries(method='GET', path='/remove_nestbox_dependencies',)
+                    has_entries(
+                        method='GET',
+                        path='/remove_nestbox_dependencies',
+                    )
                 )
             ),
         )
@@ -490,7 +505,10 @@ class TestSetupNotSelfStop(BaseIntegrationTest):
         assert_that(
             calling(setupd.setup.create).with_args(body),
             raises(SetupdError).matching(
-                has_properties(status_code=500, error_id='setup-token-failed',)
+                has_properties(
+                    status_code=500,
+                    error_id='setup-token-failed',
+                )
             ),
         )
 

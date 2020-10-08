@@ -179,7 +179,8 @@ class SetupService:
 
     def remove_nestbox_dependencies(self):
         url = "http://{host}:{port}/remove_nestbox_dependencies".format(
-            host=self._sysconfd_config['host'], port=self._sysconfd_config['port'],
+            host=self._sysconfd_config['host'],
+            port=self._sysconfd_config['port'],
         )
         try:
             response = requests.get(url)
@@ -275,7 +276,8 @@ class SetupService:
         session = requests.Session()
         session.trust_env = False
         url = 'http://{host}:{port}/services'.format(
-            host=self._sysconfd_config['host'], port=self._sysconfd_config['port'],
+            host=self._sysconfd_config['host'],
+            port=self._sysconfd_config['port'],
         )
         data = {
             'wazo-auth': 'restart',

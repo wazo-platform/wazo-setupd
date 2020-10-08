@@ -21,7 +21,10 @@ class TestSetupService(TestCase):
         }
         self.stopper = Mock()
 
-        self.service = SetupService(self.config, self.stopper,)
+        self.service = SetupService(
+            self.config,
+            self.stopper,
+        )
 
     def test_setup_rtp(self):
         with self.confd_mock() as client:
