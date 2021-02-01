@@ -1,4 +1,4 @@
-# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import uuid
@@ -415,18 +415,6 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
         assert_that(deployd.requests().json(), has_entries(requests=empty()))
         webhookd = self.make_webhookd()
         assert_that(webhookd.get_config().json(), empty())
-        sysconfd = self.make_sysconfd()
-        assert_that(
-            sysconfd.requests().json(),
-            has_entries(
-                requests=has_items(
-                    has_entries(
-                        method='GET',
-                        path='/remove_nestbox_dependencies',
-                    )
-                )
-            ),
-        )
 
 
 class TestSetupSelfStop(BaseIntegrationTest):

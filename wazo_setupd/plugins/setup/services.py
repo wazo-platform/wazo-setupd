@@ -1,4 +1,4 @@
-# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -77,7 +77,6 @@ class SetupService:
         )
 
     def setup_without_nestbox(self, setup_infos):
-        self.remove_nestbox_dependencies()
         self.post_confd_wizard(
             setup_infos['engine_language'],
             setup_infos['engine_password'],
@@ -177,26 +176,6 @@ class SetupService:
             rtp_config['icesupport'] = 'yes'
         client.rtp_general.update({'options': rtp_config})
 
-    def remove_nestbox_dependencies(self):
-        url = "http://{host}:{port}/remove_nestbox_dependencies".format(
-            host=self._sysconfd_config['host'],
-            port=self._sysconfd_config['port'],
-        )
-        try:
-            response = requests.get(url)
-        except requests.RequestsException as e:
-            raise SetupError(
-                'xivo-sysconfd connection error',
-                error_id='xivo-sysconfd-connection-error',
-                details={'original_error': e},
-            )
-        if response.status_code != 200:
-            raise SetupError(
-                'xivo-sysconfd failure',
-                error_id='xivo-sysconfd-failure',
-                details={'sysconfd-error': response.text},
-            )
-
     def register_instance(
         self,
         token,
@@ -234,6 +213,8 @@ class SetupService:
         if not engine_uuid:
             instance = deployd.instances.register(instance_data)
             return instance['uuid']
+        else:
+            engine_uuid = str(engine_uuid)
 
         instance_data["installed"] = True
         deployd.instances.update(engine_uuid, instance_data)
