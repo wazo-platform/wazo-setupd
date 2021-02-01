@@ -213,6 +213,8 @@ class SetupService:
         if not engine_uuid:
             instance = deployd.instances.register(instance_data)
             return instance['uuid']
+        else:
+            engine_uuid = str(engine_uuid)
 
         instance_data["installed"] = True
         deployd.instances.update(engine_uuid, instance_data)
