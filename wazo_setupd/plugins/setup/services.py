@@ -201,14 +201,15 @@ class SetupService:
             verify_certificate=nestbox_verify_certificate,
         )
         instance_data = {
-            "remote_host": nestbox_engine_host,
-            "https_port": nestbox_engine_port,
-            "name": nestbox_instance_name,
-            "interface_ip": engine_internal_address,
-            "username": "root",
-            "password": engine_password,
             "config": {},
+            "name": nestbox_instance_name,
+            "password": engine_password,
+            "private_host": engine_internal_address,
+            "private_port": nestbox_engine_port,
+            "public_host": nestbox_engine_host,
+            "public_port": nestbox_engine_port,
             "service_id": ENGINE_SERVICE_ID,
+            "username": "root",
         }
         if not engine_uuid:
             instance = deployd.instances.register(instance_data)
