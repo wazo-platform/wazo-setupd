@@ -189,7 +189,7 @@ class SetupService:
         engine_password,
         engine_uuid,
     ):
-        # wazo-deployd-client was just installed by xivo-sysconfd, at the
+        # wazo-deployd-client was just installed by wazo-sysconfd, at the
         # request of wazo-setupd, thus we need a lazy import
         from wazo_deployd_client import Client as DeploydClient
 
@@ -269,14 +269,14 @@ class SetupService:
             response = session.post(url, json=data)
         except requests.RequestsException as e:
             raise SetupError(
-                'xivo-sysconfd connection error',
-                error_id='xivo-sysconfd-connection-error',
+                'wazo-sysconfd connection error',
+                error_id='wazo-sysconfd-connection-error',
                 details={'original_error': e},
             )
         if response.status_code != 200:
             raise SetupError(
-                'xivo-sysconfd failure',
-                error_id='xivo-sysconfd-failure',
+                'wazo-sysconfd failure',
+                error_id='wazo-sysconfd-failure',
                 details={'sysconfd-error': response.text},
             )
 
