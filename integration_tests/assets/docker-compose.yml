@@ -64,7 +64,7 @@ services:
       - '9302'
 
   sysconfd:
-    image: wazoplatform/xivo-sysconfd-mock
+    image: wazoplatform/wazo-sysconfd-mock
     ports:
       - '8668'
 
