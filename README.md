@@ -32,3 +32,4 @@ Building the docker image:
 ```sh
 docker build -t wazoplatform/wazo-setupd .
 ```
+
