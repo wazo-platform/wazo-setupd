@@ -1,4 +1,4 @@
-# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
@@ -36,7 +36,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
     @classmethod
     def make_setupd(cls, token):
         return SetupdClient(
-            'localhost',
+            '127.0.0.1',
             cls.service_port(9302, 'setupd'),
             prefix=None,
             https=False,
@@ -44,26 +44,26 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
         )
 
     def make_auth(self):
-        return AuthClient('localhost', self.service_port(9497, 'nestbox-auth'))
+        return AuthClient('127.0.0.1', self.service_port(9497, 'nestbox-auth'))
 
     def make_bus(self):
         return BusClient.from_connection_fields(
-            host='localhost', port=self.service_port(5672, 'rabbitmq')
+            host='127.0.0.1', port=self.service_port(5672, 'rabbitmq')
         )
 
     def make_confd(self):
-        return ConfdMockClient('localhost', self.service_port(9486, 'confd'))
+        return ConfdMockClient('127.0.0.1', self.service_port(9486, 'confd'))
 
     def make_deployd(self):
         return DeploydMockClient(
-            'localhost', self.service_port(9800, 'nestbox-deployd')
+            '127.0.0.1', self.service_port(9800, 'nestbox-deployd')
         )
 
     def make_sysconfd(self):
-        return SysconfdMockClient('localhost', self.service_port(8668, 'sysconfd'))
+        return SysconfdMockClient('127.0.0.1', self.service_port(8668, 'sysconfd'))
 
     def make_webhookd(self):
-        return WebhookdMockClient('localhost', self.service_port(9300, 'webhookd'))
+        return WebhookdMockClient('127.0.0.1', self.service_port(9300, 'webhookd'))
 
     @contextmanager
     def auth_stopped(self):
