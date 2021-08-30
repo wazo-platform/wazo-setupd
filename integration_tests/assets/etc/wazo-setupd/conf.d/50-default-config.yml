@@ -7,7 +7,5 @@ confd:
   host: confd
 sysconfd:
   host: sysconfd
-bus:
-  host: rabbitmq
 service_discovery:
   enabled: false
