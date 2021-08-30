@@ -40,14 +40,6 @@ services:
     ports:
       - '9486'
 
-  rabbitmq:
-    image: rabbitmq
-    ports:
-      - '5672'
-    volumes:
-      - type: tmpfs
-        target: /var/lib/rabbitmq
-
   setupd:
     image: wazo-setupd-test
     environment:
