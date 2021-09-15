@@ -65,3 +65,24 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
         self.start_service('auth')
         auth = self.make_auth()
         until.true(auth.is_up, tries=5, message='wazo-auth did not come back up')
+
+    def synchronize_setup_config_files(self):
+        """This function is a workaround for this docker bug:
+        https://github.com/moby/moby/issues/42119
+        When this bug happens, network are not removed correctly, and volumes
+        that should be removed after that are not removed. This makes the
+        volumes to be shared across tests, causing failures.
+        This function avoids the use of docker volumes altogether."""
+
+        self.docker_copy_across_containers(
+            'setupd',
+            '/usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml',
+            'webhookd',
+            '/etc/wazo-webhookd/conf.d/50-wazo-plugin-nestbox.yml',
+        )
+        self.docker_copy_across_containers(
+            'setupd',
+            '/usr/share/wazo-setupd/50-wazo-plugin-nestbox.yml',
+            'auth',
+            '/etc/wazo-auth/conf.d/50-wazo-plugin-nestbox.yml',
+        )

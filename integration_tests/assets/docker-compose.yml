@@ -31,9 +31,6 @@ services:
     image: wazoplatform/wazo-auth-mock
     ports:
       - '9497'
-    volumes:
-      - setupd-generated-config:/usr/share/wazo-setupd:ro
-      - auth-config:/etc/wazo-auth/conf.d:ro
 
   confd:
     image: wazoplatform/wazo-confd-mock
@@ -47,10 +44,6 @@ services:
     volumes:
       - ../..:/usr/src/wazo-setupd:ro
       - ./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml:ro
-      - auth-config:/etc/wazo-auth/conf.d
-      - webhookd-config:/etc/wazo-webhookd/conf.d
-      - nestbox-plugin-config:/etc/wazo-nestbox-plugin/conf.d
-      - setupd-generated-config:/usr/share/wazo-setupd
       # - '${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/opt/venv/lib/python3.7/site-packages/xivo'
     ports:
       - '9302'
@@ -64,13 +57,4 @@ services:
     image: wazoplatform/wazo-webhookd-mock
     ports:
       - '9300'
-    volumes:
-      - setupd-generated-config:/usr/share/wazo-setupd:ro
-      - webhookd-config:/etc/wazo-webhookd/conf.d:ro
     command: /usr/local/bin/wazo-webhookd-mock.py 9300
-
-volumes:
-  setupd-generated-config:
-  auth-config:
-  webhookd-config:
-  nestbox-plugin-config:
