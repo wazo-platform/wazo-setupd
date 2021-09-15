@@ -156,6 +156,7 @@ class TestSetupValid(BaseIntegrationTest):
         }
 
         setupd.setup.create(body)
+        self.synchronize_setup_config_files()
 
         assert_that(
             confd.requests().json(),
@@ -285,6 +286,7 @@ class TestSetupValid(BaseIntegrationTest):
         }
 
         setupd.setup.create(body)
+        self.synchronize_setup_config_files()
 
         assert_that(
             confd.requests().json(),
@@ -395,6 +397,7 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
         }
 
         setupd.setup.create(body)
+        self.synchronize_setup_config_files()
 
         assert_that(
             confd.requests().json(),
