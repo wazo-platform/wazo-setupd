@@ -20,7 +20,10 @@ from .helpers.base import (
     BaseIntegrationTest,
     VALID_TOKEN,
 )
-from .helpers.wait_strategy import NoWaitStrategy
+from .helpers.wait_strategy import (
+    NoWaitStrategy,
+    SetupdEverythingOkWaitStrategy,
+)
 
 from wazo_setupd_client.exceptions import SetupdError
 
@@ -107,12 +110,15 @@ class TestSetupErrors(BaseIntegrationTest):
 class TestSetupValid(BaseIntegrationTest):
 
     asset = 'base'
-    wait_strategy = NoWaitStrategy()
+    wait_strategy = SetupdEverythingOkWaitStrategy()
 
     def setUp(self):
         super().setUp()
+
         deployd = self.make_deployd()
         deployd.reset()
+
+        self.restart_service('setupd')  # avoid self-stop after test
 
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
