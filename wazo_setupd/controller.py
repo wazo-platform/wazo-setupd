@@ -11,7 +11,8 @@ from xivo import plugin_helpers
 from xivo.consul_helpers import ServiceCatalogRegistration
 from xivo.token_renewer import TokenRenewer
 
-from .http_server import api, CoreRestApi
+from . import auth
+from .http_server import api, app, CoreRestApi
 from .stopper import Stopper
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,10 @@ class Controller:
         self.stopper = Stopper(config['self_stop_delay'], self)
         auth_client = AuthClient(**config['auth'])
         self.token_renewer = TokenRenewer(auth_client)
+        if not app.config['auth'].get('master_tenant_uuid'):
+            self.token_renewer.subscribe_to_next_token_details_change(
+                auth.init_master_tenant
+            )
         plugin_helpers.load(
             namespace='wazo_setupd.plugins',
             names=config['enabled_plugins'],
