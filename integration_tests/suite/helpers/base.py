@@ -15,7 +15,11 @@ from .wait_strategy import WaitStrategy
 from .webhookd import WebhookdMockClient
 
 VALID_TOKEN = 'valid-token'
+VALID_MASTER_TOKEN = 'valid-token-master-tenant'
+VALID_SUB_TOKEN = 'valid-token-sub-tenant'
 
+MASTER_TENANT = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeee10'
+SUB_TENANT = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeee11'
 
 class BaseIntegrationTest(AssetLaunchingTestCase):
 
