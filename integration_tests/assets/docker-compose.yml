@@ -44,6 +44,7 @@ services:
     volumes:
       - ../..:/usr/src/wazo-setupd:ro
       - ./etc/wazo-setupd/conf.d/50-default-config.yml:/etc/wazo-setupd/conf.d/50-default-config.yml:ro
+      - ./keys/wazo-setupd-key.yml:/var/lib/wazo-auth-keys/wazo-setupd-key.yml:ro
       # - '${LOCAL_GIT_REPOS}/xivo-lib-python/xivo:/opt/venv/lib/python3.7/site-packages/xivo'
     ports:
       - '9302'
