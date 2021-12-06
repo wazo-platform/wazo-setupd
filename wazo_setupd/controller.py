@@ -9,6 +9,7 @@ from functools import partial
 from wazo_auth_client import Client as AuthClient
 from xivo import plugin_helpers
 from xivo.consul_helpers import ServiceCatalogRegistration
+from xivo.status import StatusAggregator
 from xivo.token_renewer import TokenRenewer
 
 from . import auth
@@ -29,6 +30,7 @@ class Controller:
             lambda: True,
         ]
         self.rest_api = CoreRestApi(config)
+        self.status_aggregator = StatusAggregator()
         self.stopper = Stopper(config['self_stop_delay'], self)
         auth_client = AuthClient(**config['auth'])
         self.token_renewer = TokenRenewer(auth_client)
@@ -39,13 +41,19 @@ class Controller:
         plugin_helpers.load(
             namespace='wazo_setupd.plugins',
             names=config['enabled_plugins'],
-            dependencies={'api': api, 'config': config, 'stopper': self.stopper},
+            dependencies={
+                'api': api,
+                'config': config,
+                'status_aggregator': self.status_aggregator,
+                'stopper': self.stopper,
+            },
         )
         self.stopper_thread = threading.Thread(target=self.stopper.wait)
 
     def run(self):
         logger.info('wazo-setupd starting...')
         signal.signal(signal.SIGTERM, partial(_sigterm_handler, self))
+        self.status_aggregator.add_provider(auth.provide_status)
         self.stopper_thread.start()
         try:
             with self.token_renewer:
