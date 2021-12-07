@@ -4,22 +4,33 @@
 import os
 
 from contextlib import contextmanager
+from wazo_auth_client import Client as AuthClient
 from wazo_setupd_client import Client as SetupdClient
+from xivo.config_helper import parse_config_file
 from xivo_test_helpers import until
 from xivo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
-from xivo_test_helpers.auth import AuthClient
+from xivo_test_helpers.auth import (
+    AuthClient as MockAuthClient,
+    MockCredentials,
+    MockUserToken,
+)
 from .confd import ConfdMockClient
 from .deployd import DeploydMockClient
 from .sysconfd import SysconfdMockClient
 from .wait_strategy import WaitStrategy
 from .webhookd import WebhookdMockClient
 
-VALID_TOKEN = 'valid-token'
-VALID_MASTER_TOKEN = 'valid-token-master-tenant'
+VALID_TOKEN = 'valid-token-master-tenant'
 VALID_SUB_TOKEN = 'valid-token-sub-tenant'
 
 MASTER_TENANT = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeee10'
 SUB_TENANT = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeee11'
+
+WAZO_UUID = 'cd030e68-ace9-4ad4-bc4e-13c8dec67898'
+
+MASTER_USER_UUID = '5f243438-a429-46a8-a992-baed872081e0'
+SUB_USER_UUID = '5f243438-a429-46a8-a992-baed872081e1'
+
 
 class BaseIntegrationTest(AssetLaunchingTestCase):
 
@@ -32,6 +43,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.configure_wazo_auth()
         setupd = cls.make_setupd(VALID_TOKEN)
         cls.wait_strategy.wait(setupd)
 
@@ -45,22 +57,77 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
             token=token,
         )
 
-    def make_auth(self):
-        return AuthClient('127.0.0.1', self.service_port(9497, 'nestbox-auth'))
+    @classmethod
+    def make_auth(cls):
+        return AuthClient('127.0.0.1', cls.service_port(9497, 'auth'), https=False, prefix=None)
 
-    def make_confd(self):
-        return ConfdMockClient('127.0.0.1', self.service_port(9486, 'confd'))
+    @classmethod
+    def make_mock_auth(cls):
+        return MockAuthClient('127.0.0.1', cls.service_port(9497, 'auth'))
 
-    def make_deployd(self):
+    @classmethod
+    def make_mock_nestbox_auth(cls):
+        return MockAuthClient('127.0.0.1', cls.service_port(9497, 'nestbox-auth'))
+
+    @classmethod
+    def make_confd(cls):
+        return ConfdMockClient('127.0.0.1', cls.service_port(9486, 'confd'))
+
+    @classmethod
+    def make_deployd(cls):
         return DeploydMockClient(
-            '127.0.0.1', self.service_port(9800, 'nestbox-deployd')
+            '127.0.0.1', cls.service_port(9800, 'nestbox-deployd')
         )
 
-    def make_sysconfd(self):
-        return SysconfdMockClient('127.0.0.1', self.service_port(8668, 'sysconfd'))
+    @classmethod
+    def make_sysconfd(cls):
+        return SysconfdMockClient('127.0.0.1', cls.service_port(8668, 'sysconfd'))
 
-    def make_webhookd(self):
-        return WebhookdMockClient('127.0.0.1', self.service_port(9300, 'webhookd'))
+    @classmethod
+    def make_webhookd(cls):
+        return WebhookdMockClient('127.0.0.1', cls.service_port(9300, 'webhookd'))
+
+    @classmethod
+    def configure_wazo_auth(cls):
+        key_file = parse_config_file(
+            os.path.join(cls.assets_root, 'keys', 'wazo-setupd-key.yml')
+        )
+        mock_auth = cls.make_mock_auth()
+        mock_auth.set_valid_credentials(
+            MockCredentials(key_file['service_id'], key_file['service_key']),
+            VALID_TOKEN,
+        )
+
+        mock_auth.set_token(
+            MockUserToken(
+                VALID_TOKEN,
+                MASTER_USER_UUID,
+                WAZO_UUID,
+                {'tenant_uuid': MASTER_TENANT, 'uuid': MASTER_USER_UUID},
+            )
+        )
+
+        mock_auth.set_token(
+            MockUserToken(
+                VALID_SUB_TOKEN,
+                SUB_USER_UUID,
+                WAZO_UUID,
+                {'tenant_uuid': SUB_TENANT, 'uuid': SUB_USER_UUID},
+            )
+        )
+
+        mock_auth.set_tenants(
+            {
+                'uuid': MASTER_TENANT,
+                'name': 'setupd-tests-master',
+                'parent_uuid': MASTER_TENANT,
+            },
+            {
+                'uuid': SUB_TENANT,
+                'name': 'setupd-tests-sub',
+                'parent_uuid': MASTER_TENANT,
+            },
+        )
 
     @contextmanager
     def auth_stopped(self):

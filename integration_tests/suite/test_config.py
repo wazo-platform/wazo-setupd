@@ -14,10 +14,7 @@ from xivo_test_helpers.hamcrest.raises import raises
 from .helpers.base import (
     BaseIntegrationTest,
     VALID_TOKEN,
-    VALID_MASTER_TOKEN,
     VALID_SUB_TOKEN,
-    MASTER_TENANT,
-    SUB_TENANT,
 )
 from .helpers.wait_strategy import SetupdEverythingOkWaitStrategy
 
