@@ -2,10 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from wazo_setupd.auth import required_master_tenant
-from xivo.auth_verifier import required_acl
-
-from wazo_setupd.auth import required_master_tenant
 from wazo_setupd.http import AuthResource
+from xivo.auth_verifier import required_acl
 
 
 class ConfigResource(AuthResource):

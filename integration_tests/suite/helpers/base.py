@@ -60,7 +60,9 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     @classmethod
     def make_auth(cls):
-        return AuthClient('127.0.0.1', cls.service_port(9497, 'auth'), https=False, prefix=None)
+        return AuthClient(
+            '127.0.0.1', cls.service_port(9497, 'auth'), https=False, prefix=None
+        )
 
     @classmethod
     def make_mock_auth(cls):
@@ -76,9 +78,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     @classmethod
     def make_deployd(cls):
-        return DeploydMockClient(
-            '127.0.0.1', cls.service_port(9800, 'nestbox-deployd')
-        )
+        return DeploydMockClient('127.0.0.1', cls.service_port(9800, 'nestbox-deployd'))
 
     @classmethod
     def make_sysconfd(cls):
