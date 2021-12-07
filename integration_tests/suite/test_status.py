@@ -1,4 +1,4 @@
-# Copyright 2018-2019 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from hamcrest import (
@@ -11,13 +11,13 @@ from .helpers.base import (
     BaseIntegrationTest,
     VALID_TOKEN,
 )
-from .helpers.wait_strategy import NoWaitStrategy
+from .helpers.wait_strategy import SetupdEverythingOkWaitStrategy
 
 
 class TestStatusAllOK(BaseIntegrationTest):
 
     asset = 'base'
-    wait_strategy = NoWaitStrategy()
+    wait_strategy = SetupdEverythingOkWaitStrategy()
 
     def test_when_status_then_status_ok(self):
         setupd = self.make_setupd(VALID_TOKEN)

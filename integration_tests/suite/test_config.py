@@ -19,13 +19,13 @@ from .helpers.base import (
     MASTER_TENANT,
     SUB_TENANT,
 )
-from .helpers.wait_strategy import NoWaitStrategy
+from .helpers.wait_strategy import SetupdEverythingOkWaitStrategy
 
 
 class TestConfig(BaseIntegrationTest):
 
     asset = 'base'
-    wait_strategy = NoWaitStrategy()
+    wait_strategy = SetupdEverythingOkWaitStrategy()
 
     def test_config(self):
         setupd = self.make_setupd(VALID_TOKEN)
