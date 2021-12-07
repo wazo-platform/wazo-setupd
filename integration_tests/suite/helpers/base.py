@@ -43,7 +43,8 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.configure_wazo_auth()
+        if cls.asset not in ('documentation', 'short-self-stop'):
+            cls.configure_wazo_auth()
         setupd = cls.make_setupd(VALID_TOKEN)
         cls.wait_strategy.wait(setupd)
 
