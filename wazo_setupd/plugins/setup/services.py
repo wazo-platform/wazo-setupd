@@ -84,8 +84,12 @@ class SetupService:
         )
 
     def get_engine_token(self, engine_password):
+        no_service_key_auth_config = self._auth_config.copy()
+        del no_service_key_auth_config['username']
+        del no_service_key_auth_config['password']
+
         auth = AuthClient(
-            username='root', password=engine_password, **self._auth_config
+            username='root', password=engine_password, **no_service_key_auth_config
         )
         try:
             token_data = auth.token.new('wazo_user', expiration=60)
