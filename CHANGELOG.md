@@ -1,5 +1,11 @@
 # Changelog
 
+## 22.01
+
+* The following route has been restricted to the master tenant:
+
+  * `/config`
+
 ## 20.09
 
 * Deprecate SSL configuration
