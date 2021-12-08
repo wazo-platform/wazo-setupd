@@ -1,6 +1,8 @@
 # Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import requests
+
 from hamcrest import (
     assert_that,
     has_entries,
@@ -22,12 +24,16 @@ class NoWaitStrategy(WaitStrategy):
 class SetupdEverythingOkWaitStrategy(WaitStrategy):
     def wait(self, setupd):
         def setupd_is_ready():
-            status = setupd.status.get()
+            try:
+                status = setupd.status.get()
+            except requests.RequestException:
+                status = {}
             assert_that(
                 status,
                 has_entries(
                     {
                         'rest_api': has_entry('status', 'ok'),
+                        'master_tenant': has_entry('status', 'ok'),
                     }
                 ),
             )

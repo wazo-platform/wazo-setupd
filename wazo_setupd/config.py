@@ -1,10 +1,10 @@
-# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import argparse
 
 from xivo.chain_map import ChainMap
-from xivo.config_helper import read_config_file_hierarchy
+from xivo.config_helper import parse_config_file, read_config_file_hierarchy
 from xivo.xivo_logging import get_log_level_by_name
 
 _DEFAULT_HTTP_PORT = 9302
@@ -17,7 +17,13 @@ _DEFAULT_CONFIG = {
     'log_level': 'info',
     'user': 'wazo-setupd',
     'self_stop_delay': 10.0,
-    'auth': {'host': 'localhost', 'port': 9497, 'prefix': None, 'https': False},
+    'auth': {
+        'host': 'localhost',
+        'port': 9497,
+        'prefix': None,
+        'https': False,
+        'key_file': '/var/lib/wazo-auth-keys/wazo-setupd-key.yml',
+    },
     'bus': {
         'username': 'guest',
         'password': 'guest',
@@ -57,7 +63,10 @@ def load_config(args):
     reinterpreted_config = _get_reinterpreted_raw_values(
         cli_config, file_config, _DEFAULT_CONFIG
     )
-    return ChainMap(reinterpreted_config, cli_config, file_config, _DEFAULT_CONFIG)
+    service_key = _load_key_file(ChainMap(cli_config, file_config, _DEFAULT_CONFIG))
+    return ChainMap(
+        reinterpreted_config, cli_config, service_key, file_config, _DEFAULT_CONFIG
+    )
 
 
 def _get_reinterpreted_raw_values(*configs):
@@ -67,6 +76,16 @@ def _get_reinterpreted_raw_values(*configs):
             'debug' if config['debug'] else config['log_level']
         ),
     )
+
+
+def _load_key_file(config):
+    key_file = parse_config_file(config['auth']['key_file'])
+    return {
+        'auth': {
+            'username': key_file['service_id'],
+            'password': key_file['service_key'],
+        }
+    }
 
 
 def _parse_cli_args(args):

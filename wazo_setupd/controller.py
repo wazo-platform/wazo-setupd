@@ -1,4 +1,4 @@
-# Copyright 2018 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -6,9 +6,14 @@ import signal
 import threading
 
 from functools import partial
+from wazo_auth_client import Client as AuthClient
 from xivo import plugin_helpers
 from xivo.consul_helpers import ServiceCatalogRegistration
-from .http_server import api, CoreRestApi
+from xivo.status import StatusAggregator
+from xivo.token_renewer import TokenRenewer
+
+from . import auth
+from .http_server import api, app, CoreRestApi
 from .stopper import Stopper
 
 logger = logging.getLogger(__name__)
@@ -25,22 +30,35 @@ class Controller:
             lambda: True,
         ]
         self.rest_api = CoreRestApi(config)
+        self.status_aggregator = StatusAggregator()
         self.stopper = Stopper(config['self_stop_delay'], self)
+        auth_client = AuthClient(**config['auth'])
+        self.token_renewer = TokenRenewer(auth_client)
+        if not app.config['auth'].get('master_tenant_uuid'):
+            self.token_renewer.subscribe_to_next_token_details_change(
+                auth.init_master_tenant
+            )
         plugin_helpers.load(
             namespace='wazo_setupd.plugins',
             names=config['enabled_plugins'],
-            dependencies={'api': api, 'config': config, 'stopper': self.stopper},
+            dependencies={
+                'api': api,
+                'config': config,
+                'status_aggregator': self.status_aggregator,
+                'stopper': self.stopper,
+            },
         )
         self.stopper_thread = threading.Thread(target=self.stopper.wait)
 
     def run(self):
         logger.info('wazo-setupd starting...')
         signal.signal(signal.SIGTERM, partial(_sigterm_handler, self))
+        self.status_aggregator.add_provider(auth.provide_status)
         self.stopper_thread.start()
         try:
-            with ServiceCatalogRegistration(*self._service_discovery_args):
-                self.rest_api.run()
-
+            with self.token_renewer:
+                with ServiceCatalogRegistration(*self._service_discovery_args):
+                    self.rest_api.run()
         finally:
             logger.info('wazo-setupd stopping...')
             logger.debug('joining stopper thread')

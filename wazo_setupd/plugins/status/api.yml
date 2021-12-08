@@ -16,6 +16,8 @@ definitions:
     properties:
       rest_api:
         $ref: '#/definitions/ComponentWithStatus'
+      master_tenant:
+        $ref: '#/definitions/ComponentWithStatus'
   ComponentWithStatus:
     type: object
     properties:
