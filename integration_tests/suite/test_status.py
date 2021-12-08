@@ -24,6 +24,14 @@ class TestStatusAllOK(BaseIntegrationTest):
 
         def status_ok():
             result = setupd.status.get()
-            assert_that(result['rest_api'], has_entries({'status': 'ok'}))
+            assert_that(
+                result,
+                has_entries(
+                    {
+                        'rest_api': has_entries({'status': 'ok'}),
+                        'master_tenant': has_entries({'status': 'ok'}),
+                    },
+                ),
+            )
 
         until.assert_(status_ok, timeout=5)

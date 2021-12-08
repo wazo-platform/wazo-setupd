@@ -2,6 +2,10 @@
 
 ## 22.01
 
+* New read only parameters have been added to the `/status` API:
+
+  * `master_tenant`
+
 * The following route has been restricted to the master tenant:
 
   * `/config`
