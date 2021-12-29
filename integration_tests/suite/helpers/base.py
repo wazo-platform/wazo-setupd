@@ -7,9 +7,9 @@ from contextlib import contextmanager
 from wazo_auth_client import Client as AuthClient
 from wazo_setupd_client import Client as SetupdClient
 from xivo.config_helper import parse_config_file
-from xivo_test_helpers import until
-from xivo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
-from xivo_test_helpers.auth import (
+from wazo_test_helpers import until
+from wazo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
+from wazo_test_helpers.auth import (
     AuthClient as MockAuthClient,
     MockCredentials,
     MockUserToken,
