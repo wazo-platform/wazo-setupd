@@ -8,7 +8,7 @@ from hamcrest import (
     has_entries,
     has_entry,
 )
-from xivo_test_helpers import until
+from wazo_test_helpers import until
 
 
 class WaitStrategy:

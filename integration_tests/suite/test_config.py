@@ -9,7 +9,7 @@ from hamcrest import (
 )
 
 from wazo_setupd_client.exceptions import SetupdError
-from xivo_test_helpers.hamcrest.raises import raises
+from wazo_test_helpers.hamcrest.raises import raises
 
 from .helpers.base import (
     BaseIntegrationTest,
