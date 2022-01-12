@@ -1,4 +1,4 @@
-# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2022 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import uuid
@@ -119,6 +119,8 @@ class TestSetupValid(BaseIntegrationTest):
         deployd.reset()
 
         self.restart_service('setupd')  # avoid self-stop after test
+        setupd = self.make_setupd(VALID_TOKEN)
+        self.wait_strategy.wait(setupd)
 
     def test_setup_valid(self):
         setupd = self.make_setupd(VALID_TOKEN)
