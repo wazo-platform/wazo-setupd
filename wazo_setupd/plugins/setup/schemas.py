@@ -43,7 +43,7 @@ class SetupSchema(Schema):
     )
 
     @validates_schema
-    def nestbox_all_or_nothing(self, data):
+    def nestbox_all_or_nothing(self, data, **kwargs):
         if not data.get('nestbox_host'):
             return
 
@@ -69,7 +69,7 @@ class SetupSchema(Schema):
             )
 
     @validates_schema
-    def check_rtp_fields(self, data):
+    def check_rtp_fields(self, data, **kwargs):
         if not data.get('engine_rtp_icesupport'):
             return
 
