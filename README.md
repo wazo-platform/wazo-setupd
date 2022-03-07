@@ -10,15 +10,6 @@ A micro service to initialize a [Wazo](http://wazo.community) Engine.
 The official docker image for this service is `wazoplatform/wazo-setupd`.
 
 
-### Getting the image
-
-To download the latest image from the docker hub
-
-```sh
-docker pull wazoplatform/wazo-setupd
-```
-
-
 ### Running wazo-setupd
 
 ```sh
