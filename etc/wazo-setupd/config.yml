@@ -1,9 +1,8 @@
 # This file should not be modified as it may get changed by the maintainer.
-# Add extra configuration files in the extra_config_files directory to override
-# the content from this file
+# Add extra configuration files to the extra_config_files directory to override
+# the settings in this file
 
-# Extra configuration directory where the config files overriding this file
-# should be.
+# Directory in which to place config overrides
 extra_config_files: '/etc/wazo-setupd/conf.d'
 
 debug: false
@@ -12,14 +11,14 @@ log_file: /var/log/wazo-setupd.log
 # After a successful setup, wazo-setupd will stop itself after this delay (in seconds)
 self_stop_delay: 10.0
 
-# Connection info to the authentication server
+# Authentication server connection settings
 auth:
   host: localhost
   port: 9497
   prefix: null
   https: false
 
-# Event bus (AMQP) connection informations
+# Event bus (AMQP) connection settings
 bus:
   username: guest
   password: guest
@@ -28,61 +27,61 @@ bus:
   exchange_name: xivo
   exchange_type: topic
 
-# Connection info to the configuration server
+# Configuration server connection settings
 confd:
   host: localhost
   port: 9486
   prefix: null
   https: false
 
-# consul connection informations
+# consul connection settings
 consul:
   scheme: http
   host: localhost
   port: 8500
   token: 'the_one_ring'
 
-# REST API server
+# REST API server settings
 rest_api:
 
-  # Listening address
+  # Address to listen on
   listen: 127.0.0.1
 
-  # Listening port
+  # Port to listen on
   port: 9302
 
-  #CORS configuration. See Flask-CORS documentation for other values.
+  # CORS configuration. See Flask-CORS documentation for other values.
   cors:
 
-    #Enabled by default
+    # Enabled by default
     enabled: True
 
-    #Allow JSON preflight requests
+    # Allow JSON preflight requests
     allow_headers: [Content-Type, X-Auth-Token]
 
 # Service discovery configuration. all time intervals are in seconds
 service_discovery:
-  # to indicate wether of not to use service discovery, should only be disabled
-  # for testing purposes
+  # Indicates whether of not to use service discovery.
+  # It should only be disabled for testing purposes
   enabled: true
-  # the address that will be received by other services using service discovery.
-  # use "advertise_address: auto" to enable ip address detection based on
+  # The address that will be received by other services using service discovery.
+  # Use "advertise_address: auto" to enable ip address detection based on
   # advertise_address_interface
   advertise_address: auto
-  # if advertise_address is "auto" this interface will be used to find the ip
-  # address to advertise. ignored otherwise
+  # If advertise_address is "auto" this interface will be used to find the ip
+  # address to advertise. Ignored otherwise
   advertise_address_interface: eth0
   advertise_port: 9302
-  # the number of seconds that consul will wait between 2 ttl messages to mark
+  # The number of seconds that consul will wait between 2 ttl messages to mark
   # this service as up
   ttl_interval: 30
-  # the time interval before the service sends a new ttl message to consul
+  # The time interval before the service sends a new ttl message to consul
   refresh_interval: 27
-  # the time interval to detect that the service is running when starting
+  # The time interval to detect that the service is running when starting
   retry_interval: 2
   extra_tags: []
 
-# Connection info to the system configuration server
+# System configuration server connection settings
 sysconfd:
   host: localhost
   port: 8668
