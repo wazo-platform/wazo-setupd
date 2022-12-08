@@ -8,5 +8,3 @@ confd:
   host: confd
 sysconfd:
   host: sysconfd
-service_discovery:
-  enabled: false

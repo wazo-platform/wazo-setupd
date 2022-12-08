@@ -35,7 +35,6 @@ _DEFAULT_CONFIG = {
         'exchange_headers_name': 'wazo-headers',
     },
     'confd': {'host': 'localhost', 'port': 9486, 'prefix': None, 'https': False},
-    'consul': {'scheme': 'http', 'host': 'localhost', 'port': 8500},
     'rest_api': {
         'listen': '127.0.0.1',
         'port': _DEFAULT_HTTP_PORT,
@@ -43,11 +42,15 @@ _DEFAULT_CONFIG = {
         'private_key': None,
         'cors': {'enabled': True, 'allow_headers': ['Content-Type', 'X-Auth-Token']},
     },
+    'consul': {
+        'scheme': 'http',
+        'port': 8500,
+    },
     'service_discovery': {
+        'enabled': False,
         'advertise_address': 'auto',
         'advertise_address_interface': 'eth0',
         'advertise_port': _DEFAULT_HTTP_PORT,
-        'enabled': True,
         'ttl_interval': 30,
         'refresh_interval': 27,
         'retry_interval': 2,
