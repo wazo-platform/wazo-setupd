@@ -1,10 +1,10 @@
-FROM p0bailey/docker-flask
+FROM python:3.7-slim-bullseye
 
 MAINTAINER Wazo Maintainers <dev@wazo.community>
 
 COPY requirements.txt /tmp/requirements.txt
 RUN true && \
-    pip install -r /tmp/requirements.txt && \
+    pip3 install --no-cache-dir flask -r /tmp/requirements.txt && \
     mkdir -p /etc/wazo-webhookd/conf.d && \
     true
 
