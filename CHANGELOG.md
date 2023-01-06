@@ -1,5 +1,12 @@
 # Changelog
 
+## 23.01
+
+* Bus configuration changed:
+
+  * key `exchange_name` is now `wazo-headers`
+  * key `exchange_type` was removed
+
 ## 22.01
 
 * New read only parameters have been added to the `/status` API:
