@@ -1,4 +1,4 @@
-# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -93,11 +93,15 @@ class SetupService:
         )
         try:
             token_data = auth.token.new('wazo_user', expiration=60)
-        except HTTPError:
+        except HTTPError as e:
             raise SetupError(
                 message='Failed to create authorization token',
                 error_id='setup-token-failed',
-                details=self._auth_config,
+                details={
+                    'username': 'root',
+                    'original_error': str(e),
+                    **no_service_key_auth_config,
+                },
             )
         return token_data['token']
 
@@ -119,14 +123,15 @@ class SetupService:
         )
         try:
             token_data = auth.token.new('wazo_user', expiration=600)
-        except HTTPError:
+        except HTTPError as e:
             raise SetupError(
                 message='Failed to create authorization token',
                 error_id='setup-token-failed',
                 details={
                     'auth_host': nestbox_host,
                     'auth_port': nestbox_port,
-                    'service_key': service_id,
+                    'service_id': service_id,
+                    'original_error': str(e),
                 },
             )
         return token_data['token']
