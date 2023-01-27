@@ -4,7 +4,7 @@ openapi-spec-validator
 pyhamcrest
 pytest
 requests
-sqlalchemy
+sqlalchemy<2
 stevedore
 https://github.com/wazo-platform/wazo-auth-client/archive/master.zip
 https://github.com/wazo-platform/wazo-lib-rest-client/archive/master.zip
