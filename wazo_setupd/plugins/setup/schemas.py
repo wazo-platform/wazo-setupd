@@ -1,4 +1,4 @@
-# Copyright 2018-2020 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from marshmallow import validates_schema
@@ -11,7 +11,6 @@ from xivo.mallow import (
 
 
 class SetupSchema(Schema):
-
     engine_language = fields.String(
         required=True, validate=validate.OneOf(['en_US', 'fr_FR'])
     )

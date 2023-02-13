@@ -1,4 +1,4 @@
-# Copyright 2018-2022 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import uuid
@@ -29,7 +29,6 @@ from wazo_setupd_client.exceptions import SetupdError
 
 
 class TestSetupErrors(BaseIntegrationTest):
-
     asset = 'base'
     wait_strategy = NoWaitStrategy()
 
@@ -108,7 +107,6 @@ class TestSetupErrors(BaseIntegrationTest):
 
 
 class TestSetupValid(BaseIntegrationTest):
-
     asset = 'base'
     wait_strategy = SetupdEverythingOkWaitStrategy()
 
@@ -371,7 +369,6 @@ class TestSetupValid(BaseIntegrationTest):
 
 
 class TestSetupValidNoNestbox(BaseIntegrationTest):
-
     asset = 'base'
     wait_strategy = NoWaitStrategy()
 
@@ -430,7 +427,6 @@ class TestSetupValidNoNestbox(BaseIntegrationTest):
 
 
 class TestSetupSelfStop(BaseIntegrationTest):
-
     asset = 'short-self-stop'
     wait_strategy = NoWaitStrategy()
 
@@ -481,7 +477,6 @@ class TestSetupSelfStop(BaseIntegrationTest):
 
 
 class TestSetupNotSelfStop(BaseIntegrationTest):
-
     asset = 'short-self-stop'
     wait_strategy = NoWaitStrategy()
 

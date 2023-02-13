@@ -1,4 +1,4 @@
-# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from hamcrest import (
@@ -15,7 +15,6 @@ from .helpers.wait_strategy import SetupdEverythingOkWaitStrategy
 
 
 class TestStatusAllOK(BaseIntegrationTest):
-
     asset = 'base'
     wait_strategy = SetupdEverythingOkWaitStrategy()
 
