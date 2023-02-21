@@ -71,7 +71,10 @@ class Controller:
 
     def stop(self, reason):
         logger.warning('Stopping wazo-setupd: %s', reason)
-        self._stopper_http_thread = threading.Thread(target=self.rest_api.stop, name=reason)
+        self._stopper_http_thread = threading.Thread(
+            target=self.rest_api.stop,
+            name=reason,
+        )
         self._stopper_http_thread.start()
 
 
