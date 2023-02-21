@@ -1,4 +1,4 @@
-# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -61,10 +61,7 @@ class CoreRestApi:
         for route in http_helpers.list_routes(app):
             logger.debug(route)
 
-        try:
-            self.server.start()
-        except KeyboardInterrupt:
-            self.server.stop()
+        self.server.start()
 
     def stop(self):
         if self.server:
