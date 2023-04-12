@@ -1,4 +1,4 @@
-# Copyright 2018-2021 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -49,10 +49,12 @@ class Controller:
             },
         )
         self.stopper_thread = threading.Thread(target=self.stopper.wait)
+        self.stopper_http_thread = None
 
     def run(self):
         logger.info('wazo-setupd starting...')
-        signal.signal(signal.SIGTERM, partial(_sigterm_handler, self))
+        signal.signal(signal.SIGTERM, partial(_signal_handler, self))
+        signal.signal(signal.SIGINT, partial(_signal_handler, self))
         self.status_aggregator.add_provider(auth.provide_status)
         self.stopper_thread.start()
         try:
@@ -64,11 +66,17 @@ class Controller:
             logger.debug('joining stopper thread')
             self.stopper.cancel()
             self.stopper_thread.join()
+            if self._stopper_http_thread:
+                self._stopper_http_thread.join()
 
     def stop(self, reason):
         logger.warning('Stopping wazo-setupd: %s', reason)
-        self.rest_api.stop()
+        self._stopper_http_thread = threading.Thread(
+            target=self.rest_api.stop,
+            name=reason,
+        )
+        self._stopper_http_thread.start()
 
 
-def _sigterm_handler(controller, signum, frame):
-    controller.stop(reason='SIGTERM')
+def _signal_handler(controller, signum, frame):
+    controller.stop(reason=signal.Signals(signum).name)

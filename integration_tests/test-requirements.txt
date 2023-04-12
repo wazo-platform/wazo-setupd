@@ -1,10 +1,9 @@
-importlib_metadata<5.0.0  # from kombu - https://github.com/celery/kombu/issues/1600
 kombu
 openapi-spec-validator
 pyhamcrest
 pytest
 requests
-sqlalchemy
+sqlalchemy<2
 stevedore
 https://github.com/wazo-platform/wazo-auth-client/archive/master.zip
 https://github.com/wazo-platform/wazo-lib-rest-client/archive/master.zip
