@@ -18,7 +18,7 @@ VERSION = 1.0
 
 logger = logging.getLogger(__name__)
 app = Flask('wazo-setupd')
-api = Api(app, prefix='/{}'.format(VERSION))
+api = Api(app, prefix=f'/{VERSION}')
 
 
 class CoreRestApi:
