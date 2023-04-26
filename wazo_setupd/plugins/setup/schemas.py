@@ -75,7 +75,7 @@ class SetupSchema(Schema):
         required_field = 'engine_rtp_stunaddr'
         if not data.get(required_field):
             raise ValidationError(
-                'Missing keys for rtp configuration: {}'.format(required_field),
+                f'Missing keys for rtp configuration: {required_field}',
                 field_name=required_field,
             )
 

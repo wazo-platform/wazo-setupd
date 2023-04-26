@@ -330,7 +330,7 @@ class TestSetupValid(BaseIntegrationTest):
                 requests=has_item(
                     has_entries(
                         method='PUT',
-                        path='/0.1/instances/{}'.format(instance_uuid),
+                        path=f'/0.1/instances/{instance_uuid}',
                         json=has_entries(installed=True),
                     )
                 )
