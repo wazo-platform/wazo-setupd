@@ -3,11 +3,8 @@
 
 from marshmallow import validates_schema
 from marshmallow.exceptions import ValidationError
+from xivo.mallow import fields, validate
 from xivo.mallow_helpers import Schema
-from xivo.mallow import (
-    fields,
-    validate,
-)
 
 
 class SetupSchema(Schema):

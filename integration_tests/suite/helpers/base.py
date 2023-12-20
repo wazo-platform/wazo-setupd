@@ -2,18 +2,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
-
 from contextlib import contextmanager
+
 from wazo_auth_client import Client as AuthClient
 from wazo_setupd_client import Client as SetupdClient
-from xivo.config_helper import parse_config_file
 from wazo_test_helpers import until
 from wazo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
-from wazo_test_helpers.auth import (
-    AuthClient as MockAuthClient,
-    MockCredentials,
-    MockUserToken,
-)
+from wazo_test_helpers.auth import AuthClient as MockAuthClient
+from wazo_test_helpers.auth import MockCredentials, MockUserToken
+from xivo.config_helper import parse_config_file
+
 from .confd import ConfdMockClient
 from .deployd import DeploydMockClient
 from .sysconfd import SysconfdMockClient

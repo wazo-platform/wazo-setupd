@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
+
 import requests
 import yaml
-
 from requests import HTTPError
 from wazo_auth_client import Client as AuthClient
 from wazo_confd_client import Client as ConfdClient

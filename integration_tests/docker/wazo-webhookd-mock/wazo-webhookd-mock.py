@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2018-2022 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 from __future__ import annotations
 
@@ -7,10 +7,7 @@ import json
 import logging
 import sys
 
-from flask import Flask
-from flask import jsonify
-from flask import request, Response
-
+from flask import Flask, Response, jsonify, request
 from xivo.config_helper import read_config_file_hierarchy
 
 logging.basicConfig(level=logging.DEBUG)

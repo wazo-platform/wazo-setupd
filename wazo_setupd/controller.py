@@ -4,8 +4,8 @@
 import logging
 import signal
 import threading
-
 from functools import partial
+
 from wazo_auth_client import Client as AuthClient
 from xivo import plugin_helpers
 from xivo.consul_helpers import ServiceCatalogRegistration
@@ -13,7 +13,7 @@ from xivo.status import StatusAggregator
 from xivo.token_renewer import TokenRenewer
 
 from . import auth
-from .http_server import api, app, CoreRestApi
+from .http_server import CoreRestApi, api, app
 from .stopper import Stopper
 
 logger = logging.getLogger(__name__)
