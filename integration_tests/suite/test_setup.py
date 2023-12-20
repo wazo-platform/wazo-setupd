@@ -13,19 +13,12 @@ from hamcrest import (
     has_properties,
     not_,
 )
+from wazo_setupd_client.exceptions import SetupdError
 from wazo_test_helpers import until
 from wazo_test_helpers.hamcrest.raises import raises
 
-from .helpers.base import (
-    BaseIntegrationTest,
-    VALID_TOKEN,
-)
-from .helpers.wait_strategy import (
-    NoWaitStrategy,
-    SetupdEverythingOkWaitStrategy,
-)
-
-from wazo_setupd_client.exceptions import SetupdError
+from .helpers.base import VALID_TOKEN, BaseIntegrationTest
+from .helpers.wait_strategy import NoWaitStrategy, SetupdEverythingOkWaitStrategy
 
 
 class TestSetupErrors(BaseIntegrationTest):
