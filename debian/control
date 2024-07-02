@@ -24,6 +24,7 @@ Depends: ${python3:Depends},
          wazo-auth-client-python3,
          wazo-bus-python3,
          wazo-confd-client-python3,
+         wazo-uuid,
          xivo-lib-python-python3
 Description: Setup daemon for Wazo Engine
  Wazo is a system based on a powerful IPBX, to bring an easy to
