@@ -1,4 +1,4 @@
-# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2024 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -10,8 +10,6 @@ from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
 from xivo import http_helpers
-
-from .http import auth_verifier
 
 VERSION = 1.0
 
@@ -29,7 +27,6 @@ class CoreRestApi:
         app.secret_key = os.urandom(24)
         app.permanent_session_lifetime = timedelta(minutes=5)
         app.config.update(global_config)
-        auth_verifier.set_config(global_config['auth'])
         self._load_cors()
         self.server = None
 
