@@ -1,3 +1,4 @@
 etc/wazo-setupd/conf.d
 etc/wazo-webhookd/conf.d
 etc/nginx/locations/https-enabled
+etc/rsyslog.d
