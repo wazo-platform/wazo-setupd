@@ -5,11 +5,10 @@ import logging
 import os
 from datetime import timedelta
 
-from cheroot import wsgi
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-from xivo import http_helpers
+from xivo import http_helpers, wsgi
 
 VERSION = 1.0
 
