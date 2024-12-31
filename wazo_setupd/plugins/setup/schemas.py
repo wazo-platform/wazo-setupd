@@ -1,4 +1,4 @@
-# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2024 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from marshmallow import validates_schema
@@ -14,19 +14,19 @@ class SetupSchema(Schema):
     engine_password = fields.String(required=True)
     engine_license = fields.Boolean(required=True, validate=validate.Equal(True))
     engine_internal_address = fields.String()
-    engine_instance_uuid = fields.UUID(missing=None)
-    engine_rtp_icesupport = fields.Boolean(required=False, missing=False)
+    engine_instance_uuid = fields.UUID(load_default=None)
+    engine_rtp_icesupport = fields.Boolean(required=False, load_default=False)
     engine_rtp_stunaddr = fields.String(
-        validate=validate.Length(min=1, max=1024), missing=None
+        validate=validate.Length(min=1, max=1024), load_default=None
     )
     nestbox_host = fields.String()
     nestbox_port = fields.Integer(
         validate=validate.Range(
             min=0, max=65535, error='Not a valid TCP/IP port number.'
         ),
-        missing=443,
+        load_default=443,
     )
-    nestbox_verify_certificate = fields.Boolean(missing=True)
+    nestbox_verify_certificate = fields.Boolean(load_default=True)
     nestbox_service_id = fields.String()
     nestbox_service_key = fields.String()
     nestbox_instance_name = fields.String()
@@ -35,7 +35,7 @@ class SetupSchema(Schema):
         validate=validate.Range(
             min=0, max=65535, error='Not a valid TCP/IP port number.'
         ),
-        missing=443,
+        load_default=443,
     )
 
     @validates_schema
