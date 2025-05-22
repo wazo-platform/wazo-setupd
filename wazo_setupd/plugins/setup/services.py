@@ -1,4 +1,4 @@
-# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2025 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -55,6 +55,7 @@ class SetupService:
             setup_infos['nestbox_port'],
             setup_infos['nestbox_verify_certificate'],
             setup_infos['nestbox_instance_name'],
+            setup_infos['nestbox_instance_preferred_connection'],
             setup_infos['nestbox_engine_host'],
             setup_infos['nestbox_engine_port'],
             setup_infos['engine_internal_address'],
@@ -192,6 +193,7 @@ class SetupService:
         nestbox_port,
         nestbox_verify_certificate,
         nestbox_instance_name,
+        nestbox_instance_preferred_connection,
         nestbox_engine_host,
         nestbox_engine_port,
         engine_internal_address,
@@ -217,6 +219,7 @@ class SetupService:
             "private_port": nestbox_engine_port,
             "public_host": nestbox_engine_host,
             "public_port": nestbox_engine_port,
+            "preferred_connection": nestbox_instance_preferred_connection,
             "service_id": ENGINE_SERVICE_ID,
             "username": "root",
         }

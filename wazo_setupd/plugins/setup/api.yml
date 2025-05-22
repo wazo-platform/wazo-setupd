@@ -69,6 +69,13 @@ definitions:
       nestbox_instance_name:
         description: Name of the engine in Nestbox
         type: string
+      nestbox_instance_preferred_connection:
+        description: Preferred connection method to contact the engine
+        type: string
+        enum:
+          - private
+          - public
+        default: public
       nestbox_engine_host:
         description: Host used by Nestbox to contact the engine
         type: string
