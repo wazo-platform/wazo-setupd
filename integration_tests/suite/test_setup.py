@@ -61,6 +61,7 @@ class TestSetupErrors(BaseIntegrationTest):
             'nestbox_service_id': 'test',
             'nestbox_service_key': 'foobar',
             'nestbox_instance_name': 'my-wazo',
+            'nestbox_instance_preferred_connection': 'private',
             'nestbox_engine_host': 'wazo.example.com',
             'nestbox_engine_port': 443,
         }
@@ -150,6 +151,7 @@ class TestSetupValid(BaseIntegrationTest):
             'nestbox_service_id': 'nestbox-user',
             'nestbox_service_key': 'secret',
             'nestbox_instance_name': 'my-wazo',
+            'nestbox_instance_preferred_connection': 'private',
             'nestbox_engine_host': 'wazo.example.com',
             'nestbox_engine_port': 6666,
         }
@@ -203,6 +205,7 @@ class TestSetupValid(BaseIntegrationTest):
                         json=has_entries(
                             config={},
                             name='my-wazo',
+                            preferred_connection='private',
                             password='secret',
                             private_host='10.1.1.1',
                             private_port=6666,

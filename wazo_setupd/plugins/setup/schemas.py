@@ -1,4 +1,4 @@
-# Copyright 2018-2024 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2025 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from marshmallow import validates_schema
@@ -36,6 +36,10 @@ class SetupSchema(Schema):
             min=0, max=65535, error='Not a valid TCP/IP port number.'
         ),
         load_default=443,
+    )
+    nestbox_instance_preferred_connection = fields.String(
+        validate=validate.OneOf(['public', 'private']),
+        load_default='public',
     )
 
     @validates_schema
