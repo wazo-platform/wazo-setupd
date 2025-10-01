@@ -1,6 +1,5 @@
-FROM python:3.9-slim-bullseye
-
-MAINTAINER Wazo Maintainers <dev@wazo.community>
+FROM python:3.11-slim-bookworm
+LABEL maintainer="Wazo Maintainers <dev@wazo.community>"
 
 RUN pip3 install --no-cache-dir flask
 

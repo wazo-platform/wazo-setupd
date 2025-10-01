@@ -1,6 +1,5 @@
-FROM python:3.9-slim-bullseye
-
-MAINTAINER Wazo Maintainers <dev@wazo.community>
+FROM python:3.11-slim-bookworm
+LABEL maintainer="Wazo Maintainers <dev@wazo.community>"
 
 COPY requirements.txt /tmp/requirements.txt
 RUN true && \
