@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Wazo Maintainers <dev@wazo.community>
 Build-Depends: debhelper (>= 12), dh-python, python3-all, python3-setuptools
 Standards-Version: 4.2.1
-X-Python3-Version: >= 3.9
+X-Python3-Version: >= 3.11
 
 Package: wazo-setupd
 Architecture: all
@@ -16,7 +16,6 @@ Depends: ${python3:Depends},
          python3-flask,
          python3-flask-cors,
          python3-flask-restful,
-         python3-jinja2,
          python3-kombu,
          python3-marshmallow,
          python3-stevedore,
