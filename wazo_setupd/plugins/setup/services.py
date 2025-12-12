@@ -200,8 +200,8 @@ class SetupService:
         engine_password,
         engine_uuid,
     ):
-        # wazo-deployd-client was just installed by wazo-sysconfd, at the
-        # request of wazo-setupd, thus we need a lazy import
+        # wazo-deployd-client is only installed on enterprise stack, thus we
+        # need a lazy import
         from wazo_deployd_client import Client as DeploydClient
 
         deployd = DeploydClient(
