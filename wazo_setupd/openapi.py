@@ -1,75 +1,76 @@
-# Copyright 2024-2025 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2024-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
-from apispec_webframeworks.flask import FlaskPlugin
-from dataclasses_jsonschema import JsonSchemaMixin, SchemaType
-from dataclasses_jsonschema.type_defs import JsonDict
+from apispec_flask_restful import RestfulPlugin
 
 API_VERSION = '1.0'
 
 
-def create_spec(
-    base_path_prefix: str | None = None, scheme: str | None = 'http', **kwargs
-) -> APISpec:
-    """Create and configure the OpenAPI specification."""
-    base_path_prefix = (base_path_prefix or '') + f'/{API_VERSION}'
-    base_path = {
-        'url': f'{scheme}://{{domain}}:{{port}}/{base_path_prefix}',
+def make_server_url(base_path_prefix: str | None = None, scheme: str = 'http') -> dict:
+    """Create server URL configuration for OpenAPI spec."""
+    path_prefix = (base_path_prefix or '') + f'/{API_VERSION}'
+    return {
+        'url': f'{scheme}://{{domain}}:{{port}}{path_prefix}',
         'variables': {
             'domain': {
                 'default': 'wazo.example.com',
-                'description': 'domain name where the wazo-setupd service is hosted',
+                'description': 'Domain name where the wazo-setupd service is hosted',
             },
             'port': {
                 'default': '9302',
-                'description': 'port number where wazo-setupd service is available',
+                'description': 'Port number where wazo-setupd service is available',
             },
         },
     }
 
-    spec = APISpec(
-        title="wazo-setupd",
-        version="1.0.0",
-        openapi_version="3.0.3",
-        info={
-            "description": "Wazo Engine initialization service",
-            "contact": {
-                "name": "Wazo Dev Team",
-                "url": "https://wazo-platform.org/",
-                "email": "dev@wazo.community",
-            },
-            "x-logo": {
-                "url": "https://wazo-platform.org/images/logo-black.svg",
-                "backgroundColor": "#FAFAFA",
-                "altText": "Wazo Logo",
-            },
+
+# Shared spec instance - plugins register paths/schemas at load time
+SPEC = APISpec(
+    title="wazo-setupd",
+    version=API_VERSION,
+    openapi_version="3.0.2",
+    info={
+        "description": "Wazo Engine initialization service",
+        "contact": {
+            "name": "Wazo Dev Team",
+            "url": "https://wazo-platform.org/",
+            "email": "dev@wazo.community",
         },
-        servers=[base_path],
-        plugins=[FlaskPlugin(), MarshmallowPlugin()],
-        **kwargs,
-    )
-
-    # Add security scheme for X-Auth-Token header
-    spec.components.security_scheme(
-        'wazo_auth_token',
-        {
-            'type': 'apiKey',
-            'in': 'header',
-            'name': 'X-Auth-Token',
+        "x-logo": {
+            "url": "https://wazo-platform.org/images/logo-black.svg",
+            "backgroundColor": "#FAFAFA",
+            "altText": "Wazo Logo",
         },
-    )
+    },
+    plugins=[RestfulPlugin(), MarshmallowPlugin()],
+    servers=[make_server_url()],
+)
 
-    return spec
 
+# Add security scheme for X-Auth-Token header
+SPEC.components.security_scheme(
+    'wazo_auth_token',
+    {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'X-Auth-Token',
+    },
+)
 
-def register_dataclass_schema(
-    spec: APISpec, name: str | None, dataclass_type: type[JsonSchemaMixin]
-) -> JsonDict:
-    """Register a dataclass as an OpenAPI schema using dataclasses-jsonschema."""
-    name = name or dataclass_type.__name__
+# Add common response components
+SPEC.components.response(
+    'InvalidRequest',
+    {'description': 'Invalid request body or parameters'},
+)
 
-    schema = dataclass_type.json_schema(schema_type=SchemaType.OPENAPI_3)
-    spec.components.schema(component_id=name, component=schema)
-    return schema
+SPEC.components.response(
+    'InternalServerError',
+    {'description': 'An internal server error occurred'},
+)
+
+SPEC.components.response(
+    'ServiceUnavailable',
+    {'description': 'A required service is unavailable'},
+)

@@ -1,4 +1,4 @@
-# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -14,6 +14,7 @@ from xivo.token_renewer import TokenRenewer
 
 from . import auth
 from .http_server import CoreRestApi, api, app
+from .openapi import SPEC
 from .stopper import Stopper
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ class Controller:
             dependencies={
                 'api': api,
                 'config': config,
+                'spec': SPEC,
                 'status_aggregator': self.status_aggregator,
                 'stopper': self.stopper,
             },

@@ -7,4 +7,6 @@ from .http import OpenAPIResource
 class Plugin:
     def load(self, dependencies):
         api = dependencies['api']
-        api.add_resource(OpenAPIResource, '/api/api.yml')
+        spec = dependencies['spec']
+
+        api.add_resource(OpenAPIResource, '/api/api.yml', resource_class_args=[spec])
