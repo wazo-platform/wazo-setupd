@@ -29,7 +29,7 @@ def create_spec(
         },
     }
 
-    return APISpec(
+    spec = APISpec(
         title="wazo-setupd",
         version="1.0.0",
         openapi_version="3.0.3",
@@ -50,6 +50,18 @@ def create_spec(
         plugins=[FlaskPlugin(), MarshmallowPlugin()],
         **kwargs,
     )
+
+    # Add security scheme for X-Auth-Token header
+    spec.components.security_scheme(
+        'wazo_auth_token',
+        {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'X-Auth-Token',
+        },
+    )
+
+    return spec
 
 
 def register_dataclass_schema(
