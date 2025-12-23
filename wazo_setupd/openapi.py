@@ -7,9 +7,28 @@ from apispec_webframeworks.flask import FlaskPlugin
 from dataclasses_jsonschema import JsonSchemaMixin, SchemaType
 from dataclasses_jsonschema.type_defs import JsonDict
 
+API_VERSION = '1.0'
 
-def create_spec(**kwargs) -> APISpec:
+
+def create_spec(
+    base_path_prefix: str | None = None, scheme: str | None = 'http', **kwargs
+) -> APISpec:
     """Create and configure the OpenAPI specification."""
+    base_path_prefix = (base_path_prefix or '') + f'/{API_VERSION}'
+    base_path = {
+        'url': f'{scheme}://{{domain}}:{{port}}/{base_path_prefix}',
+        'variables': {
+            'domain': {
+                'default': 'wazo.example.com',
+                'description': 'domain name where the wazo-setupd service is hosted',
+            },
+            'port': {
+                'default': '9302',
+                'description': 'port number where wazo-setupd service is available',
+            },
+        },
+    }
+
     return APISpec(
         title="wazo-setupd",
         version="1.0.0",
@@ -27,9 +46,9 @@ def create_spec(**kwargs) -> APISpec:
                 "altText": "Wazo Logo",
             },
         },
-        servers=[{"url": "/1.0"}],
+        servers=[base_path],
         plugins=[FlaskPlugin(), MarshmallowPlugin()],
-        **kwargs
+        **kwargs,
     )
 
 
