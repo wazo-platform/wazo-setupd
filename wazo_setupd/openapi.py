@@ -5,6 +5,12 @@ from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_flask_restful import RestfulPlugin
 
+from wazo_setupd.schemas import (
+    ComponentWithStatusSchema,
+    ErrorSchema,
+    StatusSummarySchema,
+)
+
 API_VERSION = '1.0'
 
 
@@ -60,40 +66,10 @@ SPEC.components.security_scheme(
 )
 
 
-# Add Error schema (from api.yml)
-SPEC.components.schema(
-    'Error',
-    {
-        'title': 'Error',
-        'description': 'Error message for the client',
-        'type': 'object',
-        'properties': {
-            'message': {
-                'description': 'Human readable explanation of the error',
-                'type': 'string',
-            },
-            'error_id': {
-                'description': (
-                    'Identifier of the type of error. '
-                    'It is more precise than the HTTP status code.'
-                ),
-                'type': 'string',
-            },
-            'details': {
-                'description': (
-                    'Additional information about the error. '
-                    'The keys are specific to each error.'
-                ),
-                'type': 'object',
-            },
-            'timestamp': {
-                'description': 'Time when the error occurred',
-                'type': 'number',
-                'format': 'double',
-            },
-        },
-    },
-)
+# Register response schemas
+SPEC.components.schema('Error', schema=ErrorSchema)
+SPEC.components.schema('ComponentWithStatus', schema=ComponentWithStatusSchema)
+SPEC.components.schema('StatusSummary', schema=StatusSummarySchema)
 
 # Add common response components
 SPEC.components.response(
