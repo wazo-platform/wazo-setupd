@@ -1,4 +1,4 @@
-# Copyright 2018-2025 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import yaml
@@ -14,6 +14,27 @@ class OpenAPIResource(Resource):
         self.spec: APISpec = spec
 
     def get(self):
+        '''
+        ---
+        tags:
+          - api
+        operationId: getAPISpec
+        summary: Get the OpenAPI specification
+        description: Get the OpenAPI specification in YAML format.
+        responses:
+          200:
+            description: The OpenAPI specification in YAML format
+            content:
+              application/x-yaml:
+                schema:
+                  type: string
+          400:
+            $ref: '#/components/responses/InvalidRequest'
+          500:
+            $ref: '#/components/responses/InternalServerError'
+          503:
+            $ref: '#/components/responses/ServiceUnavailable'
+        '''
         prefix = request.headers.get('X-Script-Name')
         if prefix:
             server = make_server_url(base_path_prefix=prefix, scheme='https')
