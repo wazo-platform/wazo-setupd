@@ -1,4 +1,4 @@
-# Copyright 2018-2025 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -51,12 +51,19 @@ class TestDocumentation(BaseIntegrationTest):
         response = requests.get(api_url, headers={'X-Script-Name': '/api/setupd'})
         spec = yaml.safe_load(response.text)
 
-        # Validate spec is still valid
         validate_spec(spec, validator=openapi_v30_spec_validator)
 
-        # Verify server URL includes the prefix and uses https
         servers = spec.get('servers', [])
         assert len(servers) > 0
         server_url = servers[0].get('url', '')
         assert '/api/setupd' in server_url
         assert server_url.startswith('https://')
+
+    def test_common_response_components_registered(self):
+        spec = self._get_api_spec()
+
+        responses = spec.get('components', {}).get('responses', {})
+
+        assert 'InvalidRequest' in responses
+        assert 'InternalServerError' in responses
+        assert 'ServiceUnavailable' in responses
