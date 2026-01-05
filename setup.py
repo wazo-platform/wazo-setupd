@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from setuptools import find_packages, setup
@@ -14,7 +14,10 @@ setup(
     packages=find_packages(),
     package_data={'wazo_setupd.plugins': ['*/api.yml']},
     entry_points={
-        'console_scripts': [f'{NAME}=wazo_setupd.main:main'],
+        'console_scripts': [
+            f'{NAME}=wazo_setupd.main:main',
+            f'{NAME}-openapi=wazo_setupd.openapi_cli:main',
+        ],
         'wazo_setupd.plugins': [
             'api = wazo_setupd.plugins.api.plugin:Plugin',
             'config = wazo_setupd.plugins.config.plugin:Plugin',
