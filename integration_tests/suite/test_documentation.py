@@ -14,7 +14,7 @@ logger = logging.getLogger('openapi_spec_validator')
 logger.setLevel(logging.INFO)
 
 
-class TestDocumentation(BaseIntegrationTest):
+class _BaseDocumentationTest(BaseIntegrationTest):
     asset = 'documentation'
     wait_strategy = NoWaitStrategy()
 
@@ -24,6 +24,8 @@ class TestDocumentation(BaseIntegrationTest):
         response = requests.get(api_url)
         return yaml.safe_load(response.text)
 
+
+class TestDocumentation(_BaseDocumentationTest):
     def test_documentation_errors(self):
         spec = self._get_api_spec()
         validate_spec(spec, validator=openapi_v30_spec_validator)
@@ -67,3 +69,30 @@ class TestDocumentation(BaseIntegrationTest):
         assert 'InvalidRequest' in responses
         assert 'InternalServerError' in responses
         assert 'ServiceUnavailable' in responses
+
+
+class TestSetupEndpoint(_BaseDocumentationTest):
+    def test_endpoint_exists(self):
+        spec = self._get_api_spec()
+
+        paths = spec.get('paths', {})
+        assert '/setup' in paths, "Missing /setup path in spec"
+
+    def test_schemas(self):
+        spec = self._get_api_spec()
+
+        schemas = spec.get('components', {}).get('schemas', {})
+        assert 'SetupSchema' in schemas, "SetupSchema not registered in components"
+
+    def test_post_operation(self):
+        spec = self._get_api_spec()
+
+        setup_path = spec['paths']['/setup']
+        assert 'post' in setup_path, "Missing POST operation on /setup"
+
+        post_op = setup_path['post']
+        assert 'requestBody' in post_op, "Missing requestBody in POST /setup"
+        assert 'responses' in post_op, "Missing responses in POST /setup"
+
+        responses = post_op['responses']
+        assert '201' in responses, "Missing 201 response"
