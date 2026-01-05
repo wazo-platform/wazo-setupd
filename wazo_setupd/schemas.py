@@ -1,7 +1,8 @@
 # Copyright 2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from marshmallow import Schema, fields
+from xivo.mallow import fields
+from xivo.mallow_helpers import Schema
 
 
 class ErrorSchema(Schema):
@@ -20,7 +21,6 @@ class ErrorSchema(Schema):
     )
     details = fields.Dict(
         keys=fields.String(),
-        values=fields.Raw(),
         metadata={
             'description': (
                 'Additional information about the error. '
@@ -28,4 +28,6 @@ class ErrorSchema(Schema):
             )
         },
     )
-    timestamp = fields.Float(metadata={'description': 'Time when the error occurred'})
+    timestamp = fields.DateTime(
+        format='timestamp', metadata={'description': 'Time when the error occurred'}
+    )
