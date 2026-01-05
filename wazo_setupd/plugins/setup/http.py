@@ -1,4 +1,4 @@
-# Copyright 2018-2025 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from flask import request
@@ -31,12 +31,16 @@ class SetupResource(ErrorCatchingResource):
         responses:
           201:
             description: The setup has been completed
+            content:
+              application/json:
+                schema:
+                  type: object
           400:
             $ref: '#/components/responses/InvalidRequest'
           500:
             $ref: '#/components/responses/InternalServerError'
           503:
-            $ref: '#/components/responses/ServiceUnavailable'
+            $ref: '#/components/responses/AnotherServiceUnavailable'
         """
         setup_infos = setup_schema.load(request.json)
 

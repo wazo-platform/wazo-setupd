@@ -33,7 +33,7 @@ class OpenAPIResource(Resource):
           500:
             $ref: '#/components/responses/InternalServerError'
           503:
-            $ref: '#/components/responses/ServiceUnavailable'
+            $ref: '#/components/responses/AnotherServiceUnavailable'
         '''
         prefix = request.headers.get('X-Script-Name')
         if prefix:

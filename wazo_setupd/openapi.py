@@ -59,18 +59,89 @@ SPEC.components.security_scheme(
     },
 )
 
+
+# Add Error schema (from api.yml)
+SPEC.components.schema(
+    'Error',
+    {
+        'title': 'Error',
+        'description': 'Error message for the client',
+        'type': 'object',
+        'properties': {
+            'message': {
+                'description': 'Human readable explanation of the error',
+                'type': 'string',
+            },
+            'error_id': {
+                'description': (
+                    'Identifier of the type of error. '
+                    'It is more precise than the HTTP status code.'
+                ),
+                'type': 'string',
+            },
+            'details': {
+                'description': (
+                    'Additional information about the error. '
+                    'The keys are specific to each error.'
+                ),
+                'type': 'object',
+            },
+            'timestamp': {
+                'description': 'Time when the error occurred',
+                'type': 'number',
+                'format': 'double',
+            },
+        },
+    },
+)
+
 # Add common response components
 SPEC.components.response(
     'InvalidRequest',
-    {'description': 'Invalid request body or parameters'},
+    {
+        'description': 'Invalid request',
+        'content': {
+            'application/json': {
+                'schema': {'$ref': '#/components/schemas/Error'},
+            },
+        },
+    },
+)
+
+SPEC.components.response(
+    'NotFound',
+    {
+        'description': 'The resource requested was not found on the server',
+        'content': {
+            'application/json': {
+                'schema': {'$ref': '#/components/schemas/Error'},
+            },
+        },
+    },
+)
+
+SPEC.components.response(
+    'AnotherServiceUnavailable',
+    {
+        'description': (
+            'Another service is unavailable (e.g. wazo-auth, wazo-confd, Asterisk, ...)'
+        ),
+        'content': {
+            'application/json': {
+                'schema': {'$ref': '#/components/schemas/Error'},
+            },
+        },
+    },
 )
 
 SPEC.components.response(
     'InternalServerError',
-    {'description': 'An internal server error occurred'},
-)
-
-SPEC.components.response(
-    'ServiceUnavailable',
-    {'description': 'A required service is unavailable'},
+    {
+        'description': 'An internal server error occurred',
+        'content': {
+            'application/json': {
+                'schema': {'$ref': '#/components/schemas/Error'},
+            },
+        },
+    },
 )

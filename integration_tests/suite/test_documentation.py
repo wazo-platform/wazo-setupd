@@ -68,7 +68,8 @@ class TestDocumentation(_BaseDocumentationTest):
 
         assert 'InvalidRequest' in responses
         assert 'InternalServerError' in responses
-        assert 'ServiceUnavailable' in responses
+        assert 'AnotherServiceUnavailable' in responses
+        assert 'NotFound' in responses
 
 
 class TestSetupEndpoint(_BaseDocumentationTest):

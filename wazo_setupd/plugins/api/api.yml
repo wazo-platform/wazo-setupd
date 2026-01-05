@@ -31,7 +31,7 @@ responses:
       ...)
     schema:
       $ref: '#/definitions/Error'
-  NotFoundError:
+  NotFound:
     description: The resource requested was not found on the server
     schema:
       $ref: '#/definitions/Error'
