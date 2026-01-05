@@ -5,11 +5,7 @@ from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_flask_restful import RestfulPlugin
 
-from wazo_setupd.schemas import (
-    ComponentWithStatusSchema,
-    ErrorSchema,
-    StatusSummarySchema,
-)
+from wazo_setupd.schemas import ErrorSchema
 
 API_VERSION = '1.0'
 
@@ -68,8 +64,6 @@ SPEC.components.security_scheme(
 
 # Register response schemas
 SPEC.components.schema('Error', schema=ErrorSchema)
-SPEC.components.schema('ComponentWithStatus', schema=ComponentWithStatusSchema)
-SPEC.components.schema('StatusSummary', schema=StatusSummarySchema)
 
 # Add common response components
 SPEC.components.response(
