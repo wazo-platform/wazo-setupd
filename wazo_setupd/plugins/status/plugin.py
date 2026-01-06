@@ -4,7 +4,7 @@
 from apispec import APISpec
 from xivo.status import Status
 
-from .resource import StatusResource
+from .http import StatusResource
 from .schemas import StatusSummarySchema
 
 
