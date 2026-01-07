@@ -31,7 +31,5 @@ class StatusResource(AuthResource):
             content:
               application/json:
                 schema: StatusSummarySchema
-          401:
-            $ref: '#/components/responses/InvalidRequest'
         """
         return self.status_aggregator.status(), 200

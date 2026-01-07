@@ -35,12 +35,6 @@ class SetupResource(ErrorCatchingResource):
               application/json:
                 schema:
                   type: object
-          400:
-            $ref: '#/components/responses/InvalidRequest'
-          500:
-            $ref: '#/components/responses/InternalServerError'
-          503:
-            $ref: '#/components/responses/AnotherServiceUnavailable'
         """
         setup_infos = setup_schema.load(request.json)
 

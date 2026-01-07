@@ -37,7 +37,5 @@ class ConfigResource(AuthResource):
                 schema:
                   type: object
                   additionalProperties: true
-          401:
-            $ref: '#/components/responses/InvalidRequest'
         """
         return dict(self._config), 200

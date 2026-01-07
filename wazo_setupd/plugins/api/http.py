@@ -28,12 +28,6 @@ class OpenAPIResource(Resource):
               application/x-yaml:
                 schema:
                   type: string
-          400:
-            $ref: '#/components/responses/InvalidRequest'
-          500:
-            $ref: '#/components/responses/InternalServerError'
-          503:
-            $ref: '#/components/responses/AnotherServiceUnavailable'
         '''
         prefix = request.headers.get('X-Script-Name')
         if prefix:
