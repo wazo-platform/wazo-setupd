@@ -1,13 +1,18 @@
 # Copyright 2024-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from apispec import APISpec
+import logging
+from typing import Any
+
+from apispec import APISpec, BasePlugin
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_flask_restful import RestfulPlugin
 
 from wazo_setupd.schemas import ErrorSchema
 
 API_VERSION = '1.0'
+
+logger = logging.getLogger(__name__)
 
 
 def make_server_url(base_path_prefix: str | None = None, scheme: str = 'http') -> dict:
@@ -28,6 +33,38 @@ def make_server_url(base_path_prefix: str | None = None, scheme: str = 'http') -
     }
 
 
+COMMON_RESPONSES = {
+    '400': {'$ref': '#/components/responses/InvalidRequest'},
+    '404': {'$ref': '#/components/responses/NotFound'},
+    '500': {'$ref': '#/components/responses/InternalServerError'},
+    '503': {'$ref': '#/components/responses/AnotherServiceUnavailable'},
+}
+
+
+class BoilerplatePlugin(BasePlugin):
+    def __init__(self, common_responses):
+        self.common_responses = dict(common_responses)
+
+    def init_spec(self, spec):
+        logger.debug("initing boilerplate plugin")
+
+    def operation_helper(
+        self, path: str | None = None, operations: dict | None = None, **kwargs: Any
+    ) -> None:
+        assert operations
+        logger.debug("updating operations with common responses")
+        for op, opspec in operations.items():
+            for res in self.common_responses:
+                if res not in opspec['responses']:
+                    logger.debug(
+                        "adding common response %s to operation %s on path %s",
+                        res,
+                        op,
+                        path,
+                    )
+                    opspec['responses'][res] = self.common_responses[res]
+
+
 # Shared spec instance - plugins register paths/schemas at load time
 SPEC = APISpec(
     title="wazo-setupd",
@@ -46,7 +83,7 @@ SPEC = APISpec(
             "altText": "Wazo Logo",
         },
     },
-    plugins=[RestfulPlugin(), MarshmallowPlugin()],
+    plugins=[RestfulPlugin(), BoilerplatePlugin(COMMON_RESPONSES), MarshmallowPlugin()],
     servers=[make_server_url()],
 )
 

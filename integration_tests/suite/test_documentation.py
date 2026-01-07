@@ -71,6 +71,12 @@ class TestDocumentation(_BaseDocumentationTest):
         assert 'AnotherServiceUnavailable' in responses
         assert 'NotFound' in responses
 
+        for path, path_spec in spec['paths'].items():
+            for op, op_spec in path_spec.items():
+                assert {'400', '404', '500', '503'} <= op_spec[
+                    'responses'
+                ].keys(), f"{op} {path} spec missing common responses"
+
 
 class TestSetupEndpoint(_BaseDocumentationTest):
     def test_endpoint_exists(self):
