@@ -21,6 +21,7 @@ class ErrorSchema(Schema):
     )
     details = fields.Dict(
         keys=fields.String(),
+        values=fields.String(),
         metadata={
             'description': (
                 'Additional information about the error. '

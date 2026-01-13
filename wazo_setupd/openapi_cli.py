@@ -59,18 +59,15 @@ def main():
 
     register_plugins(SPEC)
 
-    # Create spec with optional base path
     if args.base_path:
         SPEC.options['servers'] = [make_server_url(args.base_path, scheme=args.scheme)]
 
-    # Format output
     spec_dict = SPEC.to_dict()
     if args.format == 'json':
         output = json.dumps(spec_dict, indent=2)
     else:
         output = yaml.dump(spec_dict, default_flow_style=False)
 
-    # Write output
     if args.output:
         with open(args.output, 'w') as f:
             f.write(output)
