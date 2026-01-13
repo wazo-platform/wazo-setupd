@@ -4,9 +4,8 @@ https://github.com/wazo-platform/wazo-auth-client/archive/master.zip
 https://github.com/wazo-platform/wazo-bus/archive/master.zip
 https://github.com/wazo-platform/wazo-confd-client/archive/master.zip
 https://github.com/wazo-platform/xivo-lib-python/archive/master.zip
-apispec>=6.0.0
-apispec-flask-restful>=0.3.0
-apispec-webframeworks>=0.5.2
+apispec==5.2.2
+apispec-flask-restful==0.3.1
 cheroot==9.0.0
 flask-cors==3.0.10
 flask-restful==0.3.9
