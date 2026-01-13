@@ -34,10 +34,10 @@ def make_server_url(base_path_prefix: str | None = None, scheme: str = 'http') -
 
 
 COMMON_RESPONSES = {
-    '400': {'$ref': '#/components/responses/InvalidRequest'},
-    '404': {'$ref': '#/components/responses/NotFound'},
-    '500': {'$ref': '#/components/responses/InternalServerError'},
-    '503': {'$ref': '#/components/responses/AnotherServiceUnavailable'},
+    400: {'$ref': '#/components/responses/InvalidRequest'},
+    404: {'$ref': '#/components/responses/NotFound'},
+    500: {'$ref': '#/components/responses/InternalServerError'},
+    503: {'$ref': '#/components/responses/AnotherServiceUnavailable'},
 }
 
 
@@ -54,7 +54,7 @@ class BoilerplatePlugin(BasePlugin):
         assert operations
         logger.debug("updating operations with common responses")
         for op, opspec in operations.items():
-            for res in self.common_responses:
+            for res, respec in self.common_responses.items():
                 if res not in opspec['responses']:
                     logger.debug(
                         "adding common response %s to operation %s on path %s",
@@ -62,7 +62,7 @@ class BoilerplatePlugin(BasePlugin):
                         op,
                         path,
                     )
-                    opspec['responses'][res] = self.common_responses[res]
+                    opspec['responses'][res] = respec
 
 
 # Shared spec instance - plugins register paths/schemas at load time
