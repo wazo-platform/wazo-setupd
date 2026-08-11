@@ -14,8 +14,7 @@ self_stop_delay: 10.0
 # Authentication server connection settings
 auth:
   host: localhost
-  port: 9497
-  prefix: null
+  port: 80
   https: false
 
 # Event bus (AMQP) connection settings
