@@ -1,8 +1,9 @@
-# Copyright 2018-2024 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
 import os
+import threading
 from datetime import timedelta
 
 from flask import Flask
@@ -28,6 +29,7 @@ class CoreRestApi:
         app.config.update(global_config)
         self._load_cors()
         self.server = None
+        self._stopped = threading.Event()
 
     def _load_cors(self):
         cors_config = dict(self.config.get('cors', {}))
@@ -56,8 +58,13 @@ class CoreRestApi:
         for route in http_helpers.list_routes(app):
             logger.debug(route)
 
+        if self._stopped.is_set():
+            logger.warning('stop requested during startup: not starting the server')
+            return
+
         self.server.start()
 
     def stop(self):
+        self._stopped.set()
         if self.server:
             self.server.stop()
