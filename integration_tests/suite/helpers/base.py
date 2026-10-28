@@ -9,8 +9,7 @@ from wazo_setupd_client import Client as SetupdClient
 from wazo_test_helpers import until
 from wazo_test_helpers.asset_launching_test_case import AssetLaunchingTestCase
 from wazo_test_helpers.auth import AuthClient as MockAuthClient
-from wazo_test_helpers.auth import MockCredentials, MockUserToken
-from xivo.config_helper import parse_config_file
+from wazo_test_helpers.auth import MockUserToken
 
 from .confd import ConfdMockClient
 from .deployd import DeploydMockClient
@@ -26,7 +25,6 @@ SUB_TENANT = 'eeeeeeee-eeee-4eee-aeee-eeeeeeeeee11'
 
 WAZO_UUID = 'cd030e68-ace9-4ad4-bc4e-13c8dec67898'
 
-MASTER_USER_UUID = '5f243438-a429-46a8-a992-baed872081e0'
 SUB_USER_UUID = '5f243438-a429-46a8-a992-baed872081e1'
 
 
@@ -87,24 +85,7 @@ class BaseIntegrationTest(AssetLaunchingTestCase):
 
     @classmethod
     def configure_wazo_auth(cls):
-        key_file = parse_config_file(
-            os.path.join(cls.assets_root, 'keys', 'wazo-setupd-key.yml')
-        )
         mock_auth = cls.make_mock_auth()
-        mock_auth.set_valid_credentials(
-            MockCredentials(key_file['service_id'], key_file['service_key']),
-            VALID_TOKEN,
-        )
-
-        mock_auth.set_token(
-            MockUserToken(
-                VALID_TOKEN,
-                MASTER_USER_UUID,
-                WAZO_UUID,
-                {'tenant_uuid': MASTER_TENANT, 'uuid': MASTER_USER_UUID},
-            )
-        )
-
         mock_auth.set_token(
             MockUserToken(
                 VALID_SUB_TOKEN,

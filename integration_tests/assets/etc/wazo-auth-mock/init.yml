@@ -1,0 +1,12 @@
+tokens:
+  - token: valid-token-master-tenant
+    auth_id: 5f243438-a429-46a8-a992-baed872081e0
+    xivo_uuid: cd030e68-ace9-4ad4-bc4e-13c8dec67898
+    metadata:
+      uuid: 5f243438-a429-46a8-a992-baed872081e0
+      tenant_uuid: eeeeeeee-eeee-4eee-aeee-eeeeeeeeee10
+
+valid_credentials:
+  - username: the-setupd-service
+    password: a-very-5ecre7-key
+    token: valid-token-master-tenant
