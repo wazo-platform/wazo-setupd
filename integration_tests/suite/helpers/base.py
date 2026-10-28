@@ -1,4 +1,4 @@
-# Copyright 2018-2023 The Wazo Authors  (see the AUTHORS file)
+# Copyright 2018-2026 The Wazo Authors  (see the AUTHORS file)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
@@ -21,8 +21,8 @@ from .webhookd import WebhookdMockClient
 VALID_TOKEN = 'valid-token-master-tenant'
 VALID_SUB_TOKEN = 'valid-token-sub-tenant'
 
-MASTER_TENANT = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeee10'
-SUB_TENANT = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeee11'
+MASTER_TENANT = 'eeeeeeee-eeee-4eee-aeee-eeeeeeeeee10'
+SUB_TENANT = 'eeeeeeee-eeee-4eee-aeee-eeeeeeeeee11'
 
 WAZO_UUID = 'cd030e68-ace9-4ad4-bc4e-13c8dec67898'
 
